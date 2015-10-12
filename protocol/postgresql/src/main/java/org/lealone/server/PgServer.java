@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.lealone.common.message.DbException;
@@ -35,7 +36,7 @@ import org.lealone.db.Constants;
  * @author Sergi Vladykin 2009-07-03 (convertType)
  * @author zhh
  */
-public class PgServer implements Server {
+public class PgServer implements ProtocolServer {
 
     /**
      * The default port to use for the PG server.
@@ -88,25 +89,18 @@ public class PgServer implements Server {
     private boolean stop;
 
     @Override
-    public void init(String... args) {
-        for (int i = 0; args != null && i < args.length; i++) {
-            String a = args[i];
-            if (TcpServer.isOption(a, "-pgListenAddress")) {
-                listenAddress = args[++i];
-            } else if (TcpServer.isOption(a, "-trace")) {
-                trace = true;
-            } else if (TcpServer.isOption(a, "-pgPort")) {
-                port = Integer.decode(args[++i]);
-            } else if (TcpServer.isOption(a, "-baseDir")) {
-                baseDir = args[++i];
-            } else if (TcpServer.isOption(a, "-pgAllowOthers")) {
-                allowOthers = true;
-            } else if (TcpServer.isOption(a, "-pgDaemon")) {
-                isDaemon = true;
-            } else if (TcpServer.isOption(a, "-ifExists")) {
-                ifExists = true;
-            }
-        }
+    public void init(Map<String, String> config) {
+        // TODO 对于不支持的参数直接报错
+        if (config.containsKey("listen_address"))
+            listenAddress = config.get("listen_address");
+        if (config.containsKey("listen_port"))
+            port = Integer.parseInt(config.get("listen_port"));
+
+        baseDir = config.get("base_dir");
+        trace = Boolean.parseBoolean(config.get("trace"));
+        allowOthers = Boolean.parseBoolean(config.get("allow_others"));
+        isDaemon = Boolean.parseBoolean(config.get("daemon"));
+        ifExists = Boolean.parseBoolean(config.get("if_exists"));
     }
 
     boolean getTrace() {
