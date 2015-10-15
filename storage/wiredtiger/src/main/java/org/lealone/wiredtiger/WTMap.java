@@ -325,7 +325,6 @@ public class WTMap<K, V> implements StorageMap<K, V> {
         }
     }
 
-    @Override
     public long getKeyIndex(K key) {
         long index = -1;
         wtCursor.reset();
@@ -338,7 +337,6 @@ public class WTMap<K, V> implements StorageMap<K, V> {
         return index;
     }
 
-    @Override
     public K getKey(long index) {
         if (index < 0)
             return null;
@@ -379,7 +377,6 @@ public class WTMap<K, V> implements StorageMap<K, V> {
         return new WTCursor<K, V>(wtCursor, this, from);
     }
 
-    @Override
     public Set<Entry<K, V>> entrySet() {
         final WTMap<K, V> map = this;
         return new AbstractSet<Entry<K, V>>() {
@@ -433,6 +430,6 @@ public class WTMap<K, V> implements StorageMap<K, V> {
 
     @Override
     public void close() {
-
+        wtSession.close(null);
     }
 }

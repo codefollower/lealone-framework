@@ -26,8 +26,8 @@ import org.lealone.common.value.Value;
 import org.lealone.common.value.ValueLobDb;
 import org.lealone.db.Constants;
 import org.lealone.db.Database;
-import org.lealone.mvstore.MVStorageEngine.Store;
 import org.lealone.storage.LobStorage;
+import org.lealone.storage.StorageEngineManager;
 
 /**
  * This class stores LOB objects in the database, in maps. This is the back-end
@@ -72,6 +72,8 @@ public class LobStorageMap implements LobStorage {
      */
     private MVMap<Long, byte[]> dataMap;
 
+    private MVStore mvStore;
+
     private StreamStore streamStore;
 
     public LobStorageMap(Database database) {
@@ -84,14 +86,8 @@ public class LobStorageMap implements LobStorage {
             return;
         }
         init = true;
-        Store s = MVStorageEngine.getStore(database);
-        MVStore mvStore;
-        if (s == null) {
-            // in-memory database
-            mvStore = MVStore.open(null);
-        } else {
-            mvStore = s.getStore();
-        }
+
+        mvStore = (MVStore) database.getStorage(StorageEngineManager.getInstance().getEngine(MVStoreEngine.NAME));
         lobMap = mvStore.openMap("lobMap");
         refMap = mvStore.openMap("lobRef");
         dataMap = mvStore.openMap("lobData");
@@ -280,7 +276,7 @@ public class LobStorageMap implements LobStorage {
     @Override
     public void removeAllForTable(int tableId) {
         init();
-        if (MVStorageEngine.getStore(database).getStore().isClosed()) {
+        if (mvStore.isClosed()) {
             return;
         }
         // this might not be very efficient -

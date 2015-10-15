@@ -232,7 +232,6 @@ public class MVMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V
      * @param index the index
      * @return the key
      */
-    @Override
     @SuppressWarnings("unchecked")
     public K getKey(long index) {
         if (index < 0 || index >= size()) {
@@ -304,7 +303,6 @@ public class MVMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V
      * @param key the key
      * @return the index
      */
-    @Override
     public long getKeyIndex(K key) {
         if (isEmpty()) {
             return -1;

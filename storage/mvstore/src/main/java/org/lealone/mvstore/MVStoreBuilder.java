@@ -17,24 +17,18 @@
  */
 package org.lealone.mvstore;
 
-import org.lealone.storage.StorageMap;
-import org.lealone.storage.type.DataType;
+import org.lealone.storage.StorageBuilder;
 
-public class MVMapBuilder extends StorageMap.BuilderBase {
-    private final MVStore store;
+public class MVStoreBuilder extends StorageBuilder {
 
-    public MVMapBuilder(MVStore store) {
-        this.store = store;
-    }
-
+    /**
+     * Open the storage.
+     * 
+     * @return the opened storage
+     */
     @Override
-    public <K, V> StorageMap<K, V> openMap(String name, DataType keyType, DataType valueType) {
-        MVMap.Builder<K, V> builder = new MVMap.Builder<K, V>().keyType(keyType).valueType(valueType);
-        return store.openMap(name, builder);
+    public MVStore openStorage() {
+        return new MVStore(config);
     }
 
-    @Override
-    public String getMapName(int id) {
-        return store.getMapName(id);
-    }
 }

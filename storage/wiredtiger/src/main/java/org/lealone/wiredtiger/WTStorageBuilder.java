@@ -17,25 +17,14 @@
  */
 package org.lealone.wiredtiger;
 
-import org.lealone.common.message.DbException;
-import org.lealone.storage.StorageMap;
-import org.lealone.storage.type.DataType;
+import org.lealone.storage.Storage;
+import org.lealone.storage.StorageBuilder;
 
-public class WTMapBuilder extends StorageMap.BuilderBase {
-    private final com.wiredtiger.db.Session wtSession;
-
-    public WTMapBuilder(com.wiredtiger.db.Session wtSession) {
-        this.wtSession = wtSession;
-    }
+public class WTStorageBuilder extends StorageBuilder {
 
     @Override
-    public <K, V> StorageMap<K, V> openMap(String name, DataType keyType, DataType valueType) {
-        return new WTMap<K, V>(wtSession, name, keyType, valueType);
+    public Storage openStorage() {
+        return new WTStorage(config);
     }
 
-    @Override
-    public String getMapName(int id) {
-        // TODO
-        throw DbException.getUnsupportedException("getMapName");
-    }
 }

@@ -15,23 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.wiredtiger;
+package org.lealone.mvstore;
 
 import org.lealone.storage.StorageBuilder;
 import org.lealone.storage.StorageEngineBase;
 
-/**
- * A storage engine that internally uses the WiredTiger.
- */
-public class WTStorageEngine extends StorageEngineBase {
-    public static final String NAME = "WT";
+public class MVStoreEngine extends StorageEngineBase {
+    public static final String NAME = "MVStore";
 
-    public WTStorageEngine() {
+    public MVStoreEngine() {
         super(NAME);
     }
 
     @Override
     public StorageBuilder getStorageBuilder() {
-        return new WTStorageBuilder();
+        return new MVStoreBuilder();
     }
 }
