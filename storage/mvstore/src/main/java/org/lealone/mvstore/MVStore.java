@@ -2803,7 +2803,7 @@ public class MVStore implements Storage {
      *
      * @param objectIds the ids of the objects to keep
      */
-    @Override
+    // 未使用
     public void removeTemporaryMaps(BitField objectIds) {
         for (String mapName : getMapNames()) {
             if (mapName.startsWith("temp.")) {

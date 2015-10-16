@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.lealone.common.util.BitField;
 import org.lealone.storage.Storage;
 import org.lealone.storage.StorageMap;
 import org.lealone.storage.type.DataType;
@@ -59,11 +58,6 @@ public class WTStorage implements Storage {
     @Override
     public boolean hasMap(String name) {
         return maps.containsKey(name);
-    }
-
-    @Override
-    public void removeTemporaryMaps(BitField objectIds) {
-        // TODO Auto-generated method stub
     }
 
     @Override

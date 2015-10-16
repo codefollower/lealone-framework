@@ -38,12 +38,12 @@ import org.lealone.common.util.IOUtils;
 import org.lealone.common.util.JdbcUtils;
 import org.lealone.common.util.StringUtils;
 import org.lealone.common.util.Utils;
-import org.lealone.common.value.CaseInsensitiveMap;
 import org.lealone.db.CommandInterface;
 import org.lealone.db.ConnectionInfo;
 import org.lealone.db.Constants;
 import org.lealone.db.SysProperties;
 import org.lealone.db.util.ScriptReader;
+import org.lealone.db.value.CaseInsensitiveMap;
 
 /**
  * One server thread is opened for each client.
