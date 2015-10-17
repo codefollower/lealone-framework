@@ -38,12 +38,12 @@ import org.lealone.common.util.IOUtils;
 import org.lealone.common.util.JdbcUtils;
 import org.lealone.common.util.StringUtils;
 import org.lealone.common.util.Utils;
-import org.lealone.db.CommandInterface;
 import org.lealone.db.ConnectionInfo;
 import org.lealone.db.Constants;
 import org.lealone.db.SysProperties;
 import org.lealone.db.util.ScriptReader;
 import org.lealone.db.value.CaseInsensitiveMap;
+import org.lealone.sql.SQLStatement;
 
 /**
  * One server thread is opened for each client.
@@ -449,23 +449,23 @@ public class PgServerThread implements Runnable {
     private void sendCommandComplete(JdbcStatement stat, int updateCount) throws IOException {
         startMessage('C');
         switch (stat.getLastExecutedCommandType()) {
-        case CommandInterface.INSERT:
-            writeStringPart("INSERT 0 ");
+        case SQLStatement.INSERT:
+            writeStringPart("CommandInterfaceINSERT 0 ");
             writeString(Integer.toString(updateCount));
             break;
-        case CommandInterface.UPDATE:
+        case SQLStatement.UPDATE:
             writeStringPart("UPDATE ");
             writeString(Integer.toString(updateCount));
             break;
-        case CommandInterface.DELETE:
+        case SQLStatement.DELETE:
             writeStringPart("DELETE ");
             writeString(Integer.toString(updateCount));
             break;
-        case CommandInterface.SELECT:
-        case CommandInterface.CALL:
+        case SQLStatement.SELECT:
+        case SQLStatement.CALL:
             writeString("SELECT");
             break;
-        case CommandInterface.BEGIN:
+        case SQLStatement.BEGIN:
             writeString("BEGIN");
             break;
         default:
