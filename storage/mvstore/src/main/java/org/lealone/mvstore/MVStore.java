@@ -2297,7 +2297,7 @@ public class MVStore implements Storage {
         checkOpen();
         DataUtils.checkArgument(map != meta, "Removing the meta map is not allowed");
         map.clear();
-        int id = map.getId();
+        int id = ((MVMap<?, ?>) map).getId();
         String name = getMapName(id);
         markMetaChanged();
         meta.remove(MVMap.getMapKey(id));
