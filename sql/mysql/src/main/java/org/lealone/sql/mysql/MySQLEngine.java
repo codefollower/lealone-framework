@@ -1,0 +1,85 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.lealone.sql.mysql;
+
+import java.util.Map;
+
+import org.lealone.db.CommandParameter;
+import org.lealone.db.Session;
+import org.lealone.db.schema.Sequence;
+import org.lealone.db.value.Value;
+import org.lealone.sql.Expression;
+import org.lealone.sql.SQLEngine;
+import org.lealone.sql.SQLEngineManager;
+import org.lealone.sql.SQLParser;
+import org.lealone.sql.mysql.expression.ConditionAndOr;
+import org.lealone.sql.mysql.expression.Parameter;
+import org.lealone.sql.mysql.expression.SequenceValue;
+import org.lealone.sql.mysql.expression.ValueExpression;
+
+public class MySQLEngine implements SQLEngine {
+
+    public MySQLEngine() {
+        SQLEngineManager.getInstance().registerEngine(this);
+    }
+
+    @Override
+    public SQLParser createParser(Session session) {
+        return new MySQLParser((org.lealone.db.ServerSession) session);
+    }
+
+    @Override
+    public String getName() {
+        return "MySQL";
+    }
+
+    @Override
+    public void init(Map<String, String> config) {
+    }
+
+    @Override
+    public String quoteIdentifier(String identifier) {
+        return MySQLParser.quoteIdentifier(identifier);
+    }
+
+    @Override
+    public CommandParameter createParameter(int index) {
+        return new Parameter(index);
+    }
+
+    @Override
+    public Expression createValueExpression(Value value) {
+        return ValueExpression.get(value);
+    }
+
+    @Override
+    public Expression createSequenceValue(Object sequence) {
+        return new SequenceValue((Sequence) sequence);
+    }
+
+    @Override
+    public Expression createConditionAndOr(boolean and, Expression left, Expression right) {
+        return new ConditionAndOr(and ? ConditionAndOr.AND : ConditionAndOr.OR,
+                (org.lealone.sql.mysql.expression.Expression) left, (org.lealone.sql.mysql.expression.Expression) right);
+    }
+
+    @Override
+    public void close() {
+    }
+
+}
