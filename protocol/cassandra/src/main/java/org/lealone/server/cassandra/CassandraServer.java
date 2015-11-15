@@ -15,11 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.server;
+package org.lealone.server.cassandra;
 
 import java.util.Map;
 
-public class MySQLServer implements ProtocolServer {
+import org.lealone.server.ProtocolServer;
+
+public class CassandraServer implements ProtocolServer {
 
     @Override
     public void run() {

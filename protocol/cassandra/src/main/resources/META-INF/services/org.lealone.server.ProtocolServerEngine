@@ -1,1 +1,1 @@
-org.lealone.server.CassandraServerEngine
+org.lealone.server.cassandra.CassandraServerEngine

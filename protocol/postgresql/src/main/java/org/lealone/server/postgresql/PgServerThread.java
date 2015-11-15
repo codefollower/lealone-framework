@@ -4,7 +4,7 @@
  * (http://h2database.com/html/license.html).
  * Initial Developer: H2 Group
  */
-package org.lealone.server;
+package org.lealone.server.postgresql;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,7 +32,7 @@ import java.util.Properties;
 import org.lealone.client.jdbc.JdbcConnection;
 import org.lealone.client.jdbc.JdbcPreparedStatement;
 import org.lealone.client.jdbc.JdbcStatement;
-import org.lealone.common.message.DbException;
+import org.lealone.common.exceptions.DbException;
 import org.lealone.common.util.DataUtils;
 import org.lealone.common.util.IOUtils;
 import org.lealone.common.util.JdbcUtils;

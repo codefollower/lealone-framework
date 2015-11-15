@@ -29,7 +29,7 @@ import org.lealone.api.ErrorCode;
 import org.lealone.common.compress.CompressDeflate;
 import org.lealone.common.compress.CompressLZF;
 import org.lealone.common.compress.Compressor;
-import org.lealone.common.message.DbException;
+import org.lealone.common.exceptions.DbException;
 import org.lealone.common.util.BitField;
 import org.lealone.common.util.DataUtils;
 import org.lealone.common.util.IOUtils;

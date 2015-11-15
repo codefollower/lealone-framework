@@ -15,14 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.server;
+package org.lealone.server.mysql;
 
-public class MySQLServerThread implements Runnable {
+import org.lealone.server.ProtocolServer;
+import org.lealone.server.ProtocolServerEngineBase;
+
+public class MySQLServerEngine extends ProtocolServerEngineBase {
+
+    private final MySQLServer server = new MySQLServer();
+
+    public MySQLServerEngine() {
+        super("MySQLServer");
+    }
 
     @Override
-    public void run() {
-        // TODO Auto-generated method stub
+    public ProtocolServer getProtocolServer() {
+        return server;
+    }
 
+    @Override
+    public void close() {
+        server.stop();
     }
 
 }

@@ -5,6 +5,9 @@
  */
 package org.lealone.mvstore;
 
+import java.io.IOException;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.AbstractList;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -1350,5 +1353,17 @@ public class MVMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V
 
     @Override
     public void save() {
+    }
+
+    @Override
+    public void transferTo(WritableByteChannel target, K firstKey, K lastKey) throws IOException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void transferFrom(ReadableByteChannel src) throws IOException {
+        // TODO Auto-generated method stub
+
     }
 }

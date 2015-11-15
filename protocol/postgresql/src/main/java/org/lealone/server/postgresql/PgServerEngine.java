@@ -15,25 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.server;
+package org.lealone.server.postgresql;
 
-import java.util.Map;
+import org.lealone.server.ProtocolServer;
+import org.lealone.server.ProtocolServerEngineBase;
 
-public class CassandraServerEngine implements ProtocolServerEngine {
+public class PgServerEngine extends ProtocolServerEngineBase {
 
-    private final CassandraServer server = new CassandraServer();
+    private final PgServer pgServer = new PgServer();
 
-    @Override
-    public String getName() {
-        return "CassandraServer";
+    public PgServerEngine() {
+        super("PgServer");
     }
 
     @Override
     public ProtocolServer getProtocolServer() {
-        return server;
+        return pgServer;
     }
 
-    @Override
-    public void init(Map<String, String> config) {
-    }
 }

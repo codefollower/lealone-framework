@@ -19,13 +19,13 @@ import java.util.Arrays;
 import java.util.Map.Entry;
 
 import org.lealone.api.ErrorCode;
-import org.lealone.common.message.DbException;
+import org.lealone.common.exceptions.DbException;
 import org.lealone.common.util.IOUtils;
 import org.lealone.common.util.New;
 import org.lealone.db.Constants;
 import org.lealone.db.Database;
 import org.lealone.db.value.Value;
-import org.lealone.db.value.ValueLobDb;
+import org.lealone.db.value.ValueLob;
 import org.lealone.storage.LobStorage;
 import org.lealone.storage.StorageEngineManager;
 
@@ -141,7 +141,7 @@ public class LobStorageMap implements LobStorage {
                     if (len < small.length) {
                         small = Arrays.copyOf(small, len);
                     }
-                    return ValueLobDb.createSmallLob(type, small);
+                    return ValueLob.createSmallLob(type, small);
                 }
                 b.reset();
                 in = b;
@@ -173,15 +173,15 @@ public class LobStorageMap implements LobStorage {
                         small = Arrays.copyOf(small, len);
                     }
                     byte[] utf8 = new String(small, 0, len).getBytes(Constants.UTF8);
-                    return ValueLobDb.createSmallLob(type, utf8);
+                    return ValueLob.createSmallLob(type, utf8);
                 }
                 b.reset();
                 reader = b;
             }
             CountingReaderInputStream in = new CountingReaderInputStream(reader, maxLength);
-            ValueLobDb lob = createLob(in, type);
+            ValueLob lob = createLob(in, type);
             // the length is not correct
-            lob = ValueLobDb.create(type, database, lob.getTableId(), lob.getLobId(), null, in.getLength());
+            lob = ValueLob.create(type, database, lob.getTableId(), lob.getLobId(), null, in.getLength());
             return lob;
         } catch (IllegalStateException e) {
             throw DbException.get(ErrorCode.OBJECT_CLOSED, e);
@@ -190,7 +190,7 @@ public class LobStorageMap implements LobStorage {
         }
     }
 
-    private ValueLobDb createLob(InputStream in, int type) throws IOException {
+    private ValueLob createLob(InputStream in, int type) throws IOException {
         byte[] streamStoreId;
         try {
             streamStoreId = streamStore.put(in);
@@ -204,7 +204,7 @@ public class LobStorageMap implements LobStorage {
         lobMap.put(lobId, value);
         Object[] key = new Object[] { streamStoreId, lobId };
         refMap.put(key, Boolean.TRUE);
-        ValueLobDb lob = ValueLobDb.create(type, database, tableId, lobId, null, length);
+        ValueLob lob = ValueLob.create(type, database, tableId, lobId, null, length);
         if (TRACE) {
             trace("create " + tableId + "/" + lobId);
         }
@@ -227,7 +227,7 @@ public class LobStorageMap implements LobStorage {
     }
 
     @Override
-    public ValueLobDb copyLob(ValueLobDb old, int tableId, long length) {
+    public ValueLob copyLob(ValueLob old, int tableId, long length) {
         init();
         int type = old.getType();
         long oldLobId = old.getLobId();
@@ -243,7 +243,7 @@ public class LobStorageMap implements LobStorage {
         lobMap.put(lobId, value);
         Object[] key = new Object[] { streamStoreId, lobId };
         refMap.put(key, Boolean.TRUE);
-        ValueLobDb lob = ValueLobDb.create(type, database, tableId, lobId, null, length);
+        ValueLob lob = ValueLob.create(type, database, tableId, lobId, null, length);
         if (TRACE) {
             trace("copy " + old.getTableId() + "/" + old.getLobId() + " > " + tableId + "/" + lobId);
         }
@@ -251,7 +251,7 @@ public class LobStorageMap implements LobStorage {
     }
 
     @Override
-    public InputStream getInputStream(ValueLobDb lob, byte[] hmac, long byteCount) throws IOException {
+    public InputStream getInputStream(ValueLob lob, byte[] hmac, long byteCount) throws IOException {
         init();
         Object[] value = lobMap.get(lob.getLobId());
         if (value == null) {
@@ -262,7 +262,7 @@ public class LobStorageMap implements LobStorage {
     }
 
     @Override
-    public void setTable(ValueLobDb lob, int tableId) {
+    public void setTable(ValueLob lob, int tableId) {
         init();
         long lobId = lob.getLobId();
         Object[] value = lobMap.remove(lobId);
@@ -299,7 +299,7 @@ public class LobStorageMap implements LobStorage {
     }
 
     @Override
-    public void removeLob(ValueLobDb lob) {
+    public void removeLob(ValueLob lob) {
         init();
         int tableId = lob.getTableId();
         long lobId = lob.getLobId();

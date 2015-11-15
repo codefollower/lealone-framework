@@ -15,25 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.server;
+package org.lealone.server.mysql;
 
-import java.util.Map;
+import java.io.File;
+import java.util.HashMap;
 
-public class MySQLServerEngine implements ProtocolServerEngine {
+import org.lealone.db.SysProperties;
+import org.lealone.server.mysql.MySQLServer;
 
-    private final MySQLServer server = new MySQLServer();
+public class MySQLServerTest {
+    public static final String TEST_DIR = "." + File.separatorChar + "lealone-test-data" + File.separatorChar + "test";
+    public static final String DB_NAME = "test";
 
-    @Override
-    public String getName() {
-        return "MySQLServer";
-    }
-
-    @Override
-    public ProtocolServer getProtocolServer() {
-        return server;
-    }
-
-    @Override
-    public void init(Map<String, String> config) {
+    public static void main(String[] args) {
+        SysProperties.setBaseDir(TEST_DIR);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("listen_port", "3307");
+        MySQLServer server = new MySQLServer();
+        server.init(map);
+        server.start();
+        System.out.println(server.getName() + " started, port: " + server.getPort());
     }
 }

@@ -18,7 +18,10 @@
  */
 package org.lealone.wiredtiger;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -430,5 +433,17 @@ public class WTMap<K, V> implements StorageMap<K, V> {
     @Override
     public void close() {
         wtSession.close(null);
+    }
+
+    @Override
+    public void transferTo(WritableByteChannel target, K firstKey, K lastKey) throws IOException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void transferFrom(ReadableByteChannel src) throws IOException {
+        // TODO Auto-generated method stub
+
     }
 }

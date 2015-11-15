@@ -4,7 +4,7 @@
  * (http://h2database.com/html/license.html).
  * Initial Developer: H2 Group
  */
-package org.lealone.server;
+package org.lealone.server.postgresql;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -21,10 +21,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.lealone.common.message.DbException;
+import org.lealone.common.exceptions.DbException;
 import org.lealone.common.util.NetUtils;
 import org.lealone.common.util.New;
 import org.lealone.db.Constants;
+import org.lealone.server.ProtocolServer;
 
 /**
  * This class implements a subset of the PostgreSQL protocol as described here:
