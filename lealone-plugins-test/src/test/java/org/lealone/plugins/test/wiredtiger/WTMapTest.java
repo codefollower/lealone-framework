@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.lealone.plugins.wiredtiger;
+package org.lealone.plugins.test.wiredtiger;
 
 import java.util.Map.Entry;
 
@@ -37,7 +37,7 @@ public class WTMapTest extends org.junit.Assert {
 
         try {
 
-            WTMap<Integer, String> map = new WTMap<>(wtSession, "WTMapTest");
+            WTMap<Integer, String> map = new WTMap<>(null, wtSession, "WTMapTest");
             map.clear();
 
             System.out.println("name = " + map.getName() + ", id = " + map.getId());
@@ -96,7 +96,7 @@ public class WTMapTest extends org.junit.Assert {
             assertTrue(map.areValuesEqual("a", "a"));
             assertFalse(map.areValuesEqual("a", "b"));
 
-            org.lealone.plugins.wiredtiger.WTCursor<Integer, String> cursor = map.cursor(2);
+            org.lealone.plugins.wiredtiger.WTMapCursor<Integer, String> cursor = map.cursor(2);
             assertTrue(cursor.hasNext());
             key = cursor.next();
             assertEquals(2, (int) key);

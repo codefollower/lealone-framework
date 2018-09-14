@@ -18,13 +18,13 @@
 package org.lealone.plugins.mvstore;
 
 import java.util.Map;
-import java.util.Set;
 
-import org.lealone.storage.Storage;
+import org.lealone.common.exceptions.DbException;
+import org.lealone.storage.StorageBase;
 import org.lealone.storage.StorageMap;
 import org.lealone.storage.type.StorageDataType;
 
-public class MVStorage implements Storage {
+public class MVStorage extends StorageBase {
 
     public MVStorage(Map<String, Object> config) {
     }
@@ -37,21 +37,8 @@ public class MVStorage implements Storage {
     }
 
     @Override
-    public boolean hasMap(String name) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public String nextTemporaryMapName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void backupTo(String fileName) {
-        // TODO Auto-generated method stub
-
+        throw DbException.getUnsupportedException("backupTo");
     }
 
     @Override
@@ -71,35 +58,4 @@ public class MVStorage implements Storage {
         // TODO Auto-generated method stub
 
     }
-
-    @Override
-    public boolean isClosed() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public Set<String> getMapNames() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public StorageMap<?, ?> getMap(String name) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public long getDiskSpaceUsed() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public long getMemorySpaceUsed() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
 }

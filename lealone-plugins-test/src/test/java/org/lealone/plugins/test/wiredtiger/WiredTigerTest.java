@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.lealone.plugins.wiredtiger;
+package org.lealone.plugins.test.wiredtiger;
 
 import java.io.File;
 

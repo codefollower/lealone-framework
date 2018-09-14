@@ -24,7 +24,7 @@ import org.lealone.storage.StorageMapCursor;
 import com.wiredtiger.db.Cursor;
 
 @SuppressWarnings("unchecked")
-public class WTCursor<K, V> implements StorageMapCursor<K, V> {
+public class WTMapCursor<K, V> implements StorageMapCursor<K, V> {
 
     private final Cursor wtCursor;
     private final WTMap<K, V> map;
@@ -32,7 +32,7 @@ public class WTCursor<K, V> implements StorageMapCursor<K, V> {
     private K key;
     private V value;
 
-    public WTCursor(Cursor wtCursor, WTMap<K, V> map, K from) {
+    public WTMapCursor(Cursor wtCursor, WTMap<K, V> map, K from) {
         this.wtCursor = wtCursor;
         this.map = map;
         this.from = from;

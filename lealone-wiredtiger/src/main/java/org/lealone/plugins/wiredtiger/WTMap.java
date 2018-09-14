@@ -18,22 +18,17 @@
  */
 package org.lealone.plugins.wiredtiger;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.WritableByteChannel;
 import java.util.AbstractSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.lealone.common.exceptions.DbException;
 import org.lealone.common.util.DataUtils;
 import org.lealone.db.DataBuffer;
-import org.lealone.net.NetEndpoint;
-import org.lealone.storage.LeafPageMovePlan;
 import org.lealone.storage.Storage;
-import org.lealone.storage.StorageMap;
+import org.lealone.storage.StorageMapBase;
 import org.lealone.storage.type.ObjectDataType;
 import org.lealone.storage.type.StorageDataType;
 
@@ -41,28 +36,26 @@ import com.wiredtiger.db.SearchStatus;
 import com.wiredtiger.db.Session;
 
 @SuppressWarnings("unchecked")
-public class WTMap<K, V> implements StorageMap<K, V> {
+public class WTMap<K, V> extends StorageMapBase<K, V> {
 
+    private final WTStorage storage;
     private final Session wtSession;
     private com.wiredtiger.db.Cursor wtCursor;
 
-    private final String name;
-    private final StorageDataType keyType;
-    private final StorageDataType valueType;
     private final int id;
 
     private DataBuffer writeBuffer;
     private boolean closed;
 
-    public WTMap(Session wtSession, String name) {
-        this(wtSession, name, new ObjectDataType(), new ObjectDataType());
+    public WTMap(WTStorage storage, Session wtSession, String name) {
+        this(storage, wtSession, name, new ObjectDataType(), new ObjectDataType());
     }
 
-    public WTMap(Session wtSession, String name, StorageDataType keyType, StorageDataType valueType) {
+    public WTMap(WTStorage storage, Session wtSession, String name, StorageDataType keyType,
+            StorageDataType valueType) {
+        super(name, keyType, valueType);
+        this.storage = storage;
         this.wtSession = wtSession;
-        this.name = name;
-        this.keyType = keyType;
-        this.valueType = valueType;
 
         id = getMapId(wtSession, name);
 
@@ -149,21 +142,6 @@ public class WTMap<K, V> implements StorageMap<K, V> {
 
     public int getId() {
         return id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public StorageDataType getKeyType() {
-        return keyType;
-    }
-
-    @Override
-    public StorageDataType getValueType() {
-        return valueType;
     }
 
     @Override
@@ -379,8 +357,8 @@ public class WTMap<K, V> implements StorageMap<K, V> {
     }
 
     @Override
-    public WTCursor<K, V> cursor(K from) {
-        return new WTCursor<K, V>(wtCursor, this, from);
+    public WTMapCursor<K, V> cursor(K from) {
+        return new WTMapCursor<K, V>(wtCursor, this, from);
     }
 
     public Set<Entry<K, V>> entrySet() {
@@ -389,7 +367,7 @@ public class WTMap<K, V> implements StorageMap<K, V> {
 
             @Override
             public Iterator<Entry<K, V>> iterator() {
-                final WTCursor<K, V> cursor = new WTCursor<K, V>(wtCursor, map, null);
+                final WTMapCursor<K, V> cursor = new WTMapCursor<K, V>(wtCursor, map, null);
                 return new Iterator<Entry<K, V>>() {
 
                     @Override
@@ -440,92 +418,13 @@ public class WTMap<K, V> implements StorageMap<K, V> {
     }
 
     @Override
-    public void transferTo(WritableByteChannel target, K firstKey, K lastKey) throws IOException {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void transferFrom(ReadableByteChannel src) throws IOException {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public List<NetEndpoint> getReplicationEndpoints(Object key) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Object replicationPut(org.lealone.db.Session session, Object key, Object value, StorageDataType valueType) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Object replicationGet(org.lealone.db.Session session, Object key) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Object replicationAppend(org.lealone.db.Session session, Object value, StorageDataType valueType) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public Storage getStorage() {
-        // TODO Auto-generated method stub
-        return null;
+        return storage;
     }
 
     @Override
     public K append(V value) {
-        // TODO Auto-generated method stub
-        return null;
+        throw DbException.getUnsupportedException("append");
     }
 
-    @Override
-    public void addLeafPage(ByteBuffer splitKey, ByteBuffer page, boolean last, boolean addPage) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void removeLeafPage(ByteBuffer key) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public LeafPageMovePlan prepareMoveLeafPage(LeafPageMovePlan leafPageMovePlan) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public StorageMap<Object, Object> getRawMap() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void setRootPage(ByteBuffer buff) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public long getDiskSpaceUsed() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public long getMemorySpaceUsed() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
 }

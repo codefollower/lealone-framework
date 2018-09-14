@@ -27,8 +27,8 @@ import java.sql.Statement;
 
 import org.lealone.common.exceptions.DbException;
 import org.lealone.common.util.IOUtils;
+import org.lealone.common.util.ScriptReader;
 import org.lealone.common.util.Utils;
-import org.lealone.db.util.ScriptReader;
 import org.lealone.plugins.postgresql.PgServer;
 import org.lealone.plugins.test.TestBase;
 

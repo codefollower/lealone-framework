@@ -19,21 +19,18 @@ package org.lealone.plugins.wiredtiger;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.lealone.storage.Storage;
+import org.lealone.common.exceptions.DbException;
+import org.lealone.storage.StorageBase;
 import org.lealone.storage.StorageMap;
 import org.lealone.storage.type.StorageDataType;
 
 import com.wiredtiger.db.Connection;
 import com.wiredtiger.db.wiredtiger;
 
-public class WTStorage implements Storage {
-    private final Connection conn;
-    private final ConcurrentHashMap<String, StorageMap<?, ?>> maps = new ConcurrentHashMap<>();
+public class WTStorage extends StorageBase {
 
-    private int lastMapId;
+    private final Connection conn;
 
     public WTStorage(Map<String, Object> config) {
         String storageName = (String) config.get("storageName");
@@ -51,78 +48,29 @@ public class WTStorage implements Storage {
     @Override
     public <K, V> StorageMap<K, V> openMap(String name, String mapType, StorageDataType keyType,
             StorageDataType valueType, Map<String, String> parameters) {
-        WTMap<K, V> map = new WTMap<>(conn.open_session(null), name, keyType, valueType);
+        WTMap<K, V> map = new WTMap<>(this, conn.open_session(null), name, keyType, valueType);
         maps.put(name, map);
         return map;
     }
 
     @Override
-    public boolean hasMap(String name) {
-        return maps.containsKey(name);
-    }
-
-    @Override
-    public synchronized String nextTemporaryMapName() {
-        return "temp." + lastMapId++;
-    }
-
-    @Override
     public void backupTo(String fileName) {
-        // TODO Auto-generated method stub
-    }
-
-    public void flush() {
-        conn.async_flush();
-    }
-
-    public void sync() {
-        flush();
-    }
-
-    @Override
-    public void close() {
-        conn.close(null);
-    }
-
-    @Override
-    public void closeImmediately() {
-        close();
+        throw DbException.getUnsupportedException("backupTo");
     }
 
     @Override
     public void save() {
-        // TODO Auto-generated method stub
-
+        conn.async_flush();
     }
 
     @Override
-    public boolean isClosed() {
-        // TODO Auto-generated method stub
-        return false;
+    public void close() {
+        closeImmediately();
     }
 
     @Override
-    public Set<String> getMapNames() {
-        // TODO Auto-generated method stub
-        return null;
+    public void closeImmediately() {
+        conn.close(null);
+        super.closeImmediately();
     }
-
-    @Override
-    public StorageMap<?, ?> getMap(String name) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public long getDiskSpaceUsed() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public long getMemorySpaceUsed() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
 }
