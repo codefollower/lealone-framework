@@ -32,7 +32,27 @@
     <dependencies>
         <dependency>
             <groupId>org.lealone</groupId>
+            <artifactId>lealone-mina</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lealone</groupId>
+            <artifactId>lealone-mvstore</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lealone</groupId>
+            <artifactId>lealone-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lealone</groupId>
             <artifactId>lealone-postgresql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lealone</groupId>
+            <artifactId>lealone-wiredtiger</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
