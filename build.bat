@@ -30,7 +30,7 @@ if /i "%ARG%" == "-vu" goto vu
 goto usage
 
 :usage
-echo usage: lealone [options]
+echo usage: build [options]
 echo    options:
 echo    -e            mvn eclipse:eclipse
 echo    -es           mvn eclipse:eclipse -DdownloadSources=true
@@ -65,6 +65,7 @@ set VERSION=%2
 if /i "%VERSION%" == "" goto usage
 call mvn versions:set -DnewVersion=%VERSION%
 call mvn versions:commit
+echo lealoneVersion=%VERSION%>..\lealone\lealone-common\src\main\resources\org\lealone\res\version.properties
 goto end
 
 :end

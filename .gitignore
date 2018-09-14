@@ -1,7 +1,6 @@
 *.class
-
+*.jar
 .settings
 .classpath
 .project
 target
-lealone-test-data

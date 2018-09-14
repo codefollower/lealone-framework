@@ -19,22 +19,28 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>lealone project</name>
+    <name>lealone plugins project</name>
     <groupId>org.lealone</groupId>
     <artifactId>lealone</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
 
     <modules>
-        <module>protocol/cassandra</module>
-		<module>protocol/mysql</module>
-		<module>protocol/postgresql</module>
-
-		<module>sql/mysql</module>
-		<module>sql/postgresql</module>
-
-		<module>storage/mvstore</module>
-		<module>storage/wiredtiger</module>
+        <module>../lealone/lealone-common</module>
+        <module>../lealone/lealone-net</module>
+        <module>../lealone/lealone-netty</module>
+        <module>../lealone/lealone-client</module>
+        <module>../lealone/lealone-server</module>
+        <module>../lealone/lealone-sql</module>
+        <module>../lealone/lealone-db</module>
+        <module>../lealone/lealone-mvcc</module>
+        <module>../lealone/lealone-aose</module>
+        <module>../lealone/lealone-p2p</module>
+        <module>../lealone/lealone-main</module>
+        <module>../lealone/lealone-test</module>
+        <module>lealone-postgresql</module>
+        <module>lealone-plugins-dist</module>
+        <module>lealone-plugins-test</module>
     </modules>
 
     <build>
@@ -59,8 +65,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.3.2</version>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <source>1.8</source>
+                        <target>1.8</target>
                         <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>
@@ -97,13 +103,27 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.2-beta-5</version>
+                    <configuration>
+                        <finalName>lealone-plugins-${project.version}</finalName>
+                        <descriptors>
+                            <descriptor>lealone-plugins-dist/assembly.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
                     <version>2.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
-
+    <dependencyManagement>
+        <dependencies>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
