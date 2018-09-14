@@ -38,6 +38,10 @@
         <module>../lealone/lealone-p2p</module>
         <module>../lealone/lealone-main</module>
         <module>../lealone/lealone-test</module>
+        <module>lealone-mina</module>
+        <module>lealone-mvstore</module>
+        <module>lealone-wiredtiger</module>
+        <module>lealone-mysql</module>
         <module>lealone-postgresql</module>
         <module>lealone-plugins-dist</module>
         <module>lealone-plugins-test</module>
