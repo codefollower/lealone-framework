@@ -19,36 +19,89 @@ package org.lealone.plugins.mina;
 
 import java.net.InetSocketAddress;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import org.lealone.common.exceptions.DbException;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetEndpoint;
 
 public class MinaNetClient implements org.lealone.net.NetClient {
 
+    private static final ConcurrentHashMap<InetSocketAddress, AsyncConnection> asyncConnections = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<IoSession, AsyncConnection> sessionToConnectionMap = new ConcurrentHashMap<>();
     private static final MinaNetClient instance = new MinaNetClient();
 
     public static MinaNetClient getInstance() {
         return instance;
     }
 
+    private final NioSocketConnector connector;
+
+    private MinaNetClient() {
+        connector = new NioSocketConnector();
+        connector.setHandler(new MinaNetClientHandler(this));
+    }
+
     @Override
     public AsyncConnection createConnection(Properties prop, NetEndpoint endpoint) {
-        // TODO Auto-generated method stub
-        return null;
+        return createConnection(prop, endpoint, null);
     }
 
     @Override
     public AsyncConnection createConnection(Properties prop, NetEndpoint endpoint,
             AsyncConnectionManager connectionManager) {
-        // TODO Auto-generated method stub
-        return null;
+        InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
+        AsyncConnection conn = asyncConnections.get(inetSocketAddress);
+        if (conn == null) {
+            synchronized (MinaNetClient.class) {
+                conn = asyncConnections.get(inetSocketAddress);
+                if (conn == null) {
+                    ConnectFuture future = connector.connect(inetSocketAddress);
+                    future.awaitUninterruptibly();
+                    if (!future.isConnected()) {
+                        throw new RuntimeException("Failed to connect " + inetSocketAddress, future.getException());
+                    }
+                    IoSession session = future.getSession();
+                    MinaWritableChannel writableChannel = new MinaWritableChannel(session);
+                    try {
+                        if (connectionManager != null) {
+                            conn = connectionManager.createConnection(writableChannel, false);
+                        } else {
+                            conn = new AsyncConnection(writableChannel, false, this);
+                        }
+                        InetSocketAddress remoteAddress = (InetSocketAddress) session.getRemoteAddress();
+                        conn.setHostAndPort(remoteAddress.getHostString() + ":" + remoteAddress.getPort());
+                        conn.setInetSocketAddress(inetSocketAddress);
+                        asyncConnections.put(inetSocketAddress, conn);
+                        sessionToConnectionMap.put(session, conn);
+                    } catch (Exception e) {
+                        throw DbException.convert(e);
+                    }
+                }
+            }
+        }
+        return conn;
     }
 
     @Override
     public void removeConnection(InetSocketAddress inetSocketAddress, boolean closeClient) {
-        // TODO Auto-generated method stub
-
+        asyncConnections.remove(inetSocketAddress);
+        if (closeClient && asyncConnections.isEmpty()) {
+            connector.dispose();
+        }
     }
 
+    AsyncConnection getConnection(IoSession session) {
+        return sessionToConnectionMap.get(session);
+    }
+
+    void removeConnection(IoSession session) {
+        AsyncConnection conn = sessionToConnectionMap.remove(session);
+        if (conn != null)
+            removeConnection(conn.getInetSocketAddress(), false);
+    }
 }
