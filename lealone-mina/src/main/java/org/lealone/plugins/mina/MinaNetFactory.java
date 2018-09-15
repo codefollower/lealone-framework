@@ -21,10 +21,10 @@ import org.lealone.db.Constants;
 import org.lealone.net.NetFactoryBase;
 import org.lealone.net.NetServer;
 
-public class MinalNetFactory extends NetFactoryBase {
+public class MinaNetFactory extends NetFactoryBase {
 
-    public MinalNetFactory() {
-        super(Constants.DEFAULT_NET_FACTORY_NAME, MinalNetClient.getInstance());
+    public MinaNetFactory() {
+        super(Constants.DEFAULT_NET_FACTORY_NAME, MinaNetClient.getInstance());
     }
 
     @Override

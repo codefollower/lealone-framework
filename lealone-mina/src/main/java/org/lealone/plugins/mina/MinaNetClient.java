@@ -24,11 +24,11 @@ import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetEndpoint;
 
-public class MinalNetClient implements org.lealone.net.NetClient {
+public class MinaNetClient implements org.lealone.net.NetClient {
 
-    private static final MinalNetClient instance = new MinalNetClient();
+    private static final MinaNetClient instance = new MinaNetClient();
 
-    public static MinalNetClient getInstance() {
+    public static MinaNetClient getInstance() {
         return instance;
     }
 
