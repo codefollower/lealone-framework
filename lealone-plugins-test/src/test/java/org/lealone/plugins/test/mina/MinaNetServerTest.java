@@ -23,12 +23,14 @@ import org.lealone.p2p.config.Config;
 import org.lealone.p2p.config.Config.PluggableEngineDef;
 import org.lealone.plugins.mina.MinaNetFactory;
 import org.lealone.plugins.postgresql.PgServerEngine;
+import org.lealone.plugins.test.DeletePluginsTestData;
 import org.lealone.server.TcpServerEngine;
 import org.lealone.test.start.TcpServerStart;
 
 public class MinaNetServerTest extends TcpServerStart {
 
     public static void main(String[] args) {
+        DeletePluginsTestData.main(args);
         TcpServerStart.run(MinaNetServerTest.class, args);
     }
 

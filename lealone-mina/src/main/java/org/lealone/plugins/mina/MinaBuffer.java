@@ -35,14 +35,22 @@ public class MinaBuffer implements NetBuffer {
     @Override
     public MinaBuffer appendBuffer(NetBuffer buff) {
         if (buff instanceof MinaBuffer) {
-            this.buffer.put(((MinaBuffer) buff).getBuffer());
+            int pos = buffer.position();
+            buffer.position(buffer.limit());
+            buffer.put(((MinaBuffer) buff).getBuffer());
+            buffer.flip();
+            buffer.position(pos);
         }
         return this;
     }
 
     @Override
     public int length() {
-        return buffer.remaining();
+        int pos = buffer.position();
+        if (pos > 0)
+            return pos;
+        else
+            return buffer.limit();
     }
 
     @Override
@@ -53,8 +61,15 @@ public class MinaBuffer implements NetBuffer {
     @Override
     public MinaBuffer getBuffer(int start, int end) {
         byte[] bytes = new byte[end - start];
+        // 不能直接这样用，get的javadoc是错的，start应该是bytes的位置
+        // buffer.get(bytes, start, end - start);
+        int pos = buffer.position();
+        buffer.position(start);
         buffer.get(bytes, 0, end - start);
-        return new MinaBuffer(IoBuffer.wrap(bytes));
+        buffer.position(pos);
+        IoBuffer newBuffer = IoBuffer.wrap(bytes);
+        newBuffer.setAutoExpand(true);
+        return new MinaBuffer(newBuffer);
     }
 
     @Override
