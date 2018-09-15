@@ -19,6 +19,8 @@ package org.lealone.plugins.mvstore;
 
 import java.util.Map;
 
+import org.h2.mvstore.MVMap;
+import org.h2.mvstore.MVStore;
 import org.lealone.common.exceptions.DbException;
 import org.lealone.storage.StorageBase;
 import org.lealone.storage.StorageMap;
@@ -26,14 +28,24 @@ import org.lealone.storage.type.StorageDataType;
 
 public class MVStorage extends StorageBase {
 
-    public MVStorage(Map<String, Object> config) {
+    private final MVStore mvStore;
+    // Map<String, Object> config;
+
+    public MVStorage(MVStore mvStore, Map<String, Object> config) {
+        this.mvStore = mvStore;
+        // this.config = config;
     }
 
     @Override
     public <K, V> StorageMap<K, V> openMap(String name, String mapType, StorageDataType keyType,
             StorageDataType valueType, Map<String, String> parameters) {
-        // TODO Auto-generated method stub
-        return null;
+        MVMap.Builder<K, V> builder = new MVMap.Builder<>();
+        builder.keyType(new MVDataType(keyType));
+        builder.valueType(new MVDataType(valueType));
+        MVMap<K, V> mvMap = mvStore.openMap(name, builder);
+        MVStorageMap<K, V> map = new MVStorageMap<>(this, mvMap, name, keyType, valueType);
+        maps.put(name, map);
+        return map;
     }
 
     @Override
@@ -43,19 +55,16 @@ public class MVStorage extends StorageBase {
 
     @Override
     public void save() {
-        // TODO Auto-generated method stub
-
+        mvStore.commit();
     }
 
     @Override
     public void close() {
-        // TODO Auto-generated method stub
-
+        mvStore.close();
     }
 
     @Override
     public void closeImmediately() {
-        // TODO Auto-generated method stub
-
+        mvStore.closeImmediately();
     }
 }

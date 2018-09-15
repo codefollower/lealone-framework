@@ -17,9 +17,82 @@
  */
 package org.lealone.plugins.mvstore;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
+import org.h2.mvstore.MVStore;
 import org.lealone.storage.StorageBuilder;
 
 public class MVStorageBuilder extends StorageBuilder {
+
+    private final MVStore.Builder builder = new MVStore.Builder();
+
+    @Override
+    public StorageBuilder storageName(String storageName) {
+        builder.fileName(storageName);
+        return super.storageName(storageName);
+    }
+
+    @Override
+    public StorageBuilder encryptionKey(char[] password) {
+        builder.encryptionKey(password);
+        return super.encryptionKey(password);
+    }
+
+    @Override
+    public StorageBuilder readOnly() {
+        builder.readOnly();
+        return super.readOnly();
+    }
+
+    @Override
+    public StorageBuilder inMemory() {
+        return super.inMemory();
+    }
+
+    @Override
+    public StorageBuilder cacheSize(int mb) {
+        builder.cacheSize(mb);
+        return super.cacheSize(mb);
+    }
+
+    @Override
+    public StorageBuilder compress() {
+        builder.compress();
+        return super.compress();
+    }
+
+    @Override
+    public StorageBuilder compressHigh() {
+        builder.compressHigh();
+        return super.compressHigh();
+    }
+
+    @Override
+    public StorageBuilder pageSplitSize(int pageSplitSize) {
+        builder.pageSplitSize(pageSplitSize);
+        return super.pageSplitSize(pageSplitSize);
+    }
+
+    @Override
+    public StorageBuilder backgroundExceptionHandler(UncaughtExceptionHandler exceptionHandler) {
+        builder.backgroundExceptionHandler(exceptionHandler);
+        return super.backgroundExceptionHandler(exceptionHandler);
+    }
+
+    @Override
+    public StorageBuilder reuseSpace() {
+        return super.reuseSpace();
+    }
+
+    @Override
+    public StorageBuilder minFillRate(int minFillRate) {
+        return super.minFillRate(minFillRate);
+    }
+
+    @Override
+    public StorageBuilder db(Object db) {
+        return super.db(db);
+    }
 
     /**
      * Open the storage.
@@ -28,7 +101,6 @@ public class MVStorageBuilder extends StorageBuilder {
      */
     @Override
     public MVStorage openStorage() {
-        return new MVStorage(config);
+        return new MVStorage(builder.open(), config);
     }
-
 }
