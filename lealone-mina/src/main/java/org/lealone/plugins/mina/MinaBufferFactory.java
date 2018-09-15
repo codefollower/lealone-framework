@@ -17,6 +17,7 @@
  */
 package org.lealone.plugins.mina;
 
+import org.apache.mina.core.buffer.IoBuffer;
 import org.lealone.net.NetBuffer;
 import org.lealone.net.NetBufferFactory;
 
@@ -33,7 +34,9 @@ public class MinaBufferFactory implements NetBufferFactory {
 
     @Override
     public NetBuffer createBuffer(int initialSizeHint) {
-        return null;
+        IoBuffer buffer = IoBuffer.allocate(initialSizeHint);
+        buffer.setAutoExpand(true);
+        return new MinaBuffer(buffer);
     }
 
 }

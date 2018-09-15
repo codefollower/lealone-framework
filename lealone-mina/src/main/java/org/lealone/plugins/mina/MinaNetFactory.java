@@ -17,14 +17,15 @@
  */
 package org.lealone.plugins.mina;
 
-import org.lealone.db.Constants;
 import org.lealone.net.NetFactoryBase;
 import org.lealone.net.NetServer;
 
 public class MinaNetFactory extends NetFactoryBase {
 
+    public static final String NAME = "mina";
+
     public MinaNetFactory() {
-        super(Constants.DEFAULT_NET_FACTORY_NAME, MinaNetClient.getInstance());
+        super(NAME, MinaNetClient.getInstance());
     }
 
     @Override

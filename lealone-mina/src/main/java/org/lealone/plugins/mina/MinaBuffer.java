@@ -17,62 +17,72 @@
  */
 package org.lealone.plugins.mina;
 
+import org.apache.mina.core.buffer.IoBuffer;
 import org.lealone.net.NetBuffer;
 
 public class MinaBuffer implements NetBuffer {
 
+    private final IoBuffer buffer;
+
+    public MinaBuffer(IoBuffer buff) {
+        this.buffer = buff;
+    }
+
+    public IoBuffer getBuffer() {
+        return buffer;
+    }
+
     @Override
-    public NetBuffer appendBuffer(NetBuffer buff) {
-        // TODO Auto-generated method stub
-        return null;
+    public MinaBuffer appendBuffer(NetBuffer buff) {
+        if (buff instanceof MinaBuffer) {
+            this.buffer.put(((MinaBuffer) buff).getBuffer());
+        }
+        return this;
     }
 
     @Override
     public int length() {
-        // TODO Auto-generated method stub
-        return 0;
+        return buffer.remaining();
     }
 
     @Override
-    public NetBuffer slice(int start, int end) {
-        // TODO Auto-generated method stub
-        return null;
+    public MinaBuffer slice(int start, int end) {
+        return new MinaBuffer(buffer.getSlice(start, end - start));
     }
 
     @Override
-    public NetBuffer getBuffer(int start, int end) {
-        // TODO Auto-generated method stub
-        return null;
+    public MinaBuffer getBuffer(int start, int end) {
+        byte[] bytes = new byte[end - start];
+        buffer.get(bytes, 0, end - start);
+        return new MinaBuffer(IoBuffer.wrap(bytes));
     }
 
     @Override
     public short getUnsignedByte(int pos) {
-        // TODO Auto-generated method stub
-        return 0;
+        return buffer.getUnsigned(pos);
     }
 
     @Override
-    public NetBuffer appendByte(byte b) {
-        // TODO Auto-generated method stub
-        return null;
+    public MinaBuffer appendByte(byte b) {
+        buffer.put(b);
+        return this;
     }
 
     @Override
-    public NetBuffer appendBytes(byte[] bytes, int offset, int len) {
-        // TODO Auto-generated method stub
-        return null;
+    public MinaBuffer appendBytes(byte[] bytes, int offset, int len) {
+        buffer.put(bytes, offset, len);
+        return this;
     }
 
     @Override
-    public NetBuffer appendInt(int i) {
-        // TODO Auto-generated method stub
-        return null;
+    public MinaBuffer appendInt(int i) {
+        buffer.putInt(i);
+        return this;
     }
 
     @Override
-    public NetBuffer setByte(int pos, byte b) {
-        // TODO Auto-generated method stub
-        return null;
+    public MinaBuffer setByte(int pos, byte b) {
+        buffer.put(pos, b);
+        return this;
     }
-
 }

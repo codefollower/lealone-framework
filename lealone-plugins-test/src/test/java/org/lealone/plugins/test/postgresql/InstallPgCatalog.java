@@ -17,9 +17,7 @@
  */
 package org.lealone.plugins.test.postgresql;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -52,7 +50,7 @@ public class InstallPgCatalog {
     private static void installPgCatalog(Statement stat) throws SQLException {
         Reader r = null;
         try {
-            r = new InputStreamReader(new ByteArrayInputStream(Utils.getResource(PgServer.PG_CATALOG_FILE)));
+            r = Utils.getResourceAsReader(PgServer.PG_CATALOG_FILE);
             ScriptReader reader = new ScriptReader(r);
             while (true) {
                 String sql = reader.readStatement();

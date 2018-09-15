@@ -17,6 +17,9 @@
  */
 package org.lealone.plugins.mina;
 
+import java.net.InetSocketAddress;
+
+import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.lealone.common.exceptions.DbException;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
@@ -27,13 +30,18 @@ public class MinaNetServer extends NetServerBase {
 
     private static final Logger logger = LoggerFactory.getLogger(MinaNetServer.class);
 
+    private NioSocketAcceptor acceptor;
+
     @Override
     public synchronized void start() {
         if (isStarted())
             return;
         logger.info("Starting mina net server");
         try {
-
+            acceptor = new NioSocketAcceptor();
+            // DefaultIoFilterChainBuilder chain = acceptor.getFilterChain();
+            acceptor.setHandler(new MinaNetServerHandler(this));
+            acceptor.bind(new InetSocketAddress(getHost(), getPort()));
             super.start();
         } catch (Exception e) {
             logger.error("Failed to start mina net server", e);
@@ -47,5 +55,9 @@ public class MinaNetServer extends NetServerBase {
             return;
         logger.info("Stopping mina net server");
         super.stop();
+        if (acceptor != null) {
+            acceptor.dispose();
+            acceptor = null;
+        }
     }
 }

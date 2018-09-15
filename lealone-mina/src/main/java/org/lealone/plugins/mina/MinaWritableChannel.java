@@ -17,39 +17,58 @@
  */
 package org.lealone.plugins.mina;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
+import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.session.IoSession;
 import org.lealone.net.NetBufferFactory;
 import org.lealone.net.WritableChannel;
 
 public class MinaWritableChannel implements WritableChannel {
 
+    private final IoSession session;
+    private final InetSocketAddress address;
+
+    public MinaWritableChannel(IoSession session) {
+        this.session = session;
+        SocketAddress sa = session.getRemoteAddress();
+        if (sa instanceof InetSocketAddress) {
+            address = (InetSocketAddress) sa;
+        } else {
+            address = null;
+        }
+    }
+
     @Override
     public void write(Object data) {
-        // TODO Auto-generated method stub
-
+        if (data instanceof MinaBuffer) {
+            IoBuffer buffer = ((MinaBuffer) data).getBuffer();
+            buffer.flip();
+            session.write(buffer);
+        } else {
+            session.write(data);
+        }
     }
 
     @Override
     public void close() {
-        // TODO Auto-generated method stub
-
+        session.closeNow();
     }
 
     @Override
     public String getHost() {
-        // TODO Auto-generated method stub
-        return null;
+        return address == null ? "" : address.getHostString();
     }
 
     @Override
     public int getPort() {
-        // TODO Auto-generated method stub
-        return 0;
+        return address == null ? -1 : address.getPort();
     }
 
     @Override
     public NetBufferFactory getBufferFactory() {
-        // TODO Auto-generated method stub
-        return null;
+        return MinaBufferFactory.getInstance();
     }
 
 }

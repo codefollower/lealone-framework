@@ -12,7 +12,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
@@ -644,7 +643,7 @@ public class PgConnection extends AsyncConnection {
     private static void installPgCatalog(Statement stat) throws SQLException {
         Reader r = null;
         try {
-            r = new InputStreamReader(new ByteArrayInputStream(Utils.getResource(PgServer.PG_CATALOG_FILE)));
+            r = Utils.getResourceAsReader(PgServer.PG_CATALOG_FILE);
             ScriptReader reader = new ScriptReader(r);
             while (true) {
                 String sql = reader.readStatement();
