@@ -44,7 +44,7 @@ public class PgServer extends DelegatedProtocolServer implements AsyncConnection
 
     private static final Logger logger = LoggerFactory.getLogger(PgServer.class);
 
-    public static String PG_CATALOG_FILE = "/org/lealone/plugins/postgresql/res/pg_catalog.sql";
+    public static String PG_CATALOG_FILE = "/org/lealone/plugins/postgresql/resources/pg_catalog.sql";
 
     /**
      * The default port to use for the PG server.
