@@ -206,9 +206,4 @@ public class MySQLConnection extends AsyncConnection {
         default:
         }
     }
-
-    @Override
-    protected void close() {
-        super.close();
-    }
 }

@@ -43,16 +43,6 @@ sql_engines:
     }
 
 protocol_server_engines:
-  - name: PG
-    enabled: true
-    parameters: {
-        port: 7213,
-        trace: false,
-        allow_others: true,
-        daemon: false,
-        net_factory_name: netty,
-        ssl: false
-    }
   - name: TCP
     enabled: false
     parameters: {

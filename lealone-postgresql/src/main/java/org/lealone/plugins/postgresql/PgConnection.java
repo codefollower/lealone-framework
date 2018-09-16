@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
@@ -44,6 +43,8 @@ import org.lealone.db.Constants;
 import org.lealone.db.SysProperties;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.NetBuffer;
+import org.lealone.net.NetBufferInputStream;
+import org.lealone.net.NetBufferOutputStream;
 import org.lealone.net.WritableChannel;
 import org.lealone.sql.SQLStatement;
 
@@ -56,6 +57,8 @@ import org.lealone.sql.SQLStatement;
 public class PgConnection extends AsyncConnection {
 
     private static final Logger logger = LoggerFactory.getLogger(PgConnection.class);
+
+    private static final int BUFFER_SIZE = 4 * 1024;
 
     private final PgServer server;
     private Connection conn;
@@ -664,11 +667,12 @@ public class PgConnection extends AsyncConnection {
      * Close this connection.
      */
     @Override
-    protected void close() {
+    public void close() {
         try {
             stop = true;
             JdbcUtils.closeSilently(conn);
             server.trace("Close");
+            super.close();
         } catch (Exception e) {
             server.traceError(e);
         }
@@ -826,60 +830,6 @@ public class PgConnection extends AsyncConnection {
         Prepared prep;
     }
 
-    private static class BufferInputStream extends InputStream {
-        final NetBuffer buffer;
-        final int size;
-        int pos;
-
-        BufferInputStream(NetBuffer buffer) {
-            this.buffer = buffer;
-            size = buffer.length();
-        }
-
-        @Override
-        public int available() throws IOException {
-            return size - pos;
-        }
-
-        @Override
-        public int read() throws IOException {
-            return buffer.getUnsignedByte(pos++);
-        }
-    }
-
-    private static class BufferOutputStream extends OutputStream {
-        final WritableChannel writableChannel;
-        final int initialSizeHint;
-        NetBuffer buffer;
-
-        BufferOutputStream(WritableChannel writableChannel, int initialSizeHint) {
-            this.writableChannel = writableChannel;
-            this.initialSizeHint = initialSizeHint;
-            reset();
-        }
-
-        @Override
-        public void write(int b) {
-            buffer.appendByte((byte) b);
-        }
-
-        @Override
-        public void write(byte b[], int off, int len) {
-            buffer.appendBytes(b, off, len);
-        }
-
-        void reset() {
-            buffer = writableChannel.getBufferFactory().createBuffer(initialSizeHint);
-        }
-
-        @Override
-        public void flush() throws IOException {
-            super.flush();
-            writableChannel.write(buffer);
-            reset();
-        }
-    }
-
     private NetBuffer lastBuffer;
 
     @Override
@@ -895,8 +845,8 @@ public class PgConnection extends AsyncConnection {
             return;
         }
 
-        out = new BufferOutputStream(writableChannel, 1024);
-        dataInRaw = new DataInputStream(new BufferInputStream(buffer));
+        out = new NetBufferOutputStream(writableChannel, BUFFER_SIZE);
+        dataInRaw = new DataInputStream(new NetBufferInputStream(buffer));
         try {
             int pos = 0;
             int x;

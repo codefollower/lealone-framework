@@ -28,6 +28,7 @@ import org.lealone.common.exceptions.DbException;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetEndpoint;
+import org.lealone.net.TcpConnection;
 
 public class MinaNetClient implements org.lealone.net.NetClient {
 
@@ -71,7 +72,7 @@ public class MinaNetClient implements org.lealone.net.NetClient {
                         if (connectionManager != null) {
                             conn = connectionManager.createConnection(writableChannel, false);
                         } else {
-                            conn = new AsyncConnection(writableChannel, false, this);
+                            conn = new TcpConnection(writableChannel, this);
                         }
                         InetSocketAddress remoteAddress = (InetSocketAddress) session.getRemoteAddress();
                         conn.setHostAndPort(remoteAddress.getHostString() + ":" + remoteAddress.getPort());
