@@ -18,7 +18,7 @@
 package org.lealone.plugins.mina;
 
 import java.net.InetSocketAddress;
-import java.util.Properties;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.mina.core.future.ConnectFuture;
@@ -48,12 +48,12 @@ public class MinaNetClient implements org.lealone.net.NetClient {
     }
 
     @Override
-    public AsyncConnection createConnection(Properties prop, NetEndpoint endpoint) {
-        return createConnection(prop, endpoint, null);
+    public AsyncConnection createConnection(Map<String, String> config, NetEndpoint endpoint) {
+        return createConnection(config, endpoint, null);
     }
 
     @Override
-    public AsyncConnection createConnection(Properties prop, NetEndpoint endpoint,
+    public AsyncConnection createConnection(Map<String, String> config, NetEndpoint endpoint,
             AsyncConnectionManager connectionManager) {
         InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
         AsyncConnection conn = asyncConnections.get(inetSocketAddress);
@@ -74,8 +74,6 @@ public class MinaNetClient implements org.lealone.net.NetClient {
                         } else {
                             conn = new TcpConnection(writableChannel, this);
                         }
-                        InetSocketAddress remoteAddress = (InetSocketAddress) session.getRemoteAddress();
-                        conn.setHostAndPort(remoteAddress.getHostString() + ":" + remoteAddress.getPort());
                         conn.setInetSocketAddress(inetSocketAddress);
                         asyncConnections.put(inetSocketAddress, conn);
                         sessionToConnectionMap.put(session, conn);
