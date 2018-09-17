@@ -17,20 +17,79 @@
  */
 package org.lealone.plugins.rocksdb;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import org.lealone.common.exceptions.DbException;
+import org.lealone.db.DataBuffer;
 import org.lealone.db.value.ValueLong;
 import org.lealone.storage.Storage;
 import org.lealone.storage.StorageMapBase;
 import org.lealone.storage.StorageMapCursor;
+import org.lealone.storage.fs.FileUtils;
 import org.lealone.storage.type.StorageDataType;
+import org.rocksdb.BlockBasedTableConfig;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
+import org.rocksdb.RocksDBException;
+import org.rocksdb.RocksIterator;
 
 public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
 
-    private final Storage storage;
+    private final RocksdbStorage storage;
+    private final RocksDB db;
+    private final String dbPath;
+    private boolean closed;
 
-    public RocksdbStorageMap(Storage storage, String name, StorageDataType keyType, StorageDataType valueType) {
+    public RocksdbStorageMap(RocksdbStorage storage, String storageDir, String name, StorageDataType keyType,
+            StorageDataType valueType) {
         super(name, keyType, valueType);
         this.storage = storage;
+
+        Options options = new Options();
+        BlockBasedTableConfig config = new BlockBasedTableConfig();
+        options.setTableFormatConfig(config);
+        dbPath = storageDir + File.separator + name;
+        try {
+            db = RocksDB.open(options, dbPath);
+        } catch (RocksDBException e) {
+            throw ioe(e, "Failed to open " + dbPath);
+        }
         setLastKey(lastKey());
+    }
+
+    private static DbException ioe(Throwable e, String msg) {
+        throw DbException.convertIOException(new IOException(e), msg);
+    }
+
+    private static byte[] toBytes(Object obj, StorageDataType type) {
+        try (DataBuffer buff = DataBuffer.create()) {
+            type.write(buff, obj);
+            ByteBuffer b = buff.getAndFlipBuffer();
+            byte[] bytes = b.array();
+            byte[] dest = new byte[bytes.length];
+            System.arraycopy(bytes, 0, dest, 0, bytes.length);
+            return dest;
+        }
+    }
+
+    private byte[] k(Object key) {
+        return toBytes(key, keyType);
+    }
+
+    private byte[] v(Object value) {
+        return toBytes(value, valueType);
+    }
+
+    @SuppressWarnings("unchecked")
+    K k(byte[] key) {
+        return (K) keyType.read(ByteBuffer.wrap(key));
+    }
+
+    @SuppressWarnings("unchecked")
+    V v(byte[] value) {
+        return (V) valueType.read(ByteBuffer.wrap(value));
     }
 
     @Override
@@ -39,148 +98,230 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
     }
 
     @Override
-    public K append(V value) {
-        @SuppressWarnings("unchecked")
-        K key = (K) ValueLong.get(lastKey.incrementAndGet());
-        put(key, value);
-        return key;
-    }
-
-    @Override
     public V get(K key) {
-        // TODO Auto-generated method stub
-        return null;
+        byte[] value;
+        try {
+            value = db.get(k(key));
+        } catch (RocksDBException e) {
+            throw ioe(e, "Failed to get " + key);
+        }
+        return v(value);
     }
 
     @Override
     public V put(K key, V value) {
-        // TODO Auto-generated method stub
-        return null;
+        V old = get(key);
+        try {
+            db.put(k(key), v(value));
+        } catch (RocksDBException e) {
+            throw ioe(e, "Failed to put " + key);
+        }
+        return old;
     }
 
     @Override
     public V putIfAbsent(K key, V value) {
-        // TODO Auto-generated method stub
+        if (get(key) != null)
+            return put(key, value);
         return null;
     }
 
     @Override
     public V remove(K key) {
-        // TODO Auto-generated method stub
-        return null;
+        V old = get(key);
+        try {
+            db.delete(k(key));
+        } catch (RocksDBException e) {
+            throw ioe(e, "Failed to remove " + key);
+        }
+        return old;
     }
 
     @Override
     public boolean replace(K key, V oldValue, V newValue) {
-        // TODO Auto-generated method stub
+        V old = get(key);
+        if (areValuesEqual(old, oldValue)) {
+            put(key, newValue);
+            return true;
+        }
         return false;
     }
 
     @Override
     public K firstKey() {
-        // TODO Auto-generated method stub
+        try (RocksIterator iterator = db.newIterator()) {
+            iterator.seekToFirst();
+            if (iterator.isValid()) {
+                // iterator.next();
+                return k(iterator.key());
+            }
+        }
         return null;
     }
 
     @Override
     public K lastKey() {
-        // TODO Auto-generated method stub
+        try (RocksIterator iterator = db.newIterator()) {
+            iterator.seekToLast();
+            if (iterator.isValid()) {
+                // iterator.prev();
+                return k(iterator.key());
+            }
+        }
         return null;
     }
 
     @Override
-    public K lowerKey(K key) {
-        // TODO Auto-generated method stub
-        return null;
+    public K lowerKey(K key) { // 小于给定key的最大key
+        return getMinMax(key, true, true);
     }
 
     @Override
-    public K floorKey(K key) {
-        // TODO Auto-generated method stub
-        return null;
+    public K floorKey(K key) { // 小于或等于给定key的最大key
+        return getMinMax(key, true, false);
     }
 
     @Override
-    public K higherKey(K key) {
-        // TODO Auto-generated method stub
-        return null;
+    public K higherKey(K key) { // 大于给定key的最小key
+        return getMinMax(key, false, true);
     }
 
     @Override
-    public K ceilingKey(K key) {
-        // TODO Auto-generated method stub
+    public K ceilingKey(K key) { // 大于或等于给定key的最小key
+        return getMinMax(key, false, false);
+    }
+
+    private K getMinMax(K key, boolean min, boolean excluding) {
+        try (RocksIterator iterator = db.newIterator()) {
+            for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
+                K k = k(iterator.key());
+                if (areEqual(k, key, keyType)) {
+                    if (min) {
+                        if (excluding) {
+                            iterator.prev();
+                            if (iterator.isValid())
+                                return k(iterator.key());
+                            else
+                                return null;
+                        } else {
+                            return k;
+                        }
+                    } else {
+                        if (excluding) {
+                            iterator.next();
+                            if (iterator.isValid())
+                                return k(iterator.key());
+                            else
+                                return null;
+                        } else {
+                            return k;
+                        }
+                    }
+                }
+            }
+        }
         return null;
     }
 
     @Override
     public boolean areValuesEqual(Object a, Object b) {
-        // TODO Auto-generated method stub
-        return false;
+        return areEqual(a, b, valueType);
+    }
+
+    private static boolean areEqual(Object a, Object b, StorageDataType dataType) {
+        if (a == b) {
+            return true;
+        } else if (a == null || b == null) {
+            return false;
+        }
+        return dataType.compare(a, b) == 0;
     }
 
     @Override
     public int size() {
-        // TODO Auto-generated method stub
-        return 0;
+        return (int) sizeAsLong();
     }
 
     @Override
     public long sizeAsLong() {
-        // TODO Auto-generated method stub
-        return 0;
+        long size = 0;
+        try (final RocksIterator iterator = db.newIterator()) {
+            for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
+                size++;
+            }
+        }
+        return size;
     }
 
     @Override
     public boolean containsKey(K key) {
-        // TODO Auto-generated method stub
-        return false;
+        return get(key) != null;
     }
 
     @Override
     public boolean isEmpty() {
-        // TODO Auto-generated method stub
+        try (RocksIterator iterator = db.newIterator()) {
+            iterator.seekToFirst();
+            if (iterator.isValid()) {
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean isInMemory() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public StorageMapCursor<K, V> cursor(K from) {
-        // TODO Auto-generated method stub
-        return null;
+        RocksIterator iterator = db.newIterator();
+        if (from == null) {
+            iterator.seekToFirst();
+            return new RocksdbStorageMapCursor<>(this, iterator);
+        }
+        for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
+            K key = k(iterator.key());
+            if (areEqual(from, key, keyType)) {
+                break;
+            }
+        }
+        return new RocksdbStorageMapCursor<>(this, iterator);
     }
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-
+        remove();
     }
 
     @Override
     public void remove() {
-        // TODO Auto-generated method stub
-
+        close();
+        storage.closeMap(getName());
+        FileUtils.deleteRecursive(dbPath, true);
     }
 
     @Override
     public boolean isClosed() {
-        // TODO Auto-generated method stub
-        return false;
+        return closed;
     }
 
     @Override
     public void close() {
-        // TODO Auto-generated method stub
-
+        db.close();
+        closed = true;
     }
 
     @Override
     public void save() {
-        // TODO Auto-generated method stub
+    }
 
+    @Override
+    public K append(V value) {
+        @SuppressWarnings("unchecked")
+        K key = (K) ValueLong.get(lastKey.incrementAndGet());
+        put(key, value);
+        return key;
     }
 }

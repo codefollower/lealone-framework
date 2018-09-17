@@ -20,34 +20,36 @@ package org.lealone.plugins.rocksdb;
 import java.util.Iterator;
 
 import org.lealone.storage.StorageMapCursor;
+import org.rocksdb.RocksIterator;
 
 public class RocksdbStorageMapCursor<K, V> implements Iterator<K>, StorageMapCursor<K, V> {
 
-    public RocksdbStorageMapCursor() {
+    private final RocksdbStorageMap<K, V> map;
+    private final RocksIterator iterator;
+
+    public RocksdbStorageMapCursor(RocksdbStorageMap<K, V> map, RocksIterator iterator) {
+        this.map = map;
+        this.iterator = iterator;
     }
 
     @Override
     public K getKey() {
-        // TODO Auto-generated method stub
-        return null;
+        return map.k(iterator.key());
     }
 
     @Override
     public V getValue() {
-        // TODO Auto-generated method stub
-        return null;
+        return map.v(iterator.value());
     }
 
     @Override
     public boolean hasNext() {
-        // TODO Auto-generated method stub
-        return false;
+        return iterator.isValid();
     }
 
     @Override
     public K next() {
-        // TODO Auto-generated method stub
-        return null;
+        iterator.next();
+        return getKey();
     }
-
 }

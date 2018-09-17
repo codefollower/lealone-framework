@@ -17,30 +17,13 @@
  */
 package org.lealone.plugins.test.mvstore;
 
-import org.junit.Test;
 import org.lealone.plugins.mvstore.MVStorageEngine;
+import org.lealone.plugins.test.StorageTestBase;
 
-public class MVStoreTest extends org.lealone.test.sql.SqlTestBase {
+public class MVStoreTest extends StorageTestBase {
 
     public MVStoreTest() {
-        initTransactionEngine();
-        setStorageEngineName(MVStorageEngine.NAME);
-        setEmbedded(true);
-        printURL();
+        super(MVStorageEngine.NAME);
     }
 
-    @Test
-    public void run() throws Exception {
-        stmt.executeUpdate("drop table IF EXISTS MinaNetClientTest");
-        stmt.executeUpdate("create table IF NOT EXISTS MinaNetClientTest(f1 int, f2 int, f3 int)");
-        stmt.executeUpdate("insert into MinaNetClientTest(f1, f2, f3) values(1,2,3)");
-        stmt.executeUpdate("insert into MinaNetClientTest(f1, f2, f3) values(5,2,3)");
-        stmt.executeUpdate("insert into MinaNetClientTest(f1, f2, f3) values(3,2,3)");
-
-        sql = "select count(*) from MinaNetClientTest";
-        assertEquals(3, getIntValue(1, true));
-
-        sql = "select * from MinaNetClientTest";
-        printResultSet();
-    }
 }

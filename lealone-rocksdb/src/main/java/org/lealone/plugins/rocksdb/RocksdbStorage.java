@@ -25,15 +25,19 @@ import org.lealone.storage.type.StorageDataType;
 
 public class RocksdbStorage extends StorageBase {
 
-    // Map<String, Object> config;
+    private final Map<String, Object> config;
 
     public RocksdbStorage(Map<String, Object> config) {
+        this.config = config;
     }
 
     @Override
     public <K, V> StorageMap<K, V> openMap(String name, String mapType, StorageDataType keyType,
             StorageDataType valueType, Map<String, String> parameters) {
-        return null;
+        RocksdbStorageMap<K, V> map = new RocksdbStorageMap<>(this, (String) config.get("storageName"), name, keyType,
+                valueType);
+        maps.put(name, map);
+        return map;
     }
 
 }
