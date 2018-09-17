@@ -25,6 +25,10 @@
 使用 [H2](http://www.h2database.com/html/main.html) 数据库的 [MVStore](http://www.h2database.com/html/mvstore.html) 作为额外的 Lealone 存储引擎
 
 
+### [lealone-rocksdb](https://github.com/lealone/Lealone-Plugins/tree/master/lealone-rocksdb)
+使用 [RocksDB](https://github.com/facebook/rocksdb) 作为额外的 Lealone 存储引擎
+
+
 ## 数据库协议插件
 
 
