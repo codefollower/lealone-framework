@@ -41,6 +41,7 @@
         <module>lealone-mina</module>
         <module>lealone-mvstore</module>
         <module>lealone-wiredtiger</module>
+        <module>lealone-rocksdb</module>
         <module>lealone-mysql</module>
         <module>lealone-postgresql</module>
         <module>lealone-plugins-dist</module>
