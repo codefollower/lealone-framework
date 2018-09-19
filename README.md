@@ -7,7 +7,7 @@
 使用 [Apache MINA](http://mina.apache.org/) 网络应用框架来实现 Lealone 客户端与服务器端以及 Lealone 集群节点之间的网络通信
 
 
-### [lealone-netty](https://github.com/lealone/Lealone/tree/master/lealone-netty)
+### [lealone-netty](https://github.com/lealone/Lealone-Plugins/tree/master/lealone-netty)
 使用 [Netty](http://netty.io/) 网络应用框架来实现 Lealone 客户端与服务器端以及 Lealone 集群节点之间的网络通信
 
 
