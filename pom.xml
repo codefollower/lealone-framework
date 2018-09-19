@@ -28,7 +28,6 @@
     <modules>
         <module>../lealone/lealone-common</module>
         <module>../lealone/lealone-net</module>
-        <module>../lealone/lealone-netty</module>
         <module>../lealone/lealone-client</module>
         <module>../lealone/lealone-server</module>
         <module>../lealone/lealone-sql</module>
@@ -39,6 +38,7 @@
         <module>../lealone/lealone-main</module>
         <module>../lealone/lealone-test</module>
         <module>lealone-mina</module>
+        <module>lealone-netty</module>
         <module>lealone-mvstore</module>
         <module>lealone-wiredtiger</module>
         <module>lealone-rocksdb</module>
