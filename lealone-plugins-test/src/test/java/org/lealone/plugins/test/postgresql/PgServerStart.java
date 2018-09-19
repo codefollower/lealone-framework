@@ -26,11 +26,11 @@ import org.lealone.plugins.postgresql.PgServer;
 import org.lealone.plugins.postgresql.PgServerEngine;
 import org.lealone.test.start.TcpServerStart;
 
-public class PgServerTest extends TcpServerStart {
+public class PgServerStart extends TcpServerStart {
 
     public static void main(String[] args) {
         // DeletePluginsTestData.main(args);
-        TcpServerStart.run(PgServerTest.class, args);
+        TcpServerStart.run(PgServerStart.class, args);
     }
 
     @Override

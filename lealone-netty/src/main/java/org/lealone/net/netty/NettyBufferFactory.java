@@ -15,14 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.start;
+package org.lealone.net.netty;
 
-import org.lealone.test.start.TcpServerStart;
+import org.lealone.net.NetBuffer;
+import org.lealone.net.NetBufferFactory;
 
-public class PluginsStart extends TcpServerStart {
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
-    public static void main(String[] args) {
-        TcpServerStart.run(PluginsStart.class, args);
+public class NettyBufferFactory implements NetBufferFactory {
+
+    private static final NettyBufferFactory instance = new NettyBufferFactory();
+
+    public static NettyBufferFactory getInstance() {
+        return instance;
+    }
+
+    private NettyBufferFactory() {
+    }
+
+    @Override
+    public NetBuffer createBuffer(int initialSizeHint) {
+        ByteBuf buffer = Unpooled.unreleasableBuffer(Unpooled.buffer(initialSizeHint, Integer.MAX_VALUE));
+        return new NettyBuffer(buffer);
     }
 
 }

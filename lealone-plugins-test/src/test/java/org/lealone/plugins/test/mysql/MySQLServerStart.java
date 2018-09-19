@@ -15,37 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.mina;
+package org.lealone.plugins.test.mysql;
+
+import java.util.ArrayList;
 
 import org.lealone.common.exceptions.ConfigException;
-import org.lealone.db.Constants;
 import org.lealone.p2p.config.Config;
 import org.lealone.p2p.config.Config.PluggableEngineDef;
-import org.lealone.plugins.mina.MinaNetFactory;
+import org.lealone.plugins.mysql.server.MySQLServer;
+import org.lealone.plugins.mysql.server.MySQLServerEngine;
+import org.lealone.plugins.test.mina.MinaNetServerTest;
 import org.lealone.test.start.TcpServerStart;
 
-public class MinaNetServerTest extends TcpServerStart {
+public class MySQLServerStart extends TcpServerStart {
 
     public static void main(String[] args) {
         // DeletePluginsTestData.main(args);
-        TcpServerStart.run(MinaNetServerTest.class, args);
+        TcpServerStart.run(MySQLServerStart.class, args);
     }
 
     @Override
     public void applyConfig(Config config) throws ConfigException {
-        enableMinaNetServer(config);
+        config.protocol_server_engines = new ArrayList<>(1);
+        PluggableEngineDef def = new PluggableEngineDef();
+        def.enabled = true;
+        def.name = MySQLServerEngine.NAME;
+        def.getParameters().put("port", MySQLServer.DEFAULT_PORT + "");
+        config.protocol_server_engines.add(def);
+
+        MinaNetServerTest.enableMinaNetServer(config);
         super.applyConfig(config);
     }
 
-    public static void enableMinaNetServer(Config config) {
-        for (PluggableEngineDef e : config.protocol_server_engines) {
-            e.getParameters().put(Constants.NET_FACTORY_NAME_KEY, MinaNetFactory.NAME);
-            // if (TcpServerEngine.NAME.equalsIgnoreCase(e.name)) {
-            // e.enabled = true;
-            // e.getParameters().put(Constants.NET_FACTORY_NAME_KEY, MinaNetFactory.NAME);
-            // } else if (PgServerEngine.NAME.equalsIgnoreCase(e.name)) {
-            // e.enabled = false;
-            // }
-        }
-    }
 }
