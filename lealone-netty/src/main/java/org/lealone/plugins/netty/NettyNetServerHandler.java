@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.net.netty;
+package org.lealone.plugins.netty;
 
 import org.lealone.common.exceptions.DbException;
 import org.lealone.common.logging.Logger;
