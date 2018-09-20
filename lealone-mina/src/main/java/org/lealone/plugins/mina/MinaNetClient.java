@@ -40,11 +40,9 @@ public class MinaNetClient implements org.lealone.net.NetClient {
         return instance;
     }
 
-    private final NioSocketConnector connector;
+    private NioSocketConnector connector;
 
     private MinaNetClient() {
-        connector = new NioSocketConnector();
-        connector.setHandler(new MinaNetClientHandler(this));
     }
 
     @Override
@@ -55,6 +53,14 @@ public class MinaNetClient implements org.lealone.net.NetClient {
     @Override
     public AsyncConnection createConnection(Map<String, String> config, NetEndpoint endpoint,
             AsyncConnectionManager connectionManager) {
+        if (connector == null) {
+            synchronized (this) {
+                if (connector == null) {
+                    connector = new NioSocketConnector();
+                    connector.setHandler(new MinaNetClientHandler(this));
+                }
+            }
+        }
         InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
         AsyncConnection conn = asyncConnections.get(inetSocketAddress);
         if (conn == null) {

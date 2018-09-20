@@ -15,41 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.mysql;
+package org.lealone.plugins.mysql.protocol;
 
-import java.util.Map;
+public abstract class Packet extends MySQLPacket {
 
-import org.lealone.server.ProtocolServer;
-import org.lealone.server.ProtocolServerEngineBase;
+    public static final byte PACKET_HEADER_SIZE = 4;
 
-public class MySQLServerEngine extends ProtocolServerEngineBase {
+    public int packetLength;
+    public byte packetId;
 
-    private final MySQLServer server = new MySQLServer();
-
-    public static final String NAME = "MySQL";
-
-    public MySQLServerEngine() {
-        super(NAME);
+    @Override
+    public int calcPacketSize() {
+        return 0;
     }
 
     @Override
-    public ProtocolServer getProtocolServer() {
-        return server;
+    protected String getPacketInfo() {
+        return null;
     }
 
-    @Override
-    protected ProtocolServer getProtocolServer(int port) {
-        return server;
-    }
+    public abstract void read(PacketInput in);
 
-    @Override
-    public void init(Map<String, String> config) {
-        server.init(config);
-    }
-
-    @Override
-    public void close() {
-        server.stop();
-    }
+    public abstract void write(PacketOutput out);
 
 }

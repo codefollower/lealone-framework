@@ -24,7 +24,6 @@ import org.lealone.p2p.config.Config;
 import org.lealone.p2p.config.Config.PluggableEngineDef;
 import org.lealone.plugins.mysql.server.MySQLServer;
 import org.lealone.plugins.mysql.server.MySQLServerEngine;
-import org.lealone.plugins.test.mina.MinaNetServerTest;
 import org.lealone.test.start.TcpServerStart;
 
 public class MySQLServerStart extends TcpServerStart {
@@ -43,7 +42,7 @@ public class MySQLServerStart extends TcpServerStart {
         def.getParameters().put("port", MySQLServer.DEFAULT_PORT + "");
         config.protocol_server_engines.add(def);
 
-        MinaNetServerTest.enableMinaNetServer(config);
+        // MinaNetServerTest.enableMinaNetServer(config);
         super.applyConfig(config);
     }
 

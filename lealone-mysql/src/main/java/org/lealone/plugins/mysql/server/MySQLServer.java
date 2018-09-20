@@ -15,16 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.mysql;
+package org.lealone.plugins.mysql.server;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.lealone.common.logging.Logger;
-import org.lealone.common.logging.LoggerFactory;
 import org.lealone.common.util.New;
+import org.lealone.db.LealoneDatabase;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetEndpoint;
@@ -36,11 +35,12 @@ import org.lealone.server.DelegatedProtocolServer;
 
 public class MySQLServer extends DelegatedProtocolServer implements AsyncConnectionManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(MySQLServer.class);
+    public static final String DATABASE_NAME = "mysql";
+
+    // private static final Logger logger = LoggerFactory.getLogger(MySQLServer.class);
     public static final int DEFAULT_PORT = 7214;
 
     private final Set<MySQLConnection> connections = Collections.synchronizedSet(new HashSet<MySQLConnection>());
-    private boolean trace;
 
     @Override
     public String getName() {
@@ -52,25 +52,10 @@ public class MySQLServer extends DelegatedProtocolServer implements AsyncConnect
         return MySQLServerEngine.NAME;
     }
 
-    void trace(String msg) {
-        if (trace)
-            logger.info(msg);
-    }
-
-    void traceError(Throwable e) {
-        logger.info(e);
-    }
-
-    boolean getTrace() {
-        return trace;
-    }
-
     @Override
     public void init(Map<String, String> config) {
         if (!config.containsKey("port"))
             config.put("port", String.valueOf(DEFAULT_PORT));
-
-        trace = Boolean.parseBoolean(config.get("trace"));
 
         NetFactory factory = NetFactoryManager.getFactory(config);
         NetServer netServer = factory.createNetServer();
@@ -81,11 +66,19 @@ public class MySQLServer extends DelegatedProtocolServer implements AsyncConnect
         NetEndpoint.setLocalTcpEndpoint(getHost(), getPort());
     }
 
+    private void createDatabase() {
+        String sql = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME //
+                + " PARAMETERS(DEFAULT_SQL_ENGINE='" + MySQLServerEngine.NAME + "')";
+        LealoneDatabase.getInstance().getSystemSession().prepareStatementLocal(sql).executeUpdate();
+    }
+
     @Override
     public synchronized void start() {
         if (isStarted())
             return;
         super.start();
+
+        createDatabase();
     }
 
     @Override
@@ -99,10 +92,14 @@ public class MySQLServer extends DelegatedProtocolServer implements AsyncConnect
         }
     }
 
+    public synchronized void addConnection(MySQLConnection conn) {
+        connections.add(conn);
+    }
+
     @Override
     public synchronized AsyncConnection createConnection(WritableChannel writableChannel, boolean isServer) {
         MySQLConnection conn = new MySQLConnection(this, writableChannel, isServer);
-        connections.add(conn);
+        conn.handshake();
         return conn;
     }
 
