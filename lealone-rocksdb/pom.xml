@@ -34,6 +34,7 @@
             <groupId>org.lealone</groupId>
             <artifactId>lealone-common</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.rocksdb</groupId>

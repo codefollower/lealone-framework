@@ -34,11 +34,13 @@
             <groupId>org.lealone</groupId>
             <artifactId>lealone-net</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.lealone</groupId>
             <artifactId>lealone-sql</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

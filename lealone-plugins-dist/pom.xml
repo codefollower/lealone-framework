@@ -61,7 +61,7 @@
         </dependency>
         <dependency>
             <groupId>org.lealone</groupId>
-            <artifactId>lealone-postgresql</artifactId>
+            <artifactId>lealone-test</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
