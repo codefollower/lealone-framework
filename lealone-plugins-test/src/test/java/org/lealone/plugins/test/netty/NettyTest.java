@@ -145,7 +145,7 @@ public class NettyTest {
     }
 
     public static void main2(String[] args) throws Exception {
-        NettyNetServerTest.optimizeNetty();
+        NettyNetServerStart.optimizeNetty();
 
         long t0 = System.currentTimeMillis();
         long t1 = System.currentTimeMillis();

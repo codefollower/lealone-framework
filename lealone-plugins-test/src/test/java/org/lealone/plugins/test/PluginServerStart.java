@@ -17,13 +17,17 @@
  */
 package org.lealone.plugins.test;
 
-public class StorageTestBase extends PluginTestBase {
+import org.lealone.test.start.NodeBase;
 
-    public StorageTestBase(String storageEngineName) {
-        super("Storage_Test");
-        initTransactionEngine();
-        setStorageEngineName(storageEngineName);
-        setEmbedded(true);
-        printURL();
+public abstract class PluginServerStart extends NodeBase {
+
+    // YamlConfigLoader的子类必须有一个无参数的构造函数
+    public PluginServerStart() {
+        nodeBaseDirPrefix = "plugins";
+    }
+
+    public static void start(Class<? extends PluginServerStart> clz) {
+        // DeletePluginsTestData.main(new String[0]);
+        NodeBase.run(clz, null);
     }
 }

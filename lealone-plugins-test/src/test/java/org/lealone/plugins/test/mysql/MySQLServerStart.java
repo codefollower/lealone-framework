@@ -17,33 +17,21 @@
  */
 package org.lealone.plugins.test.mysql;
 
-import java.util.ArrayList;
-
 import org.lealone.common.exceptions.ConfigException;
 import org.lealone.p2p.config.Config;
-import org.lealone.p2p.config.Config.PluggableEngineDef;
-import org.lealone.plugins.mysql.server.MySQLServer;
-import org.lealone.plugins.mysql.server.MySQLServerEngine;
-import org.lealone.test.start.TcpServerStart;
+import org.lealone.plugins.test.PluginServerStart;
+import org.lealone.plugins.test.PluginTestBase;
 
-public class MySQLServerStart extends TcpServerStart {
+public class MySQLServerStart extends PluginServerStart {
 
     public static void main(String[] args) {
-        // DeletePluginsTestData.main(args);
-        TcpServerStart.run(MySQLServerStart.class, args);
+        start(MySQLServerStart.class);
     }
 
     @Override
     public void applyConfig(Config config) throws ConfigException {
-        config.protocol_server_engines = new ArrayList<>(1);
-        PluggableEngineDef def = new PluggableEngineDef();
-        def.enabled = true;
-        def.name = MySQLServerEngine.NAME;
-        def.getParameters().put("port", MySQLServer.DEFAULT_PORT + "");
-        config.protocol_server_engines.add(def);
-
-        // MinaNetServerTest.enableMinaNetServer(config);
+        PluginTestBase.enableMySQLServer(config);
+        PluginTestBase.enableMinaNetServer(config);
         super.applyConfig(config);
     }
-
 }

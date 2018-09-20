@@ -17,34 +17,22 @@
  */
 package org.lealone.plugins.test.postgresql;
 
-import java.util.ArrayList;
-
 import org.lealone.common.exceptions.ConfigException;
 import org.lealone.p2p.config.Config;
-import org.lealone.p2p.config.Config.PluggableEngineDef;
-import org.lealone.plugins.postgresql.PgServer;
-import org.lealone.plugins.postgresql.PgServerEngine;
-import org.lealone.test.start.TcpServerStart;
+import org.lealone.plugins.test.PluginServerStart;
+import org.lealone.plugins.test.PluginTestBase;
 
-public class PgServerStart extends TcpServerStart {
+public class PgServerStart extends PluginServerStart {
 
     public static void main(String[] args) {
-        // DeletePluginsTestData.main(args);
-        TcpServerStart.run(PgServerStart.class, args);
+        start(PgServerStart.class);
     }
 
     @Override
     public void applyConfig(Config config) throws ConfigException {
-        if (config.protocol_server_engines == null) {
-            config.protocol_server_engines = new ArrayList<>(1);
-        }
-
-        PluggableEngineDef def = new PluggableEngineDef();
-        def.enabled = true;
-        def.name = PgServerEngine.NAME;
-        def.getParameters().put("port", PgServer.DEFAULT_PORT + "");
-
-        config.protocol_server_engines.add(def);
+        PluginTestBase.enablePgServer(config);
+        PluginTestBase.enableMinaNetServer(config);
+        // PluginTestBase.enableNettyNetServer(config);
         super.applyConfig(config);
     }
 }

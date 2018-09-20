@@ -20,34 +20,22 @@ package org.lealone.plugins.test.netty;
 import java.net.InetAddress;
 
 import org.lealone.common.exceptions.ConfigException;
-import org.lealone.db.Constants;
 import org.lealone.p2p.config.Config;
-import org.lealone.p2p.config.Config.PluggableEngineDef;
-import org.lealone.plugins.mina.MinaNetFactory;
-import org.lealone.test.start.TcpServerStart;
+import org.lealone.plugins.test.PluginServerStart;
+import org.lealone.plugins.test.PluginTestBase;
 
-public class NettyNetServerTest extends TcpServerStart {
+public class NettyNetServerStart extends PluginServerStart {
 
     public static void main(String[] args) {
-        TcpServerStart.run(NettyNetServerTest.class, args);
+        optimizeNetty();
+        start(NettyNetServerStart.class);
     }
 
     @Override
     public void applyConfig(Config config) throws ConfigException {
-        enableNettyNetServer(config);
+        PluginTestBase.enableTcpServer(config);
+        PluginTestBase.enableNettyNetServer(config);
         super.applyConfig(config);
-    }
-
-    public static void enableNettyNetServer(Config config) {
-        for (PluggableEngineDef e : config.protocol_server_engines) {
-            e.getParameters().put(Constants.NET_FACTORY_NAME_KEY, MinaNetFactory.NAME);
-            // if (TcpServerEngine.NAME.equalsIgnoreCase(e.name)) {
-            // e.enabled = true;
-            // e.getParameters().put(Constants.NET_FACTORY_NAME_KEY, MinaNetFactory.NAME);
-            // } else if (PgServerEngine.NAME.equalsIgnoreCase(e.name)) {
-            // e.enabled = false;
-            // }
-        }
     }
 
     public static void optimizeNetty() {

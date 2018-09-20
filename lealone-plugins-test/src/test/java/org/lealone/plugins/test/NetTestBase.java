@@ -17,12 +17,11 @@
  */
 package org.lealone.plugins.test;
 
-public class TestBase extends org.lealone.test.TestBase {
+public class NetTestBase extends PluginTestBase {
 
-    static {
+    public NetTestBase(String factoryName) {
+        super("Net_Test");
+        setNetFactoryName(factoryName);
+        printURL();
     }
-
-    public TestBase() {
-    }
-
 }

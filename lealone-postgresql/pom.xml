@@ -35,5 +35,11 @@
             <artifactId>lealone-client</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4.1212</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

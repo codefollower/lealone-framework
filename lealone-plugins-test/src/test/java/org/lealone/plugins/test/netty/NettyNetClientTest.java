@@ -17,28 +17,12 @@
  */
 package org.lealone.plugins.test.netty;
 
-import org.junit.Test;
+import org.lealone.plugins.netty.NettyNetFactory;
+import org.lealone.plugins.test.NetTestBase;
 
-public class NettyNetClientTest extends org.lealone.test.sql.SqlTestBase {
+public class NettyNetClientTest extends NetTestBase {
 
-    public NettyNetClientTest() { // 连接到默认测试数据库
-        addConnectionParameter(org.lealone.db.Constants.NET_FACTORY_NAME_KEY,
-                org.lealone.plugins.mina.MinaNetFactory.NAME);
-        printURL();
-    }
-
-    @Test
-    public void run() throws Exception {
-        stmt.executeUpdate("drop table IF EXISTS MinaNetClientTest");
-        stmt.executeUpdate("create table IF NOT EXISTS MinaNetClientTest(f1 int, f2 int, f3 int)");
-        stmt.executeUpdate("insert into MinaNetClientTest(f1, f2, f3) values(1,2,3)");
-        stmt.executeUpdate("insert into MinaNetClientTest(f1, f2, f3) values(5,2,3)");
-        stmt.executeUpdate("insert into MinaNetClientTest(f1, f2, f3) values(3,2,3)");
-
-        sql = "select count(*) from MinaNetClientTest";
-        assertEquals(3, getIntValue(1, true));
-
-        sql = "select * from MinaNetClientTest";
-        printResultSet();
+    public NettyNetClientTest() {
+        super(NettyNetFactory.NAME);
     }
 }

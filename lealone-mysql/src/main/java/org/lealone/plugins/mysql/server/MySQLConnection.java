@@ -32,7 +32,6 @@ import org.lealone.db.Constants;
 import org.lealone.db.Session;
 import org.lealone.db.result.Result;
 import org.lealone.db.value.Value;
-import org.lealone.db.value.ValueInt;
 import org.lealone.db.value.ValueNull;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.NetBuffer;
@@ -43,8 +42,8 @@ import org.lealone.plugins.mysql.protocol.AuthPacket;
 import org.lealone.plugins.mysql.protocol.EOFPacket;
 import org.lealone.plugins.mysql.protocol.ErrorPacket;
 import org.lealone.plugins.mysql.protocol.FieldPacket;
-import org.lealone.plugins.mysql.protocol.Fields;
 import org.lealone.plugins.mysql.protocol.HandshakePacket;
+import org.lealone.plugins.mysql.protocol.OkPacket;
 import org.lealone.plugins.mysql.protocol.Packet;
 import org.lealone.plugins.mysql.protocol.PacketInput;
 import org.lealone.plugins.mysql.protocol.PacketOutput;
@@ -267,50 +266,11 @@ public class MySQLConnection extends AsyncConnection {
 
     private void writeUpdateResult(int updateCount) {
         PacketOutput out = getPacketOutput();
-        int fieldCount = 1;
-        ResultSetHeaderPacket header = PacketUtil.getHeader(fieldCount);
-        FieldPacket[] fields = new FieldPacket[fieldCount];
-        EOFPacket eof = new EOFPacket();
-        byte packetId = 0;
-        header.packetId = ++packetId;
-        // packetId++;
-        for (int i = 0; i < fieldCount; i++) {
-            fields[i] = PacketUtil.getField("UpdateResult", Fields.FIELD_TYPE_INT24);
-            fields[i].packetId = ++packetId;
-        }
-        eof.packetId = ++packetId;
-
-        ByteBuffer buffer = out.allocate();
-
-        // write header
-        buffer = header.write(buffer, out);
-
-        // write fields
-        for (FieldPacket field : fields) {
-            buffer = field.write(buffer, out);
-        }
-
-        // write eof
-        buffer = eof.write(buffer, out);
-
-        // write rows
-        packetId = eof.packetId;
-        for (int i = 0; i < 1; i++) {
-            RowDataPacket row = new RowDataPacket(fieldCount);
-            for (int j = 0; j < fieldCount; j++) {
-                row.add(ValueInt.get(updateCount).toString().getBytes());
-            }
-            row.packetId = ++packetId;
-            buffer = row.write(buffer, out);
-        }
-
-        // write last eof
-        EOFPacket lastEof = new EOFPacket();
-        lastEof.packetId = ++packetId;
-        buffer = lastEof.write(buffer, out);
-
-        // post write
-        out.write(buffer);
+        OkPacket packet = new OkPacket();
+        packet.packetId = 1;
+        packet.affectedRows = updateCount;
+        packet.serverStatus = 2;
+        packet.write(out);
     }
 
     private final static byte[] encodeString(String src, String charset) {

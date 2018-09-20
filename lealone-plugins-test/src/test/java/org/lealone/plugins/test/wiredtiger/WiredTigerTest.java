@@ -20,6 +20,8 @@ package org.lealone.plugins.test.wiredtiger;
 
 import java.io.File;
 
+import org.lealone.test.TestBase;
+
 import com.wiredtiger.db.Connection;
 import com.wiredtiger.db.Cursor;
 import com.wiredtiger.db.Session;
@@ -31,7 +33,7 @@ public class WiredTigerTest {
     }
 
     public static Connection getWTConnection() {
-        String dir = TestBase.TEST_DIR + "/WiredTigerTest";
+        String dir = TestBase.TEST_DIR + File.separatorChar + "WiredTigerTest";
         if (!new File(dir).exists())
             new File(dir).mkdirs();
         return wiredtiger.open(dir, "create");

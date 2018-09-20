@@ -25,5 +25,4 @@ public class MVStoreTest extends StorageTestBase {
     public MVStoreTest() {
         super(MVStorageEngine.NAME);
     }
-
 }
