@@ -96,7 +96,7 @@ import org.lealone.sql.ddl.CreateUser;
 import org.lealone.sql.ddl.CreateUserDataType;
 import org.lealone.sql.ddl.CreateView;
 import org.lealone.sql.ddl.DeallocateProcedure;
-import org.lealone.sql.ddl.DefineStatement;
+import org.lealone.sql.ddl.DefinitionStatement;
 import org.lealone.sql.ddl.DropAggregate;
 import org.lealone.sql.ddl.DropConstant;
 import org.lealone.sql.ddl.DropDatabase;
@@ -4792,7 +4792,7 @@ public class MySQLParser implements SQLParser {
         return command;
     }
 
-    private DefineStatement parseAlterSchema() {
+    private DefinitionStatement parseAlterSchema() {
         String schemaName = readIdentifierWithSchema();
         return parseAlterSchemaRename(schemaName);
     }
@@ -5525,7 +5525,7 @@ public class MySQLParser implements SQLParser {
         }
     }
 
-    private DefineStatement parseAlterTableAddConstraintIf(String tableName, Schema schema) {
+    private DefinitionStatement parseAlterTableAddConstraintIf(String tableName, Schema schema) {
         String constraintName = null, comment = null;
         boolean ifNotExists = false;
         boolean allowIndexDefinition = database.getMode().indexDefinitionInCreateTable;
@@ -5733,7 +5733,7 @@ public class MySQLParser implements SQLParser {
 
     private void parseTableDefinition(Schema schema, CreateTable command, String tableName) {
         do {
-            DefineStatement c = parseAlterTableAddConstraintIf(tableName, schema);
+            DefinitionStatement c = parseAlterTableAddConstraintIf(tableName, schema);
             if (c != null) {
                 command.addConstraintCommand(c);
             } else {
