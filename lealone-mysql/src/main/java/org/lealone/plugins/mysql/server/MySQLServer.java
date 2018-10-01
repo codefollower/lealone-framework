@@ -17,12 +17,12 @@
  */
 package org.lealone.plugins.mysql.server;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.lealone.common.util.New;
 import org.lealone.db.LealoneDatabase;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
@@ -87,7 +87,7 @@ public class MySQLServer extends DelegatedProtocolServer implements AsyncConnect
             return;
         super.stop();
 
-        for (MySQLConnection c : New.arrayList(connections)) {
+        for (MySQLConnection c : new ArrayList<>(connections)) {
             c.close();
         }
     }

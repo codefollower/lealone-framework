@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,7 +20,6 @@ import java.util.Set;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
-import org.lealone.common.util.New;
 import org.lealone.db.Constants;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
@@ -79,7 +79,7 @@ public class PgServer extends DelegatedProtocolServer implements AsyncConnection
     private static final int PG_TYPE_TIMESTAMP_NO_TMZONE = 1114;
     private static final int PG_TYPE_NUMERIC = 1700;
 
-    private final HashSet<Integer> typeSet = New.hashSet();
+    private final HashSet<Integer> typeSet = new HashSet<>();
     private final Set<PgConnection> connections = Collections.synchronizedSet(new HashSet<PgConnection>());
     private boolean trace;
 
@@ -135,7 +135,7 @@ public class PgServer extends DelegatedProtocolServer implements AsyncConnection
             return;
         super.stop();
 
-        for (PgConnection c : New.arrayList(connections)) {
+        for (PgConnection c : new ArrayList<>(connections)) {
             c.close();
         }
     }
