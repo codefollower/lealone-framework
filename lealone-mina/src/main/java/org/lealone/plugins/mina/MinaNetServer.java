@@ -20,7 +20,6 @@ package org.lealone.plugins.mina;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.lealone.common.exceptions.DbException;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.net.NetServerBase;
@@ -44,8 +43,7 @@ public class MinaNetServer extends NetServerBase {
             acceptor.bind(new InetSocketAddress(getHost(), getPort()));
             super.start();
         } catch (Exception e) {
-            logger.error("Failed to start mina net server", e);
-            throw DbException.convert(e);
+            checkBindException(e, "Failed to start mina net server");
         }
     }
 

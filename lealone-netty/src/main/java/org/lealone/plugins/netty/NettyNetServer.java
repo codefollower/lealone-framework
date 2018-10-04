@@ -19,7 +19,6 @@ package org.lealone.plugins.netty;
 
 import java.util.concurrent.CountDownLatch;
 
-import org.lealone.common.exceptions.DbException;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.net.NetServerBase;
@@ -61,8 +60,7 @@ public class NettyNetServer extends NetServerBase {
             latch.await();
             super.start();
         } catch (Exception e) {
-            logger.error("Failed to start netty net server", e);
-            throw DbException.convert(e);
+            checkBindException(e, "Failed to start netty net server");
         }
     }
 
