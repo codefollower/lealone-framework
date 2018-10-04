@@ -18,7 +18,6 @@
 package org.lealone.plugins.mvstore;
 
 import org.h2.mvstore.MVMap;
-import org.lealone.db.value.ValueLong;
 import org.lealone.storage.Storage;
 import org.lealone.storage.StorageMapBase;
 import org.lealone.storage.StorageMapCursor;
@@ -26,15 +25,13 @@ import org.lealone.storage.type.StorageDataType;
 
 public class MVStorageMap<K, V> extends StorageMapBase<K, V> {
 
-    private final Storage storage;
     private final MVMap<K, V> mvMap;
 
     public MVStorageMap(Storage storage, MVMap<K, V> mvMap, String name, StorageDataType keyType,
             StorageDataType valueType) {
-        super(name, keyType, valueType);
-        this.storage = storage;
+        super(name, keyType, valueType, storage);
         this.mvMap = mvMap;
-        setLastKey(lastKey());
+        setMaxKey(lastKey());
     }
 
     @Override
@@ -165,18 +162,5 @@ public class MVStorageMap<K, V> extends StorageMapBase<K, V> {
     @Override
     public void save() {
         // 无对应方法
-    }
-
-    @Override
-    public Storage getStorage() {
-        return storage;
-    }
-
-    @Override
-    public K append(V value) {
-        @SuppressWarnings("unchecked")
-        K key = (K) ValueLong.get(lastKey.incrementAndGet());
-        put(key, value);
-        return key;
     }
 }

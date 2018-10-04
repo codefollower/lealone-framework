@@ -27,9 +27,9 @@ public class MVStorageBuilder extends StorageBuilder {
     private final MVStore.Builder builder = new MVStore.Builder();
 
     @Override
-    public StorageBuilder storageName(String storageName) {
-        builder.fileName(storageName);
-        return super.storageName(storageName);
+    public StorageBuilder storagePath(String storagePath) {
+        builder.fileName(storagePath);
+        return super.storagePath(storagePath);
     }
 
     @Override

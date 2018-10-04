@@ -20,7 +20,6 @@ package org.lealone.plugins.wiredtiger;
 import java.io.File;
 import java.util.Map;
 
-import org.lealone.common.exceptions.DbException;
 import org.lealone.storage.StorageBase;
 import org.lealone.storage.StorageMap;
 import org.lealone.storage.type.StorageDataType;
@@ -33,8 +32,8 @@ public class WTStorage extends StorageBase {
     private final Connection conn;
 
     public WTStorage(Map<String, Object> config) {
-        String storageName = (String) config.get("storageName");
-        conn = createConnection(storageName);
+        super(config);
+        conn = createConnection(getStoragePath());
     }
 
     private Connection createConnection(String dbName) {
@@ -51,11 +50,6 @@ public class WTStorage extends StorageBase {
         WTMap<K, V> map = new WTMap<>(this, conn.open_session(null), name, keyType, valueType);
         maps.put(name, map);
         return map;
-    }
-
-    @Override
-    public void backupTo(String fileName) {
-        throw DbException.getUnsupportedException("backupTo");
     }
 
     @Override

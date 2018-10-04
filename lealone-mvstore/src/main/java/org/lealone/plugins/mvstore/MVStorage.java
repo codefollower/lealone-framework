@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.h2.mvstore.MVMap;
 import org.h2.mvstore.MVStore;
-import org.lealone.common.exceptions.DbException;
 import org.lealone.storage.StorageBase;
 import org.lealone.storage.StorageMap;
 import org.lealone.storage.type.StorageDataType;
@@ -29,11 +28,10 @@ import org.lealone.storage.type.StorageDataType;
 public class MVStorage extends StorageBase {
 
     private final MVStore mvStore;
-    // Map<String, Object> config;
 
     public MVStorage(MVStore mvStore, Map<String, Object> config) {
+        super(config);
         this.mvStore = mvStore;
-        // this.config = config;
     }
 
     @Override
@@ -49,22 +47,19 @@ public class MVStorage extends StorageBase {
     }
 
     @Override
-    public void backupTo(String fileName) {
-        throw DbException.getUnsupportedException("backupTo");
-    }
-
-    @Override
     public void save() {
         mvStore.commit();
     }
 
     @Override
     public void close() {
+        super.close();
         mvStore.close();
     }
 
     @Override
     public void closeImmediately() {
+        super.closeImmediately();
         mvStore.closeImmediately();
     }
 }

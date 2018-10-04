@@ -23,7 +23,6 @@ import java.nio.ByteBuffer;
 
 import org.lealone.common.exceptions.DbException;
 import org.lealone.db.DataBuffer;
-import org.lealone.db.value.ValueLong;
 import org.lealone.storage.Storage;
 import org.lealone.storage.StorageMapBase;
 import org.lealone.storage.StorageMapCursor;
@@ -37,15 +36,13 @@ import org.rocksdb.RocksIterator;
 
 public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
 
-    private final RocksdbStorage storage;
     private final RocksDB db;
     private final String dbPath;
     private boolean closed;
 
     public RocksdbStorageMap(RocksdbStorage storage, String storageDir, String name, StorageDataType keyType,
             StorageDataType valueType) {
-        super(name, keyType, valueType);
-        this.storage = storage;
+        super(name, keyType, valueType, storage);
 
         Options options = new Options();
         BlockBasedTableConfig config = new BlockBasedTableConfig();
@@ -56,7 +53,7 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
         } catch (RocksDBException e) {
             throw ioe(e, "Failed to open " + dbPath);
         }
-        setLastKey(lastKey());
+        setMaxKey(lastKey());
     }
 
     private static DbException ioe(Throwable e, String msg) {
@@ -315,13 +312,5 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
 
     @Override
     public void save() {
-    }
-
-    @Override
-    public K append(V value) {
-        @SuppressWarnings("unchecked")
-        K key = (K) ValueLong.get(lastKey.incrementAndGet());
-        put(key, value);
-        return key;
     }
 }

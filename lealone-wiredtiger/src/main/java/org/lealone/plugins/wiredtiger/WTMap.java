@@ -24,10 +24,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.lealone.common.exceptions.DbException;
 import org.lealone.common.util.DataUtils;
 import org.lealone.db.DataBuffer;
-import org.lealone.storage.Storage;
 import org.lealone.storage.StorageMapBase;
 import org.lealone.storage.type.ObjectDataType;
 import org.lealone.storage.type.StorageDataType;
@@ -38,7 +36,6 @@ import com.wiredtiger.db.Session;
 @SuppressWarnings("unchecked")
 public class WTMap<K, V> extends StorageMapBase<K, V> {
 
-    private final WTStorage storage;
     private final Session wtSession;
     private com.wiredtiger.db.Cursor wtCursor;
 
@@ -53,8 +50,7 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
 
     public WTMap(WTStorage storage, Session wtSession, String name, StorageDataType keyType,
             StorageDataType valueType) {
-        super(name, keyType, valueType);
-        this.storage = storage;
+        super(name, keyType, valueType, storage);
         this.wtSession = wtSession;
 
         id = getMapId(wtSession, name);
@@ -416,15 +412,4 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
     public void close() {
         wtSession.close(null);
     }
-
-    @Override
-    public Storage getStorage() {
-        return storage;
-    }
-
-    @Override
-    public K append(V value) {
-        throw DbException.getUnsupportedException("append");
-    }
-
 }
