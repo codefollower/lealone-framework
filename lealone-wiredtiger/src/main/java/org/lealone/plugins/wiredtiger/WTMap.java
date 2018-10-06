@@ -27,9 +27,9 @@ import java.util.Set;
 import org.lealone.common.util.DataUtils;
 import org.lealone.db.DataBuffer;
 import org.lealone.storage.StorageMapBase;
-import org.lealone.storage.type.ObjectDataType;
 import org.lealone.storage.type.StorageDataType;
 
+import com.wiredtiger.db.Cursor;
 import com.wiredtiger.db.SearchStatus;
 import com.wiredtiger.db.Session;
 
@@ -37,19 +37,18 @@ import com.wiredtiger.db.Session;
 public class WTMap<K, V> extends StorageMapBase<K, V> {
 
     private final Session wtSession;
-    private com.wiredtiger.db.Cursor wtCursor;
-
     private final int id;
+    private Cursor wtCursor;
 
     private DataBuffer writeBuffer;
     private boolean closed;
 
-    public WTMap(WTStorage storage, Session wtSession, String name) {
-        this(storage, wtSession, name, new ObjectDataType(), new ObjectDataType());
+    public WTMap(String name, WTStorage storage, Session wtSession) {
+        this(name, null, null, storage, wtSession);
     }
 
-    public WTMap(WTStorage storage, Session wtSession, String name, StorageDataType keyType,
-            StorageDataType valueType) {
+    public WTMap(String name, StorageDataType keyType, StorageDataType valueType, WTStorage storage,
+            Session wtSession) {
         super(name, keyType, valueType, storage);
         this.wtSession = wtSession;
 
@@ -58,6 +57,7 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
         wtSession.create("table:" + name, "key_format=u,value_format=u");
 
         openWTCursor();
+        setMaxKey(lastKey());
     }
 
     private void openWTCursor() {
@@ -66,7 +66,7 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
 
     private static int getMapId(Session wtSession, String name) {
         wtSession.create("table:lealone_map_id", "key_format=S,value_format=i");
-        com.wiredtiger.db.Cursor wtCursor = wtSession.open_cursor("table:lealone_map_id", null, "append");
+        Cursor wtCursor = wtSession.open_cursor("table:lealone_map_id", null, "append");
 
         int id;
         name += "_map_id";
@@ -313,7 +313,6 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
             if (areEqual(key, getWTKey(), keyType))
                 break;
         }
-
         return index;
     }
 
@@ -333,9 +332,6 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
             return null;
 
         return (K) getWTKey();
-    }
-
-    public void setVolatile(boolean isVolatile) {
     }
 
     @Override
@@ -360,12 +356,10 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
     public Set<Entry<K, V>> entrySet() {
         final WTMap<K, V> map = this;
         return new AbstractSet<Entry<K, V>>() {
-
             @Override
             public Iterator<Entry<K, V>> iterator() {
                 final WTMapCursor<K, V> cursor = new WTMapCursor<K, V>(wtCursor, map, null);
                 return new Iterator<Entry<K, V>>() {
-
                     @Override
                     public boolean hasNext() {
                         return cursor.hasNext();
@@ -382,7 +376,6 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
                         throw DataUtils.newUnsupportedOperationException("Removing is not supported");
                     }
                 };
-
             }
 
             @Override
@@ -394,9 +387,7 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
             public boolean contains(Object o) {
                 return WTMap.this.containsKey(o);
             }
-
         };
-
     }
 
     @Override

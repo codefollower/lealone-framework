@@ -47,7 +47,7 @@ public class WTStorage extends StorageBase {
     @Override
     public <K, V> StorageMap<K, V> openMap(String name, String mapType, StorageDataType keyType,
             StorageDataType valueType, Map<String, String> parameters) {
-        WTMap<K, V> map = new WTMap<>(this, conn.open_session(null), name, keyType, valueType);
+        WTMap<K, V> map = new WTMap<>(name, keyType, valueType, this, conn.open_session(null));
         maps.put(name, map);
         return map;
     }

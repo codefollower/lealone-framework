@@ -40,15 +40,14 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
     private final String dbPath;
     private boolean closed;
 
-    public RocksdbStorageMap(RocksdbStorage storage, String storageDir, String name, StorageDataType keyType,
-            StorageDataType valueType) {
+    public RocksdbStorageMap(String name, StorageDataType keyType, StorageDataType valueType, RocksdbStorage storage) {
         super(name, keyType, valueType, storage);
 
         Options options = new Options();
         options.setCreateIfMissing(true);
         BlockBasedTableConfig config = new BlockBasedTableConfig();
         options.setTableFormatConfig(config);
-        dbPath = storageDir + File.separator + name;
+        dbPath = storage.getStoragePath() + File.separator + name;
         try {
             db = RocksDB.open(options, dbPath);
         } catch (RocksDBException e) {

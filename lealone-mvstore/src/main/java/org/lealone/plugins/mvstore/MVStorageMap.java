@@ -28,8 +28,8 @@ public class MVStorageMap<K, V> extends StorageMapBase<K, V> {
 
     private final MVMap<K, V> mvMap;
 
-    public MVStorageMap(Storage storage, MVMap<K, V> mvMap, String name, StorageDataType keyType,
-            StorageDataType valueType) {
+    public MVStorageMap(String name, StorageDataType keyType, StorageDataType valueType, Storage storage,
+            MVMap<K, V> mvMap) {
         super(name, keyType, valueType, storage);
         this.mvMap = mvMap;
         setMaxKey(lastKey());

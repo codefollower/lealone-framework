@@ -41,7 +41,7 @@ public class MVStorage extends StorageBase {
         builder.keyType(new MVDataType(keyType));
         builder.valueType(new MVDataType(valueType));
         MVMap<K, V> mvMap = mvStore.openMap(name, builder);
-        MVStorageMap<K, V> map = new MVStorageMap<>(this, mvMap, name, keyType, valueType);
+        MVStorageMap<K, V> map = new MVStorageMap<>(name, keyType, valueType, this, mvMap);
         maps.put(name, map);
         return map;
     }

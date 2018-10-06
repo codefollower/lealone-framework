@@ -36,8 +36,7 @@ public class WTMapTest extends org.junit.Assert {
         Session wtSession = wtConnection.open_session(null);
 
         try {
-
-            WTMap<Integer, String> map = new WTMap<>(null, wtSession, "WTMapTest");
+            WTMap<Integer, String> map = new WTMap<>("WTMapTest", null, wtSession);
             map.clear();
 
             System.out.println("name = " + map.getName() + ", id = " + map.getId());
