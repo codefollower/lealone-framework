@@ -45,6 +45,7 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
         super(name, keyType, valueType, storage);
 
         Options options = new Options();
+        options.setCreateIfMissing(true);
         BlockBasedTableConfig config = new BlockBasedTableConfig();
         options.setTableFormatConfig(config);
         dbPath = storageDir + File.separator + name;
@@ -64,9 +65,8 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
         try (DataBuffer buff = DataBuffer.create()) {
             type.write(buff, obj);
             ByteBuffer b = buff.getAndFlipBuffer();
-            byte[] bytes = b.array();
-            byte[] dest = new byte[bytes.length];
-            System.arraycopy(bytes, 0, dest, 0, bytes.length);
+            byte[] dest = new byte[b.limit()];
+            System.arraycopy(b.array(), b.arrayOffset(), dest, 0, dest.length);
             return dest;
         }
     }
@@ -86,6 +86,8 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
 
     @SuppressWarnings("unchecked")
     V v(byte[] value) {
+        if (value == null)
+            return null;
         return (V) valueType.read(ByteBuffer.wrap(value));
     }
 
@@ -149,7 +151,6 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
         try (RocksIterator iterator = db.newIterator()) {
             iterator.seekToFirst();
             if (iterator.isValid()) {
-                // iterator.next();
                 return k(iterator.key());
             }
         }
@@ -161,7 +162,6 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
         try (RocksIterator iterator = db.newIterator()) {
             iterator.seekToLast();
             if (iterator.isValid()) {
-                // iterator.prev();
                 return k(iterator.key());
             }
         }
@@ -192,7 +192,7 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
         try (RocksIterator iterator = db.newIterator()) {
             for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
                 K k = k(iterator.key());
-                if (areEqual(k, key, keyType)) {
+                if (keyType.compare(key, k) >= 0) {
                     if (min) {
                         if (excluding) {
                             iterator.prev();
@@ -280,7 +280,7 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
         }
         for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
             K key = k(iterator.key());
-            if (areEqual(from, key, keyType)) {
+            if (keyType.compare(key, from) >= 0) {
                 break;
             }
         }

@@ -48,6 +48,8 @@ import org.rocksdb.WriteBatch;
 import org.rocksdb.WriteOptions;
 import org.rocksdb.util.SizeUnit;
 
+//要把rocksdbjni-5.14.2.jar中的本地库解压到一个目录，
+//然后使用-Djava.library.path=<your_rocksdbjni_path>这样的方式才能运行
 public class RocksDBTest extends StorageTestBase {
 
     static {

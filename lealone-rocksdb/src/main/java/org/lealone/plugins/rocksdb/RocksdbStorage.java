@@ -32,8 +32,7 @@ public class RocksdbStorage extends StorageBase {
     @Override
     public <K, V> StorageMap<K, V> openMap(String name, String mapType, StorageDataType keyType,
             StorageDataType valueType, Map<String, String> parameters) {
-        RocksdbStorageMap<K, V> map = new RocksdbStorageMap<>(this, (String) config.get("storagePath"), name, keyType,
-                valueType);
+        RocksdbStorageMap<K, V> map = new RocksdbStorageMap<>(this, getStoragePath(), name, keyType, valueType);
         maps.put(name, map);
         return map;
     }
