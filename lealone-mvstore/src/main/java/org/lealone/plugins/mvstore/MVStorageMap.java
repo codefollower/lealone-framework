@@ -18,6 +18,7 @@
 package org.lealone.plugins.mvstore;
 
 import org.h2.mvstore.MVMap;
+import org.h2.mvstore.MVStore;
 import org.lealone.storage.Storage;
 import org.lealone.storage.StorageMapBase;
 import org.lealone.storage.StorageMapCursor;
@@ -151,16 +152,19 @@ public class MVStorageMap<K, V> extends StorageMapBase<K, V> {
 
     @Override
     public boolean isClosed() {
-        return mvMap.isClosed();
+        return !storage.hasMap(name);
     }
 
     @Override
     public void close() {
-        // 无对应方法
+        storage.closeMap(name);
+        // MVMap的close不是public的，并且没实际用处
     }
 
     @Override
     public void save() {
-        // 无对应方法
+        MVStore store = mvMap.getStore();
+        if (!store.isClosed())
+            store.commit();
     }
 }

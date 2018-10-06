@@ -58,11 +58,6 @@ public class WTStorage extends StorageBase {
     }
 
     @Override
-    public void close() {
-        closeImmediately();
-    }
-
-    @Override
     public void closeImmediately() {
         conn.close(null);
         super.closeImmediately();

@@ -53,6 +53,7 @@ public class MVDataType implements org.h2.mvstore.type.DataType {
     public void write(WriteBuffer buff, Object[] obj, int len, boolean key) {
         DataBuffer db = DataBuffer.create();
         for (int i = 0; i < len; i++) {
+            db.reset();
             type.write(db, obj[i]);
             buff.put(db.getAndFlipBuffer());
         }
