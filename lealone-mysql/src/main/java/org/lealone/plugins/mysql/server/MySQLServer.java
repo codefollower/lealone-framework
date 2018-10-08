@@ -40,7 +40,7 @@ public class MySQLServer extends DelegatedProtocolServer implements AsyncConnect
     // private static final Logger logger = LoggerFactory.getLogger(MySQLServer.class);
     public static final int DEFAULT_PORT = 7214;
 
-    private final Set<MySQLConnection> connections = Collections.synchronizedSet(new HashSet<MySQLConnection>());
+    private final Set<MySQLServerConnection> connections = Collections.synchronizedSet(new HashSet<MySQLServerConnection>());
 
     @Override
     public String getName() {
@@ -87,18 +87,18 @@ public class MySQLServer extends DelegatedProtocolServer implements AsyncConnect
             return;
         super.stop();
 
-        for (MySQLConnection c : new ArrayList<>(connections)) {
+        for (MySQLServerConnection c : new ArrayList<>(connections)) {
             c.close();
         }
     }
 
-    public synchronized void addConnection(MySQLConnection conn) {
+    public synchronized void addConnection(MySQLServerConnection conn) {
         connections.add(conn);
     }
 
     @Override
     public synchronized AsyncConnection createConnection(WritableChannel writableChannel, boolean isServer) {
-        MySQLConnection conn = new MySQLConnection(this, writableChannel, isServer);
+        MySQLServerConnection conn = new MySQLServerConnection(this, writableChannel, isServer);
         conn.handshake();
         return conn;
     }

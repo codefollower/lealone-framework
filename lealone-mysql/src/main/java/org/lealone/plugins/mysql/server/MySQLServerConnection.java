@@ -55,9 +55,9 @@ import org.lealone.plugins.mysql.server.handler.PacketHandler;
 import org.lealone.plugins.mysql.util.PacketUtil;
 import org.lealone.sql.PreparedStatement;
 
-public class MySQLConnection extends AsyncConnection {
+public class MySQLServerConnection extends AsyncConnection {
 
-    private static final Logger logger = LoggerFactory.getLogger(MySQLConnection.class);
+    private static final Logger logger = LoggerFactory.getLogger(MySQLServerConnection.class);
     private static final int BUFFER_SIZE = 16 * 1024;
     private static final byte[] AUTH_OK = new byte[] { 7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 };
 
@@ -70,7 +70,7 @@ public class MySQLConnection extends AsyncConnection {
     // private DataOutputStream out;
     // private boolean initialized;
 
-    protected MySQLConnection(MySQLServer server, WritableChannel writableChannel, boolean isServer) {
+    protected MySQLServerConnection(MySQLServer server, WritableChannel writableChannel, boolean isServer) {
         super(writableChannel, isServer);
         this.server = server;
     }

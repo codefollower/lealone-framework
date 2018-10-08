@@ -22,16 +22,16 @@ import java.io.UnsupportedEncodingException;
 import org.lealone.plugins.mysql.protocol.MySQLMessage;
 import org.lealone.plugins.mysql.protocol.MySQLPacket;
 import org.lealone.plugins.mysql.protocol.PacketInput;
-import org.lealone.plugins.mysql.server.MySQLConnection;
+import org.lealone.plugins.mysql.server.MySQLServerConnection;
 
 public class CommandPacketHandler implements PacketHandler {
 
     // private static final Logger logger = LoggerFactory.getLogger(CommandPacketHandler.class);
 
     // private PacketHandler packetHandler;
-    private final MySQLConnection conn;
+    private final MySQLServerConnection conn;
 
-    public CommandPacketHandler(MySQLConnection conn) {
+    public CommandPacketHandler(MySQLServerConnection conn) {
         this.conn = conn;
     }
 

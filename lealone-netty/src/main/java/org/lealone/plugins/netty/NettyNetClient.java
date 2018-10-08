@@ -27,7 +27,7 @@ import org.lealone.common.logging.LoggerFactory;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetEndpoint;
-import org.lealone.net.TcpConnection;
+import org.lealone.net.TcpClientConnection;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -161,7 +161,7 @@ public class NettyNetClient implements org.lealone.net.NetClient {
                         if (connectionManager != null) {
                             conn = connectionManager.createConnection(channel, false);
                         } else {
-                            conn = new TcpConnection(channel, nettyNetClient);
+                            conn = new TcpClientConnection(channel, nettyNetClient);
                         }
                         ChannelPipeline p = ch.pipeline();
                         p.addLast(new NettyClientHandler(connectionManager, conn));

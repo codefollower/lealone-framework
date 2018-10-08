@@ -54,9 +54,9 @@ import org.lealone.sql.SQLStatement;
  * @author H2 Group
  * @author zhh
  */
-public class PgConnection extends AsyncConnection {
+public class PgServerConnection extends AsyncConnection {
 
-    private static final Logger logger = LoggerFactory.getLogger(PgConnection.class);
+    private static final Logger logger = LoggerFactory.getLogger(PgServerConnection.class);
 
     private static final int BUFFER_SIZE = 4 * 1024;
 
@@ -78,7 +78,7 @@ public class PgConnection extends AsyncConnection {
     private final HashMap<String, Prepared> prepared = new CaseInsensitiveMap<Prepared>();
     private final HashMap<String, Portal> portals = new CaseInsensitiveMap<Portal>();
 
-    protected PgConnection(PgServer server, WritableChannel writableChannel, boolean isServer) {
+    protected PgServerConnection(PgServer server, WritableChannel writableChannel, boolean isServer) {
         super(writableChannel, isServer);
         this.server = server;
     }

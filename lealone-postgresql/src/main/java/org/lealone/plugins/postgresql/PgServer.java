@@ -80,7 +80,7 @@ public class PgServer extends DelegatedProtocolServer implements AsyncConnection
     private static final int PG_TYPE_NUMERIC = 1700;
 
     private final HashSet<Integer> typeSet = new HashSet<>();
-    private final Set<PgConnection> connections = Collections.synchronizedSet(new HashSet<PgConnection>());
+    private final Set<PgServerConnection> connections = Collections.synchronizedSet(new HashSet<PgServerConnection>());
     private boolean trace;
 
     @Override
@@ -135,7 +135,7 @@ public class PgServer extends DelegatedProtocolServer implements AsyncConnection
             return;
         super.stop();
 
-        for (PgConnection c : new ArrayList<>(connections)) {
+        for (PgServerConnection c : new ArrayList<>(connections)) {
             c.close();
         }
     }
@@ -370,7 +370,7 @@ public class PgServer extends DelegatedProtocolServer implements AsyncConnection
 
     @Override
     public synchronized AsyncConnection createConnection(WritableChannel writableChannel, boolean isServer) {
-        PgConnection conn = new PgConnection(this, writableChannel, isServer);
+        PgServerConnection conn = new PgServerConnection(this, writableChannel, isServer);
         connections.add(conn);
         conn.setProcessId(connections.size());
         return conn;

@@ -19,13 +19,13 @@ package org.lealone.plugins.mysql.server.handler;
 
 import org.lealone.plugins.mysql.protocol.AuthPacket;
 import org.lealone.plugins.mysql.protocol.PacketInput;
-import org.lealone.plugins.mysql.server.MySQLConnection;
+import org.lealone.plugins.mysql.server.MySQLServerConnection;
 
 public class AuthPacketHandler implements PacketHandler {
 
-    MySQLConnection conn;
+    MySQLServerConnection conn;
 
-    public AuthPacketHandler(MySQLConnection conn) {
+    public AuthPacketHandler(MySQLServerConnection conn) {
         this.conn = conn;
     }
 
