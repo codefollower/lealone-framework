@@ -42,14 +42,17 @@ public class PluginTestBase extends org.lealone.test.sql.SqlTestBase {
 
     @Test
     public void run() throws Exception {
-        stmt.executeUpdate("drop table IF EXISTS " + tableName);
-        stmt.executeUpdate("create table IF NOT EXISTS " + tableName + "(f1 int, f2 int, f3 int)");
-        stmt.executeUpdate("insert into " + tableName + "(f1, f2, f3) values(1,2,3)");
-        stmt.executeUpdate("insert into " + tableName + "(f1, f2, f3) values(5,2,3)");
-        stmt.executeUpdate("insert into " + tableName + "(f1, f2, f3) values(3,2,3)");
+        executeUpdate("drop table IF EXISTS " + tableName);
+        executeUpdate("create table IF NOT EXISTS " + tableName + "(f1 int, f2 int, f3 int)");
+        executeUpdate("insert into " + tableName + "(f1, f2, f3) values(1,2,3)");
+        executeUpdate("insert into " + tableName + "(f1, f2, f3) values(5,2,3)");
+        executeUpdate("insert into " + tableName + "(f1, f2, f3) values(3,2,3)");
 
         sql = "select count(*) from " + tableName;
         assertEquals(3, getIntValue(1, true));
+
+        int updateCount = executeUpdate("update " + tableName + " set f2=3 where f1>=3");
+        assertEquals(2, updateCount);
 
         sql = "select * from " + tableName;
         printResultSet();

@@ -101,6 +101,8 @@ public class MVStorageBuilder extends StorageBuilder {
      */
     @Override
     public MVStorage openStorage() {
+        // 禁用自动提交，交由上层的事务引擎负责
+        builder.autoCommitDisabled();
         return new MVStorage(builder.open(), config);
     }
 }
