@@ -30,6 +30,7 @@ import org.lealone.plugins.mysql.server.MySQLServerEngine;
 import org.lealone.plugins.netty.NettyNetFactory;
 import org.lealone.plugins.postgresql.PgServer;
 import org.lealone.plugins.postgresql.PgServerEngine;
+import org.lealone.plugins.vertx.VertxNetFactory;
 import org.lealone.server.TcpServerEngine;
 
 public class PluginTestBase extends org.lealone.test.sql.SqlTestBase {
@@ -90,6 +91,10 @@ public class PluginTestBase extends org.lealone.test.sql.SqlTestBase {
 
     public static void enableNettyNetServer(Config config) {
         enableNetServer(config, NettyNetFactory.NAME);
+    }
+
+    public static void enableVertxNetServer(Config config) {
+        enableNetServer(config, VertxNetFactory.NAME);
     }
 
     public static void enableNioNetServer(Config config) {

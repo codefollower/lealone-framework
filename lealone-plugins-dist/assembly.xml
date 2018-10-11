@@ -83,6 +83,21 @@
         </moduleSet>
         <moduleSet>
             <includes>
+                <include>org.lealone:lealone-vertx</include>
+            </includes>
+            <binaries>
+                <unpack>false</unpack>
+                <outputDirectory>plugins/lealone-vertx</outputDirectory>
+                <dependencySets>
+                    <dependencySet>
+                        <useTransitiveFiltering>true</useTransitiveFiltering>
+                        <useTransitiveDependencies>true</useTransitiveDependencies>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+        <moduleSet>
+            <includes>
                 <include>org.lealone:lealone-postgresql</include>
             </includes>
             <binaries>
