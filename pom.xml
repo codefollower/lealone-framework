@@ -39,6 +39,7 @@
         <module>../lealone/lealone-test</module>
         <module>lealone-mina</module>
         <module>lealone-netty</module>
+        <module>lealone-vertx</module>
         <module>lealone-mvstore</module>
         <module>lealone-wiredtiger</module>
         <module>lealone-rocksdb</module>
