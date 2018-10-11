@@ -11,7 +11,7 @@
 使用 [Netty](http://netty.io/) 网络应用框架来实现 Lealone 客户端与服务器端以及 Lealone 集群节点之间的网络通信
 
 
-### [lealone-vertx](https://github.com/lealone/Lealone-Platform/tree/master/lealone-vertx)
+### [lealone-vertx](https://github.com/lealone/Lealone-Plugins/tree/master/lealone-vertx)
 使用 [Vert.x](https://vertx.io/) 来实现 Lealone 客户端与服务器端以及 Lealone 集群节点之间的网络通信
 
 
