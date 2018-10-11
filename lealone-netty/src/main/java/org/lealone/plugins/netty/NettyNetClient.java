@@ -19,13 +19,14 @@ package org.lealone.plugins.netty;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
+import org.lealone.common.exceptions.DbException;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
+import org.lealone.net.NetClientBase;
 import org.lealone.net.NetEndpoint;
 import org.lealone.net.TcpClientConnection;
 
@@ -43,13 +44,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-public class NettyNetClient implements org.lealone.net.NetClient {
+public class NettyNetClient extends NetClientBase {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyNetClient.class);
-
-    // 使用InetSocketAddress为key而不是字符串，是因为像localhost和127.0.0.1这两种不同格式实际都是同一个意思，
-    // 如果用字符串，就会产生两条AsyncConnection，这是没必要的。
-    private static final ConcurrentHashMap<InetSocketAddress, AsyncConnection> asyncConnections = new ConcurrentHashMap<>();
 
     private static final NettyNetClient instance = new NettyNetClient();
 
@@ -57,18 +54,18 @@ public class NettyNetClient implements org.lealone.net.NetClient {
         return instance;
     }
 
-    private static NettyNetClient.NettyClient client;
+    private static NettyNetClient.NettyClient nettyClient;
 
-    private static synchronized void openClient(NettyNetClient nettyNetClient, Map<String, String> config) {
-        if (client == null) {
-            client = new NettyClient(nettyNetClient, config);
+    private static synchronized void openNettyClient(NettyNetClient nettyNetClient, Map<String, String> config) {
+        if (nettyClient == null) {
+            nettyClient = new NettyClient(nettyNetClient, config);
         }
     }
 
-    private static synchronized void closeClient() {
-        if (client != null) {
-            client.close();
-            client = null;
+    private static synchronized void closeNettyClient() {
+        if (nettyClient != null) {
+            nettyClient.close();
+            nettyClient = null;
         }
     }
 
@@ -76,55 +73,23 @@ public class NettyNetClient implements org.lealone.net.NetClient {
     }
 
     @Override
-    public AsyncConnection createConnection(Map<String, String> config, NetEndpoint endpoint) {
-        return createConnection(config, endpoint, null);
+    protected void openInternal(Map<String, String> config) {
+        openNettyClient(this, config);
     }
 
     @Override
-    public AsyncConnection createConnection(Map<String, String> config, NetEndpoint endpoint,
-            AsyncConnectionManager connectionManager) {
-        if (client == null) {
-            openClient(this, config);
-        }
-        InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
-        AsyncConnection asyncConnection = asyncConnections.get(inetSocketAddress);
-        if (asyncConnection == null) {
-            synchronized (NettyNetClient.class) {
-                asyncConnection = asyncConnections.get(inetSocketAddress);
-                if (asyncConnection == null) {
-                    CountDownLatch latch = new CountDownLatch(1);
-                    try {
-                        client.connect(inetSocketAddress, endpoint.getHost(), endpoint.getPort(), latch,
-                                connectionManager);
-                        latch.await();
-                        asyncConnection = asyncConnections.get(inetSocketAddress);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Cannot connect to " + inetSocketAddress, e);
-                    }
-                    if (asyncConnection == null) {
-                        throw new RuntimeException("Cannot connect to " + inetSocketAddress);
-                    }
-                }
-            }
-        }
-        return asyncConnection;
+    protected void closeInternal() {
+        closeNettyClient();
     }
 
     @Override
-    public void removeConnection(InetSocketAddress inetSocketAddress, boolean closeClient) {
-        removeConnectionInternal(inetSocketAddress, closeClient);
+    protected void createConnectionInternal(NetEndpoint endpoint, AsyncConnectionManager connectionManager,
+            CountDownLatch latch) throws Exception {
+        nettyClient.connect(endpoint, connectionManager, latch);
     }
 
-    private static void removeConnectionInternal(AsyncConnection conn, boolean closeClient) {
-        removeConnectionInternal(conn.getInetSocketAddress(), closeClient);
-    }
-
-    private static synchronized void removeConnectionInternal(InetSocketAddress inetSocketAddress,
-            boolean closeClient) {
-        asyncConnections.remove(inetSocketAddress);
-        if (closeClient && asyncConnections.isEmpty()) {
-            closeClient();
-        }
+    private static void removeConnectionInternal(AsyncConnection conn) {
+        instance.removeConnection(conn.getInetSocketAddress());
     }
 
     private static class NettyClient {
@@ -148,30 +113,33 @@ public class NettyNetClient implements org.lealone.net.NetClient {
             bootstrap.config().group().shutdownGracefully();
         }
 
-        public void connect(InetSocketAddress inetSocketAddress, String host, int port, CountDownLatch latch,
-                AsyncConnectionManager connectionManager) throws Exception {
-            // ChannelFuture f = b.connect(host, port).sync();
-            bootstrap.connect(host, port).addListener(new ChannelFutureListener() {
+        public void connect(NetEndpoint endpoint, AsyncConnectionManager connectionManager, CountDownLatch latch) {
+            final InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
+            bootstrap.connect(endpoint.getHost(), endpoint.getPort()).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
-                    if (future.isSuccess()) {
-                        SocketChannel ch = (SocketChannel) future.channel();
-                        NettyWritableChannel channel = new NettyWritableChannel(ch);
-                        AsyncConnection conn;
-                        if (connectionManager != null) {
-                            conn = connectionManager.createConnection(channel, false);
+                    try {
+                        if (future.isSuccess()) {
+                            SocketChannel ch = (SocketChannel) future.channel();
+                            NettyWritableChannel channel = new NettyWritableChannel(ch);
+                            AsyncConnection conn;
+                            if (connectionManager != null) {
+                                conn = connectionManager.createConnection(channel, false);
+                            } else {
+                                conn = new TcpClientConnection(channel, nettyNetClient);
+                            }
+                            ChannelPipeline p = ch.pipeline();
+                            p.addLast(new NettyClientHandler(connectionManager, conn));
+                            conn.setInetSocketAddress(inetSocketAddress);
+                            nettyNetClient.addConnection(inetSocketAddress, conn);
                         } else {
-                            conn = new TcpClientConnection(channel, nettyNetClient);
+                            throw DbException.convert(future.cause());
                         }
-                        ChannelPipeline p = ch.pipeline();
-                        p.addLast(new NettyClientHandler(connectionManager, conn));
-                        conn.setInetSocketAddress(inetSocketAddress);
-                        asyncConnections.put(inetSocketAddress, conn);
+                    } finally {
+                        latch.countDown();
                     }
-                    latch.countDown();
                 }
             });
-            // f.channel().closeFuture().sync();
         }
     }
 
@@ -202,7 +170,7 @@ public class NettyNetClient implements org.lealone.net.NetClient {
             logger.info(msg + " closed");
             if (connectionManager != null)
                 connectionManager.removeConnection(conn);
-            removeConnectionInternal(conn, false);
+            removeConnectionInternal(conn);
         }
     }
 }

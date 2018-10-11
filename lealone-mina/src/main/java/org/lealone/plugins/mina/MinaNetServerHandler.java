@@ -57,7 +57,7 @@ public class MinaNetServerHandler extends IoHandlerAdapter {
     public void exceptionCaught(IoSession session, Throwable cause) {
         session.closeNow();
         String msg = "RemoteAddress " + session.getRemoteAddress();
-        logger.error(msg + " exception: " + cause.getMessage(), cause);
+        logger.error(msg + " exception: " + cause.getMessage());
         logger.info(msg + " closed");
     }
 

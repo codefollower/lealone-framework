@@ -54,7 +54,7 @@ public class NettyNetServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof ByteBuf) {
             ByteBuf buff = (ByteBuf) msg;
-            conn.handle(new NettyBuffer(buff));
+            conn.handle(new NettyBuffer(buff.copy()));
             buff.release();
         } else {
             throw DbException.throwInternalError("msg type is " + msg.getClass().getName() + " not ByteBuf");

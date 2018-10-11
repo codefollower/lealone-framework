@@ -20,6 +20,7 @@ package org.lealone.plugins.mina;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.session.IoSession;
@@ -27,12 +28,12 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.lealone.common.exceptions.DbException;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
+import org.lealone.net.NetClientBase;
 import org.lealone.net.NetEndpoint;
 import org.lealone.net.TcpClientConnection;
 
-public class MinaNetClient implements org.lealone.net.NetClient {
+public class MinaNetClient extends NetClientBase {
 
-    private static final ConcurrentHashMap<InetSocketAddress, AsyncConnection> asyncConnections = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<IoSession, AsyncConnection> sessionToConnectionMap = new ConcurrentHashMap<>();
     private static final MinaNetClient instance = new MinaNetClient();
 
@@ -46,57 +47,18 @@ public class MinaNetClient implements org.lealone.net.NetClient {
     }
 
     @Override
-    public AsyncConnection createConnection(Map<String, String> config, NetEndpoint endpoint) {
-        return createConnection(config, endpoint, null);
-    }
-
-    @Override
-    public AsyncConnection createConnection(Map<String, String> config, NetEndpoint endpoint,
-            AsyncConnectionManager connectionManager) {
+    protected synchronized void openInternal(Map<String, String> config) {
         if (connector == null) {
-            synchronized (this) {
-                if (connector == null) {
-                    connector = new NioSocketConnector();
-                    connector.setHandler(new MinaNetClientHandler(this));
-                }
-            }
+            connector = new NioSocketConnector();
+            connector.setHandler(new MinaNetClientHandler(this));
         }
-        InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
-        AsyncConnection conn = asyncConnections.get(inetSocketAddress);
-        if (conn == null) {
-            synchronized (MinaNetClient.class) {
-                conn = asyncConnections.get(inetSocketAddress);
-                if (conn == null) {
-                    ConnectFuture future = connector.connect(inetSocketAddress);
-                    future.awaitUninterruptibly();
-                    if (!future.isConnected()) {
-                        throw new RuntimeException("Failed to connect " + inetSocketAddress, future.getException());
-                    }
-                    IoSession session = future.getSession();
-                    MinaWritableChannel writableChannel = new MinaWritableChannel(session);
-                    try {
-                        if (connectionManager != null) {
-                            conn = connectionManager.createConnection(writableChannel, false);
-                        } else {
-                            conn = new TcpClientConnection(writableChannel, this);
-                        }
-                        conn.setInetSocketAddress(inetSocketAddress);
-                        asyncConnections.put(inetSocketAddress, conn);
-                        sessionToConnectionMap.put(session, conn);
-                    } catch (Exception e) {
-                        throw DbException.convert(e);
-                    }
-                }
-            }
-        }
-        return conn;
     }
 
     @Override
-    public void removeConnection(InetSocketAddress inetSocketAddress, boolean closeClient) {
-        asyncConnections.remove(inetSocketAddress);
-        if (closeClient && asyncConnections.isEmpty()) {
+    protected synchronized void closeInternal() {
+        if (connector != null) {
             connector.dispose();
+            connector = null;
         }
     }
 
@@ -107,6 +69,32 @@ public class MinaNetClient implements org.lealone.net.NetClient {
     void removeConnection(IoSession session) {
         AsyncConnection conn = sessionToConnectionMap.remove(session);
         if (conn != null)
-            removeConnection(conn.getInetSocketAddress(), false);
+            removeConnection(conn.getInetSocketAddress());
+    }
+
+    @Override
+    protected void createConnectionInternal(NetEndpoint endpoint, AsyncConnectionManager connectionManager,
+            CountDownLatch latch) throws Exception {
+        try {
+            InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
+            ConnectFuture future = connector.connect(inetSocketAddress);
+            future.awaitUninterruptibly();
+            if (!future.isConnected()) {
+                throw DbException.convert(future.getException());
+            }
+            IoSession session = future.getSession();
+            MinaWritableChannel writableChannel = new MinaWritableChannel(session);
+            AsyncConnection conn;
+            if (connectionManager != null) {
+                conn = connectionManager.createConnection(writableChannel, false);
+            } else {
+                conn = new TcpClientConnection(writableChannel, this);
+            }
+            conn.setInetSocketAddress(inetSocketAddress);
+            addConnection(inetSocketAddress, conn);
+            sessionToConnectionMap.put(session, conn);
+        } finally {
+            latch.countDown();
+        }
     }
 }
