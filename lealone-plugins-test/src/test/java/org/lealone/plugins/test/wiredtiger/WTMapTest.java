@@ -102,7 +102,7 @@ public class WTMapTest extends org.junit.Assert {
             assertEquals(2, (int) cursor.getKey());
             assertEquals("b", cursor.getValue());
             assertTrue(cursor.hasNext());
-            cursor = map.cursor(null);
+            cursor = map.cursor((Integer) null);
             assertTrue(cursor.hasNext());
 
             for (Entry<Integer, String> e : map.entrySet()) {
