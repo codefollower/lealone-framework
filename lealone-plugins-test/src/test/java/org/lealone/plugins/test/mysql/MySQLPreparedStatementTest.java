@@ -31,7 +31,7 @@ public class MySQLPreparedStatementTest {
         return getMySQLConnection(true);
     }
 
-    private static Connection getMySQLConnection(boolean autoCommit) throws Exception {
+    public static Connection getMySQLConnection(boolean autoCommit) throws Exception {
         String driver = "com.mysql.jdbc.Driver";
         int port = MySQLServer.DEFAULT_PORT;
         String db = "mysql";
@@ -87,6 +87,11 @@ public class MySQLPreparedStatementTest {
 
     public static void main(String[] args) throws Exception {
         try {
+            // Connection[] a = new Connection[100];
+            // for (int i = 0; i < 100; i++)
+            // a[i] = getMySQLConnection();
+            // for (int i = 0; i < 100; i++)
+            // a[i].close();
             Connection conn = getMySQLConnection();
             Statement statement = conn.createStatement();
             statement.executeUpdate("drop table if exists pet");

@@ -19,7 +19,7 @@ base_dir: target/test-data
 listen_address: 127.0.0.1
 
 storage_engines:
-  - name: AOSE
+  - name: MVStore
     enabled: true
     parameters: {
         # key1: v1,

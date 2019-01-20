@@ -19,12 +19,14 @@ package org.lealone.plugins.test.mysql;
 
 import org.lealone.common.exceptions.ConfigException;
 import org.lealone.p2p.config.Config;
+import org.lealone.plugins.mvstore.MVStorageEngine;
 import org.lealone.plugins.test.PluginServerStart;
 import org.lealone.plugins.test.PluginTestBase;
 
 public class MySQLServerStart extends PluginServerStart {
 
     public static void main(String[] args) {
+        System.setProperty("lealone.default.storage.engine", MVStorageEngine.NAME);
         start(MySQLServerStart.class);
     }
 
