@@ -54,6 +54,7 @@ public class VertxNetServerStart extends PluginServerStart {
         // disableSSLContext();
     }
 
+    @SuppressWarnings("restriction")
     public static void disableSSLContext() {
         // 这一行可以屏蔽在io.vertx.core.net.impl.SSLHelper类的static初始代码中调用耗时的SSLContext.getInstance("TLS")
         // 但是在JDK 1.8.0_112-b15中不能正常启动，

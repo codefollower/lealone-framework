@@ -45,6 +45,7 @@
         <module>lealone-rocksdb</module>
         <module>lealone-mysql</module>
         <module>lealone-postgresql</module>
+        <module>lealone-mongodb</module>
         <module>lealone-plugins-dist</module>
         <module>lealone-plugins-test</module>
     </modules>
@@ -134,7 +135,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
