@@ -17,12 +17,10 @@
  */
 package org.lealone.plugins.mvstore;
 
-import java.util.Iterator;
-
 import org.h2.mvstore.Cursor;
 import org.lealone.storage.StorageMapCursor;
 
-public class MVStorageMapCursor<K, V> implements Iterator<K>, StorageMapCursor<K, V> {
+public class MVStorageMapCursor<K, V> implements StorageMapCursor<K, V> {
 
     private final Cursor<K, V> cursor;
 

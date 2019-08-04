@@ -18,7 +18,6 @@
  */
 package org.lealone.plugins.wiredtiger;
 
-import org.lealone.common.util.DataUtils;
 import org.lealone.storage.StorageMapCursor;
 
 import com.wiredtiger.db.Cursor;
@@ -43,6 +42,16 @@ public class WTMapCursor<K, V> implements StorageMapCursor<K, V> {
     }
 
     @Override
+    public K getKey() {
+        return key;
+    }
+
+    @Override
+    public V getValue() {
+        return value;
+    }
+
+    @Override
     public boolean hasNext() {
         if (from != null) {
             from = null;
@@ -64,20 +73,5 @@ public class WTMapCursor<K, V> implements StorageMapCursor<K, V> {
     @Override
     public K next() {
         return key;
-    }
-
-    @Override
-    public K getKey() {
-        return key;
-    }
-
-    @Override
-    public V getValue() {
-        return value;
-    }
-
-    @Override
-    public void remove() {
-        throw DataUtils.newUnsupportedOperationException("Removing is not supported");
     }
 }
