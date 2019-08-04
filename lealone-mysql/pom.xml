@@ -43,11 +43,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.jsqlparser</groupId>
-            <artifactId>jsqlparser</artifactId>
-            <version>1.3</version>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.16</version><!--6.0.2太新了，直接连MySQL 5.7在没做更多配置前都抛错-->
