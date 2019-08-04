@@ -28,10 +28,10 @@ import org.lealone.sql.IExpression;
 import org.lealone.sql.SQLEngine;
 import org.lealone.sql.SQLEngineManager;
 import org.lealone.sql.SQLParser;
-import org.lealone.sql.expression.ConditionAndOr;
 import org.lealone.sql.expression.Parameter;
 import org.lealone.sql.expression.SequenceValue;
 import org.lealone.sql.expression.ValueExpression;
+import org.lealone.sql.expression.condition.ConditionAndOr;
 
 public class MySQLEngine implements SQLEngine {
 
