@@ -34,6 +34,10 @@
             <outputDirectory>conf</outputDirectory>
         </fileSet>
         <fileSet>
+            <directory>lealone-plugins-dist/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>lealone-js/src/main/js</directory>
             <outputDirectory>js</outputDirectory>
         </fileSet>
@@ -197,6 +201,21 @@
             <binaries>
                 <unpack>false</unpack>
                 <outputDirectory>plugins/lealone-service</outputDirectory>
+                <dependencySets>
+                    <dependencySet>
+                        <useTransitiveFiltering>true</useTransitiveFiltering>
+                        <useTransitiveDependencies>true</useTransitiveDependencies>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+        <moduleSet>
+            <includes>
+                <include>org.lealone:lealone-sqlline</include>
+            </includes>
+            <binaries>
+                <unpack>false</unpack>
+                <outputDirectory>lib/client</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
