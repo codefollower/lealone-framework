@@ -25,16 +25,20 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>lealone-mongodb</artifactId>
+    <artifactId>lealone-js</artifactId>
     <packaging>jar</packaging>
     <version>5.0.0-SNAPSHOT</version>
+
+    <build>
+        <sourceDirectory>${project.basedir}/src/main/js</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/js</testSourceDirectory>
+    </build>
 
     <dependencies>
         <dependency>
             <groupId>org.lealone</groupId>
-            <artifactId>lealone-net</artifactId>
+            <artifactId>lealone-main</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -26,17 +26,17 @@
     <version>5.0.0-SNAPSHOT</version>
 
     <modules>
-        <module>../lealone/lealone-common</module>
-        <module>../lealone/lealone-net</module>
-        <module>../lealone/lealone-client</module>
-        <module>../lealone/lealone-server</module>
-        <module>../lealone/lealone-sql</module>
-        <module>../lealone/lealone-db</module>
-        <module>../lealone/lealone-amte</module>
-        <module>../lealone/lealone-aose</module>
-        <module>../lealone/lealone-p2p</module>
-        <module>../lealone/lealone-main</module>
-        <module>../lealone/lealone-test</module>
+        <module>../lealone-database/lealone-common</module>
+        <module>../lealone-database/lealone-net</module>
+        <module>../lealone-database/lealone-client</module>
+        <module>../lealone-database/lealone-server</module>
+        <module>../lealone-database/lealone-sql</module>
+        <module>../lealone-database/lealone-db</module>
+        <module>../lealone-database/lealone-amte</module>
+        <module>../lealone-database/lealone-aose</module>
+        <module>../lealone-database/lealone-p2p</module>
+        <module>../lealone-database/lealone-main</module>
+        <module>../lealone-database/lealone-test</module>
         <module>lealone-mina</module>
         <module>lealone-netty</module>
         <module>lealone-vertx</module>
@@ -45,7 +45,9 @@
         <module>lealone-rocksdb</module>
         <module>lealone-mysql</module>
         <module>lealone-postgresql</module>
-        <module>lealone-mongodb</module>
+        <module>lealone-js</module>
+        <module>lealone-orm</module>
+        <module>lealone-service</module>
         <module>lealone-plugins-dist</module>
         <module>lealone-plugins-test</module>
     </modules>
@@ -113,7 +115,7 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.2-beta-5</version>
                     <configuration>
-                        <finalName>lealone-plugins-${project.version}</finalName>
+                        <finalName>lealone-${project.version}</finalName>
                         <descriptors>
                             <descriptor>lealone-plugins-dist/assembly.xml</descriptor>
                         </descriptors>
@@ -129,6 +131,31 @@
     </build>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-core</artifactId>
+                <version>3.5.1</version><!--
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-codec-http</artifactId>
+                    </exclusion>
+                </exclusions>-->
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-unit</artifactId>
+                <version>3.5.1</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>

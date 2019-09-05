@@ -26,12 +26,16 @@
     <baseDirectory>/</baseDirectory>
     <fileSets>
         <fileSet>
-            <directory>../lealone/lealone-dist/bin</directory>
+            <directory>../lealone-database/lealone-dist/bin</directory>
             <outputDirectory>bin</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../lealone/lealone-dist/conf</directory>
+            <directory>../lealone-database/lealone-dist/conf</directory>
             <outputDirectory>conf</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>lealone-js/src/main/js</directory>
+            <outputDirectory>js</outputDirectory>
         </fileSet>
     </fileSets>
 
@@ -45,7 +49,7 @@
             <outputDirectory>lib/client</outputDirectory>
         </file>-->
         <file>
-            <source>../lealone/lealone-dist/target/lealone-${project.version}.jar</source>
+            <source>../lealone-database/lealone-dist/target/lealone-${project.version}.jar</source>
             <outputDirectory>lib</outputDirectory>
         </file>
     </files>
@@ -163,6 +167,36 @@
             <binaries>
                 <unpack>false</unpack>
                 <outputDirectory>plugins/lealone-wiredtiger</outputDirectory>
+                <dependencySets>
+                    <dependencySet>
+                        <useTransitiveFiltering>true</useTransitiveFiltering>
+                        <useTransitiveDependencies>true</useTransitiveDependencies>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+        <moduleSet>
+            <includes>
+                <include>org.lealone:lealone-orm</include>
+            </includes>
+            <binaries>
+                <unpack>false</unpack>
+                <outputDirectory>plugins/lealone-orm</outputDirectory>
+                <dependencySets>
+                    <dependencySet>
+                        <useTransitiveFiltering>true</useTransitiveFiltering>
+                        <useTransitiveDependencies>true</useTransitiveDependencies>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+        <moduleSet>
+            <includes>
+                <include>org.lealone:lealone-service</include>
+            </includes>
+            <binaries>
+                <unpack>false</unpack>
+                <outputDirectory>plugins/lealone-service</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
