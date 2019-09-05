@@ -65,8 +65,7 @@ import org.lealone.db.value.ValueTimestamp;
 import org.lealone.sql.SQLParser;
 import org.lealone.sql.SQLStatement;
 import org.lealone.sql.StatementBase;
-import org.lealone.sql.StatementWrapper;
-import org.lealone.sql.StatementWrapperList;
+import org.lealone.sql.StatementList;
 import org.lealone.sql.admin.ShutdownServer;
 import org.lealone.sql.ddl.AlterDatabase;
 import org.lealone.sql.ddl.AlterIndexRename;
@@ -277,13 +276,11 @@ public class MySQLParser implements SQLParser {
 
             s.setPrepareAlways(recompileAlways);
             s.setParameterList(parameters);
-            StatementWrapper sw = new StatementWrapper(session, s);
-            s = sw;
             boolean hasMore = isToken(";");
             if (hasMore) {
                 String remaining = originalSQL.substring(parseIndex);
                 if (remaining.trim().length() != 0) {
-                    s = new StatementWrapperList(session, sw, remaining);
+                    s = new StatementList(session, s, remaining);
                 }
             } else if (currentTokenType != END) {
                 throw getSyntaxError();
