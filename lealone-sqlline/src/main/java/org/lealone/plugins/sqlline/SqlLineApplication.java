@@ -46,7 +46,7 @@ import sqlline.ReflectiveCommandHandler;
 import sqlline.SqlLine;
 import sqlline.SqlLineOpts;
 
-//改编自org.apache.lealone.exec.client.DrillSqlLineApplication
+//改编自org.apache.drill.exec.client.DrillSqlLineApplication
 public class SqlLineApplication extends Application {
 
     public static void main(String[] args) throws IOException {
