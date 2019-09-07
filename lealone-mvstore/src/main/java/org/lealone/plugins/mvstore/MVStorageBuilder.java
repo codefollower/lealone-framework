@@ -27,6 +27,13 @@ public class MVStorageBuilder extends StorageBuilder {
     private final MVStore.Builder builder = new MVStore.Builder();
 
     @Override
+    public MVStorage openStorage() {
+        // 禁用自动提交，交由上层的事务引擎负责
+        builder.autoCommitDisabled();
+        return new MVStorage(builder.open(), config);
+    }
+
+    @Override
     public StorageBuilder storagePath(String storagePath) {
         builder.fileName(storagePath);
         return super.storagePath(storagePath);
@@ -92,17 +99,5 @@ public class MVStorageBuilder extends StorageBuilder {
     @Override
     public StorageBuilder db(Object db) {
         return super.db(db);
-    }
-
-    /**
-     * Open the storage.
-     * 
-     * @return the opened storage
-     */
-    @Override
-    public MVStorage openStorage() {
-        // 禁用自动提交，交由上层的事务引擎负责
-        builder.autoCommitDisabled();
-        return new MVStorage(builder.open(), config);
     }
 }

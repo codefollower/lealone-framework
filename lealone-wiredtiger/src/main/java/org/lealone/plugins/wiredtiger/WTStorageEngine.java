@@ -24,6 +24,7 @@ import org.lealone.storage.StorageEngineBase;
  * A storage engine that internally uses the WiredTiger.
  */
 public class WTStorageEngine extends StorageEngineBase {
+
     public static final String NAME = "WT";
 
     public WTStorageEngine() {
@@ -33,5 +34,12 @@ public class WTStorageEngine extends StorageEngineBase {
     @Override
     public StorageBuilder getStorageBuilder() {
         return new WTStorageBuilder();
+    }
+
+    public static class WTStorageBuilder extends StorageBuilder {
+        @Override
+        public WTStorage openStorage() {
+            return new WTStorage(config);
+        }
     }
 }

@@ -34,13 +34,13 @@ import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 import org.rocksdb.RocksIterator;
 
-public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
+public class RocksdbMap<K, V> extends StorageMapBase<K, V> {
 
     private final RocksDB db;
     private final String dbPath;
     private boolean closed;
 
-    public RocksdbStorageMap(String name, StorageDataType keyType, StorageDataType valueType, RocksdbStorage storage) {
+    public RocksdbMap(String name, StorageDataType keyType, StorageDataType valueType, RocksdbStorage storage) {
         super(name, keyType, valueType, storage);
 
         Options options = new Options();
@@ -275,7 +275,7 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
         RocksIterator iterator = db.newIterator();
         if (from == null) {
             iterator.seekToFirst();
-            return new RocksdbStorageMapCursor<>(this, iterator);
+            return new RocksdbMapCursor<>(this, iterator);
         }
         for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {
             K key = k(iterator.key());
@@ -283,7 +283,7 @@ public class RocksdbStorageMap<K, V> extends StorageMapBase<K, V> {
                 break;
             }
         }
-        return new RocksdbStorageMapCursor<>(this, iterator);
+        return new RocksdbMapCursor<>(this, iterator);
     }
 
     @Override

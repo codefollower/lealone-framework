@@ -17,12 +17,12 @@
  */
 package org.lealone.plugins.rocksdb;
 
-import org.lealone.db.DataHandler;
-import org.lealone.storage.LobStorage;
-import org.lealone.storage.Storage;
 import org.lealone.storage.StorageBuilder;
 import org.lealone.storage.StorageEngineBase;
 
+/**
+ * A storage engine that internally uses the RocksDB.
+ */
 public class RocksdbStorageEngine extends StorageEngineBase {
 
     public static final String NAME = "rocksdb";
@@ -36,8 +36,10 @@ public class RocksdbStorageEngine extends StorageEngineBase {
         return new RocksdbStorageBuilder();
     }
 
-    @Override
-    public LobStorage getLobStorage(DataHandler dataHandler, Storage storage) {
-        return null;
+    public static class RocksdbStorageBuilder extends StorageBuilder {
+        @Override
+        public RocksdbStorage openStorage() {
+            return new RocksdbStorage(config);
+        }
     }
 }

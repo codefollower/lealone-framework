@@ -23,14 +23,14 @@ import org.rocksdb.RocksIterator;
 //RocksIterator的行为跟java.util.Iterator不一样，
 //java.util.Iterator是先判断hasNext()，如果为true再调用next()取到当前值，
 //而RocksIterator是判断isValid()为true时就要把当前值取好了，调用next是转到下一行了。
-public class RocksdbStorageMapCursor<K, V> implements StorageMapCursor<K, V> {
+public class RocksdbMapCursor<K, V> implements StorageMapCursor<K, V> {
 
-    private final RocksdbStorageMap<K, V> map;
+    private final RocksdbMap<K, V> map;
     private final RocksIterator iterator;
     private K k;
     private V v;
 
-    public RocksdbStorageMapCursor(RocksdbStorageMap<K, V> map, RocksIterator iterator) {
+    public RocksdbMapCursor(RocksdbMap<K, V> map, RocksIterator iterator) {
         this.map = map;
         this.iterator = iterator;
     }
