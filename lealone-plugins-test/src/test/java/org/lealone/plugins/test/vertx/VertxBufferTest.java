@@ -30,7 +30,7 @@ public class VertxBufferTest {
     }
 
     public static void main(String[] args) {
-        AsyncConnection c = new TcpServerConnection(null, false);
+        AsyncConnection c = new TcpServerConnection(null, null, false);
         Buffer b = Buffer.buffer();
         b.appendInt(8); // packetLength
         b.appendInt(1);

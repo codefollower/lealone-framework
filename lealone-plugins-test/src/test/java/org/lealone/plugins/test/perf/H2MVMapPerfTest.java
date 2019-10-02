@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lealone.plugins.test.perf;
 
 import java.util.ArrayList;
@@ -8,14 +25,14 @@ import org.h2.mvstore.MVStore;
 
 //以单元测试的方式运行会比通过main方法运行得出稍微慢一些的测试结果，
 //这可能是因为单元测试额外启动了一个ReaderThread占用了一些资源
-public class BlockingMVMapPerformanceTest {
+public class H2MVMapPerfTest {
 
     public static void main(String[] args) throws Exception {
-        new BlockingMVMapPerformanceTest().run();
+        new H2MVMapPerfTest().run();
     }
 
     static int threadsCount = 4; // Runtime.getRuntime().availableProcessors() * 4;
-    static int count = 50000 * 1;// 50000;
+    static int count = 90000 * 1;// 50000;
 
     int[] randomKeys = getRandomKeys();
     MVMap<Integer, String> map;
@@ -23,24 +40,26 @@ public class BlockingMVMapPerformanceTest {
     public void run() {
         // MVStore.Builder builder = new MVStore.Builder();
         MVStore store = MVStore.open(null);
-        map = store.openMap("BlockingMVMapPerformanceTest");
-        // singleThreadWrite();
-        int loop = 20;
+        map = store.openMap(H2MVMapPerfTest.class.getSimpleName());
+        singleThreadSerialWrite();
+        int loop = 10;
         for (int i = 1; i <= loop; i++) {
-            map.clear();
+            // map.clear();
 
             singleThreadRandomWrite();
-            // singleThreadSerialWrite();
+            singleThreadSerialWrite();
 
             // singleThreadRandomRead();
             // singleThreadSerialRead();
 
-            // multiThreadsRandomWrite(i);
-            // multiThreadsSerialWrite(i);
+            multiThreadsRandomWrite(i);
+            multiThreadsSerialWrite(i);
 
             // multiThreadsRandomRead(i);
             // multiThreadsSerialRead(i);
+            System.out.println();
         }
+        // System.out.println("map size: " + map.size());
     }
 
     int[] getRandomKeys() {
@@ -202,14 +221,14 @@ public class BlockingMVMapPerformanceTest {
                 timeSum += threads[i].writeTime;
             }
         }
-        System.out.println();
-        System.out.println("loop: " + loop + ", threads: " + threadsCount + ", count: " + count);
-        System.out.println("==========================================================");
-        for (int i = 0; i < threadsCount; i++) {
-            System.out.println(threads[i].timeStr);
-        }
+        // System.out.println();
+        // System.out.println("loop: " + loop + ", threads: " + threadsCount + ", count: " + count);
+        // System.out.println("==========================================================");
+        // for (int i = 0; i < threadsCount; i++) {
+        // System.out.println(threads[i].timeStr);
+        // }
         System.out.println("multi-threads" + (random ? " random " : " serial ") + (read ? "read" : "write")
                 + " time, sum: " + timeSum + " ms, avg: " + (timeSum / threadsCount) + " ms");
-        System.out.println("==========================================================");
+        // System.out.println("==========================================================");
     }
 }
