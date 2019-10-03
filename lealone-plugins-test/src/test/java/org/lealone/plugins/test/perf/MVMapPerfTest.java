@@ -20,9 +20,9 @@ package org.lealone.plugins.test.perf;
 import org.h2.mvstore.MVStore;
 import org.lealone.plugins.mvstore.MVStorage;
 import org.lealone.storage.type.ObjectDataType;
-import org.lealone.test.perf.btree.BTreePerfTestBase;
+import org.lealone.test.perf.btree.StorageMapPerfTestBase;
 
-public class MVMapPerfTest extends BTreePerfTestBase {
+public class MVMapPerfTest extends StorageMapPerfTestBase {
 
     public static void main(String[] args) throws Exception {
         new MVMapPerfTest().run();
