@@ -234,12 +234,7 @@ public class RocksdbMap<K, V> extends StorageMapBase<K, V> {
     }
 
     @Override
-    public int size() {
-        return (int) sizeAsLong();
-    }
-
-    @Override
-    public long sizeAsLong() {
+    public long size() {
         long size = 0;
         try (final RocksIterator iterator = db.newIterator()) {
             for (iterator.seekToFirst(); iterator.isValid(); iterator.next()) {

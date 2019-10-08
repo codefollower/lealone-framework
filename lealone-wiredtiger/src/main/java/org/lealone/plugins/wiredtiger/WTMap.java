@@ -204,17 +204,12 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
     }
 
     @Override
-    public int size() {
+    public long size() {
         wtCursor.reset();
-        int size = 0;
+        long size = 0;
         while (wtCursor.next() == 0)
             size++;
         return size;
-    }
-
-    @Override
-    public long sizeAsLong() {
-        return size();
     }
 
     @Override
@@ -380,7 +375,7 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
 
             @Override
             public int size() {
-                return WTMap.this.size();
+                return (int) WTMap.this.size();
             }
 
             @Override

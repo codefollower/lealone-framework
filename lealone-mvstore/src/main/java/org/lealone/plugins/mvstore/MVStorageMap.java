@@ -113,12 +113,7 @@ public class MVStorageMap<K, V> extends StorageMapBase<K, V> {
     }
 
     @Override
-    public int size() {
-        return mvMap.size();
-    }
-
-    @Override
-    public long sizeAsLong() {
+    public long size() {
         return mvMap.sizeAsLong();
     }
 
