@@ -15,39 +15,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf;
+package org.lealone.plugins.test.perf.transaction;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.h2.mvstore.MVMap;
 import org.h2.mvstore.MVStore;
+import org.h2.mvstore.db.TransactionStore;
+import org.h2.mvstore.db.TransactionStore.Transaction;
+import org.h2.mvstore.db.TransactionStore.TransactionMap;
 
-//以单元测试的方式运行会比通过main方法运行得出稍微慢一些的测试结果，
-//这可能是因为单元测试额外启动了一个ReaderThread占用了一些资源
-public class H2MVMapPerfTest {
+public class H2TransactionPerfTest {
 
     public static void main(String[] args) throws Exception {
-        new H2MVMapPerfTest().run();
+        new H2TransactionPerfTest().run();
     }
 
     static int threadsCount = 4; // Runtime.getRuntime().availableProcessors() * 4;
     static int count = 90000 * 1;// 50000;
 
+    int loop = 20;
     int[] randomKeys = getRandomKeys();
     MVMap<Integer, String> map;
+    String mapName = H2TransactionPerfTest.class.getSimpleName();
+    TransactionStore ts;
+    final AtomicLong startTime = new AtomicLong(0);
+    final AtomicLong endTime = new AtomicLong(0);
 
     public void run() {
         // MVStore.Builder builder = new MVStore.Builder();
         MVStore store = MVStore.open(null);
-        map = store.openMap(H2MVMapPerfTest.class.getSimpleName());
+        map = store.openMap(mapName);
+        ts = new TransactionStore(store);
+        ts.init();
+
         singleThreadSerialWrite();
-        int loop = 10;
         for (int i = 1; i <= loop; i++) {
             // map.clear();
 
-            singleThreadRandomWrite();
-            singleThreadSerialWrite();
+            // singleThreadRandomWrite();
+            // singleThreadSerialWrite();
 
             // singleThreadRandomRead();
             // singleThreadSerialRead();
@@ -76,10 +85,13 @@ public class H2MVMapPerfTest {
     }
 
     void singleThreadSerialWrite() {
+        Transaction tx1 = ts.begin();
+        TransactionMap<Integer, String> map1 = tx1.openMap(mapName);
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
-            map.put(i, "valueaaa");
+            map1.put(i, "valueaaa");
         }
+        tx1.commit();
         long t2 = System.currentTimeMillis();
         System.out.println("single-thread serial write time: " + (t2 - t1) + " ms, count: " + count);
     }
@@ -117,10 +129,6 @@ public class H2MVMapPerfTest {
         boolean read;
         boolean random;
 
-        long readTime;
-        long writeTime;
-        String timeStr;
-
         MyThread(int start, int end, boolean read, boolean random) {
             super("MyThread-" + start);
             this.start = start;
@@ -130,14 +138,23 @@ public class H2MVMapPerfTest {
         }
 
         void write() throws Exception {
+            // 取最早启动的那个线程的时间
+            startTime.compareAndSet(0, System.currentTimeMillis());
+            Transaction tx1 = ts.begin();
+            TransactionMap<Integer, String> map1 = tx1.openMap(mapName);
             for (int i = start; i < end; i++) {
-                int key;
+                Integer key;
                 if (random)
                     key = randomKeys[i];
                 else
                     key = i;
                 String value = "value-";// "value-" + key;
-                map.put(key, value);
+                // map.put(key, value);
+
+                Transaction t = ts.begin();
+                TransactionMap<Integer, String> m = map1.getInstance(t, 0);
+                m.put(key, value);
+                t.commit();
             }
         }
 
@@ -153,20 +170,12 @@ public class H2MVMapPerfTest {
         @Override
         public void run() {
             try {
-                long t1 = System.currentTimeMillis();
                 if (read) {
                     read();
                 } else {
                     write();
                 }
-                long t2 = System.currentTimeMillis();
-                if (read) {
-                    readTime = t2 - t1;
-                } else {
-                    writeTime = t2 - t1;
-                }
-                timeStr = (getName() + (random ? " random " : " serial ") + (read ? "read" : "write") + " end, time: "
-                        + (t2 - t1) + " ms, count: " + (end - start));
+                endTime.set(System.currentTimeMillis());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -190,6 +199,8 @@ public class H2MVMapPerfTest {
     }
 
     void multiThreads(int loop, boolean read, boolean random) {
+        startTime.set(0);
+        endTime.set(0);
         int avg = count / threadsCount;
         MyThread[] threads = new MyThread[threadsCount];
         for (int i = 0; i < threadsCount; i++) {
@@ -211,24 +222,10 @@ public class H2MVMapPerfTest {
             }
         }
 
-        long timeSum = 0;
-        if (read) {
-            for (int i = 0; i < threadsCount; i++) {
-                timeSum += threads[i].readTime;
-            }
-        } else {
-            for (int i = 0; i < threadsCount; i++) {
-                timeSum += threads[i].writeTime;
-            }
-        }
-        // System.out.println();
-        // System.out.println("loop: " + loop + ", threads: " + threadsCount + ", count: " + count);
-        // System.out.println("==========================================================");
-        // for (int i = 0; i < threadsCount; i++) {
-        // System.out.println(threads[i].timeStr);
-        // }
-        System.out.println("multi-threads" + (random ? " random " : " serial ") + (read ? "read" : "write")
-                + " time, sum: " + timeSum + " ms, avg: " + (timeSum / threadsCount) + " ms");
-        // System.out.println("==========================================================");
+        long totalTime = endTime.get() - startTime.get();
+        long avgTime = totalTime / threadsCount;
+        System.out.println(H2TransactionPerfTest.class.getSimpleName() + " loop: " + loop + ", rows: " + count
+                + ", threads: " + threadsCount + (random ? ", random " : ", serial ") + (read ? "read " : "write")
+                + ", total time: " + totalTime + " ms, avg time: " + avgTime + " ms");
     }
 }

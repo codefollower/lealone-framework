@@ -15,26 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf;
+package org.lealone.plugins.test.perf.sql;
 
-import org.h2.mvstore.MVStore;
-import org.lealone.plugins.mvstore.MVStorage;
-import org.lealone.storage.type.ObjectDataType;
-import org.lealone.test.perf.btree.StorageMapPerfTestBase;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
-public class MVMapPerfTest extends StorageMapPerfTestBase {
+public class H2EmbeddedSqlPerfTest extends SqlPerfTest {
 
     public static void main(String[] args) throws Exception {
-        new MVMapPerfTest().run();
+        System.setProperty("h2.lobInDatabase", "false");
+        System.setProperty("h2.lobClientMaxSizeMemory", "1024");
+        System.setProperty("java.io.tmpdir", "./target/mytest/tmp");
+        System.setProperty("h2.baseDir", "./target/mytest");
+
+        new H2EmbeddedSqlPerfTest().run(args);
     }
 
     @Override
-    protected void init() {
-        // MVStore.Builder builder = new MVStore.Builder();
-        MVStore store = MVStore.open(null);
-
-        MVStorage mvs = new MVStorage(store, null);
-        map = mvs.openMap(MVMapPerfTest.class.getSimpleName(), new ObjectDataType(), new ObjectDataType(), null);
+    Connection getConnection() throws Exception {
+        String url = "jdbc:h2:file:./mydb";
+        // url = "jdbc:h2:mem:mydb";
+        return DriverManager.getConnection(url, "sa", "");
     }
-
 }
