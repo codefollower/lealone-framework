@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.lealone.plugins.mysql.server.MySQLServer;
 
 public class MySQLPreparedStatementTest {
+
     private static Connection getMySQLConnection() throws Exception {
         return getMySQLConnection(true);
     }

@@ -49,6 +49,7 @@
         <module>lealone-orm</module>
         <module>lealone-service</module>
         <module>lealone-sqlline</module>
+        <module>lealone-perf</module>
         <module>lealone-plugins-dist</module>
         <module>lealone-plugins-test</module>
     </modules>

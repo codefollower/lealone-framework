@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf.sql;
+package org.lealone.test.perf.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,7 +31,7 @@ public class LealoneSqlPerfTest extends SqlPerfTest {
     }
 
     @Override
-    Connection getConnection() throws Exception {
+    protected Connection getConnection() throws Exception {
         String url = "jdbc:lealone:tcp://localhost:7210/test;NET_FACTORY_NAME=nio";
         return DriverManager.getConnection(url, "root", "");
     }

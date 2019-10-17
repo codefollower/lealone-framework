@@ -15,17 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf.storage;
-
-import java.util.ArrayList;
-import java.util.Collections;
+package org.lealone.test.perf.storage;
 
 import org.h2.mvstore.MVMap;
 import org.h2.mvstore.MVStore;
 
 //以单元测试的方式运行会比通过main方法运行得出稍微慢一些的测试结果，
 //这可能是因为单元测试额外启动了一个ReaderThread占用了一些资源
-public class H2MVMapPerfTest {
+public class H2MVMapPerfTest extends StorageMapPerfTest {
 
     public static void main(String[] args) throws Exception {
         new H2MVMapPerfTest().run();
@@ -37,6 +34,7 @@ public class H2MVMapPerfTest {
     int[] randomKeys = getRandomKeys();
     MVMap<Integer, String> map;
 
+    @Override
     public void run() {
         // MVStore.Builder builder = new MVStore.Builder();
         MVStore store = MVStore.open(null);
@@ -62,19 +60,7 @@ public class H2MVMapPerfTest {
         // System.out.println("map size: " + map.size());
     }
 
-    int[] getRandomKeys() {
-        ArrayList<Integer> list = new ArrayList<>(count);
-        for (int i = 1; i <= count; i++) {
-            list.add(i);
-        }
-        Collections.shuffle(list);
-        int[] keys = new int[count];
-        for (int i = 0; i < count; i++) {
-            keys[i] = list.get(i);
-        }
-        return keys;
-    }
-
+    @Override
     void singleThreadSerialWrite() {
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -84,6 +70,7 @@ public class H2MVMapPerfTest {
         System.out.println("single-thread serial write time: " + (t2 - t1) + " ms, count: " + count);
     }
 
+    @Override
     void singleThreadRandomWrite() {
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -93,6 +80,7 @@ public class H2MVMapPerfTest {
         System.out.println("single-thread random write time: " + (t2 - t1) + " ms, count: " + count);
     }
 
+    @Override
     void singleThreadSerialRead() {
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -102,6 +90,7 @@ public class H2MVMapPerfTest {
         System.out.println("single-thread serial read time: " + (t2 - t1) + " ms, count: " + count);
     }
 
+    @Override
     void singleThreadRandomRead() {
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -173,18 +162,22 @@ public class H2MVMapPerfTest {
         }
     }
 
+    @Override
     void multiThreadsSerialRead(int loop) {
         multiThreads(loop, true, false);
     }
 
+    @Override
     void multiThreadsRandomRead(int loop) {
         multiThreads(loop, true, true);
     }
 
+    @Override
     void multiThreadsSerialWrite(int loop) {
         multiThreads(loop, false, false);
     }
 
+    @Override
     void multiThreadsRandomWrite(int loop) {
         multiThreads(loop, false, true);
     }

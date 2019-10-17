@@ -15,20 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf.sql;
+package org.lealone.test.perf.sql;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 
-public class H2SqlPerfTest extends SqlPerfTest {
+import org.lealone.test.perf.H2PerfTestServer;
+
+public class H2EmbeddedSqlPerfTest extends SqlPerfTest {
 
     public static void main(String[] args) throws Exception {
-        new H2SqlPerfTest().run(args);
+        H2PerfTestServer.setH2Properties();
+
+        new H2EmbeddedSqlPerfTest().run(args);
     }
 
     @Override
-    Connection getConnection() throws Exception {
-        String url = "jdbc:h2:tcp://localhost:9092/mydb";
-        return DriverManager.getConnection(url, "sa", "");
+    protected Connection getConnection() throws Exception {
+        return getH2Connection(true);
     }
 }

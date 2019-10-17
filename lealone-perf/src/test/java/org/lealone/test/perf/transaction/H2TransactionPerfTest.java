@@ -15,10 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf.transaction;
+package org.lealone.test.perf.transaction;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.h2.mvstore.MVMap;
@@ -27,7 +25,7 @@ import org.h2.mvstore.db.TransactionStore;
 import org.h2.mvstore.db.TransactionStore.Transaction;
 import org.h2.mvstore.db.TransactionStore.TransactionMap;
 
-public class H2TransactionPerfTest {
+public class H2TransactionPerfTest extends TransactionPerfTest {
 
     public static void main(String[] args) throws Exception {
         new H2TransactionPerfTest().run();
@@ -44,6 +42,7 @@ public class H2TransactionPerfTest {
     final AtomicLong startTime = new AtomicLong(0);
     final AtomicLong endTime = new AtomicLong(0);
 
+    @Override
     public void run() {
         // MVStore.Builder builder = new MVStore.Builder();
         MVStore store = MVStore.open(null);
@@ -71,19 +70,7 @@ public class H2TransactionPerfTest {
         // System.out.println("map size: " + map.size());
     }
 
-    int[] getRandomKeys() {
-        ArrayList<Integer> list = new ArrayList<>(count);
-        for (int i = 1; i <= count; i++) {
-            list.add(i);
-        }
-        Collections.shuffle(list);
-        int[] keys = new int[count];
-        for (int i = 0; i < count; i++) {
-            keys[i] = list.get(i);
-        }
-        return keys;
-    }
-
+    @Override
     void singleThreadSerialWrite() {
         Transaction tx1 = ts.begin();
         TransactionMap<Integer, String> map1 = tx1.openMap(mapName);
@@ -96,6 +83,7 @@ public class H2TransactionPerfTest {
         System.out.println("single-thread serial write time: " + (t2 - t1) + " ms, count: " + count);
     }
 
+    @Override
     void singleThreadRandomWrite() {
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -105,6 +93,7 @@ public class H2TransactionPerfTest {
         System.out.println("single-thread random write time: " + (t2 - t1) + " ms, count: " + count);
     }
 
+    @Override
     void singleThreadSerialRead() {
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -114,6 +103,7 @@ public class H2TransactionPerfTest {
         System.out.println("single-thread serial read time: " + (t2 - t1) + " ms, count: " + count);
     }
 
+    @Override
     void singleThreadRandomRead() {
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -182,18 +172,22 @@ public class H2TransactionPerfTest {
         }
     }
 
+    @Override
     void multiThreadsSerialRead(int loop) {
         multiThreads(loop, true, false);
     }
 
+    @Override
     void multiThreadsRandomRead(int loop) {
         multiThreads(loop, true, true);
     }
 
+    @Override
     void multiThreadsSerialWrite(int loop) {
         multiThreads(loop, false, false);
     }
 
+    @Override
     void multiThreadsRandomWrite(int loop) {
         multiThreads(loop, false, true);
     }

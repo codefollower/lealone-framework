@@ -15,19 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf;
+package org.lealone.test.perf;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class H2Server {
+public class H2PerfTestServer {
+
     public static void main(String[] args) throws SQLException {
-        // System.setProperty("DATABASE_TO_UPPER", "false");
-        System.setProperty("h2.lobInDatabase", "false");
-        System.setProperty("h2.lobClientMaxSizeMemory", "1024");
-        System.setProperty("java.io.tmpdir", "./target/mytest/tmp");
-        System.setProperty("h2.baseDir", "./target/mytest");
-        // System.setProperty("h2.check2", "true");
+        setH2Properties();
+
         ArrayList<String> list = new ArrayList<String>();
         // list.add("-tcp");
         // //list.add("-tool");
@@ -47,5 +44,14 @@ public class H2Server {
         // list.add("-web");
         // list.add("-ifExists");
         org.h2.tools.Server.main(list.toArray(new String[list.size()]));
+    }
+
+    public static void setH2Properties() {
+        // System.setProperty("DATABASE_TO_UPPER", "false");
+        System.setProperty("h2.lobInDatabase", "false");
+        System.setProperty("h2.lobClientMaxSizeMemory", "1024");
+        System.setProperty("java.io.tmpdir", PerfTestBase.PERF_TEST_BASE_DIR + "/h2/tmp");
+        System.setProperty("h2.baseDir", PerfTestBase.PERF_TEST_BASE_DIR + "/h2");
+        // System.setProperty("h2.check2", "true");
     }
 }

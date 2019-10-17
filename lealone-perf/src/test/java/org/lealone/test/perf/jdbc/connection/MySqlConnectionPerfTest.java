@@ -15,26 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf.sql;
+package org.lealone.test.perf.jdbc.connection;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 
-public class H2EmbeddedSqlPerfTest extends SqlPerfTest {
+public class MySqlConnectionPerfTest extends ConnectionPerfTest {
 
     public static void main(String[] args) throws Exception {
-        System.setProperty("h2.lobInDatabase", "false");
-        System.setProperty("h2.lobClientMaxSizeMemory", "1024");
-        System.setProperty("java.io.tmpdir", "./target/mytest/tmp");
-        System.setProperty("h2.baseDir", "./target/mytest");
-
-        new H2EmbeddedSqlPerfTest().run(args);
+        new MySqlConnectionPerfTest().run();
     }
 
     @Override
-    Connection getConnection() throws Exception {
-        String url = "jdbc:h2:file:./mydb";
-        // url = "jdbc:h2:mem:mydb";
-        return DriverManager.getConnection(url, "sa", "");
+    protected Connection getConnection() throws Exception {
+        return getMySqlConnection();
     }
 }

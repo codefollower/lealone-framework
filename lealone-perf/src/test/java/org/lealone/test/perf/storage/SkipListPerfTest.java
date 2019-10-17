@@ -15,25 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf.storage;
+package org.lealone.test.perf.storage;
 
-import org.h2.mvstore.MVStore;
-import org.lealone.plugins.mvstore.MVStorage;
-import org.lealone.storage.type.ObjectDataType;
-import org.lealone.test.perf.btree.StorageMapPerfTestBase;
+import org.lealone.db.value.ValueInt;
+import org.lealone.db.value.ValueString;
+import org.lealone.storage.memory.MemoryStorage;
+import org.lealone.test.perf.storage.StorageMapPerfTest;
 
-public class MVMapPerfTest extends StorageMapPerfTestBase {
+public class SkipListPerfTest extends StorageMapPerfTest {
 
     public static void main(String[] args) throws Exception {
-        new MVMapPerfTest().run();
+        new SkipListPerfTest().run();
     }
 
     @Override
-    protected void init() {
-        // MVStore.Builder builder = new MVStore.Builder();
-        MVStore store = MVStore.open(null);
-
-        MVStorage mvs = new MVStorage(store, null);
-        map = mvs.openMap(MVMapPerfTest.class.getSimpleName(), new ObjectDataType(), new ObjectDataType(), null);
+    protected void openMap() {
+        if (map == null || map.isClosed()) {
+            MemoryStorage ms = new MemoryStorage();
+            map = ms.openMap(SkipListPerfTest.class.getSimpleName(), ValueInt.type, ValueString.type, null);
+        }
     }
 }

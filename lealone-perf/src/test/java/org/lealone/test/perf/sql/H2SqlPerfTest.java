@@ -15,20 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf.sql;
+package org.lealone.test.perf.sql;
 
 import java.sql.Connection;
 
-import org.lealone.plugins.test.mysql.MySQLPreparedStatementTest;
-
-public class MySqlPerfTest extends SqlPerfTest {
+public class H2SqlPerfTest extends SqlPerfTest {
 
     public static void main(String[] args) throws Exception {
-        new MySqlPerfTest().run(args);
+        new H2SqlPerfTest().run(args);
     }
 
     @Override
-    Connection getConnection() throws Exception {
-        return MySQLPreparedStatementTest.getMySQLConnection(true);
+    protected Connection getConnection() throws Exception {
+        return getH2Connection();
     }
 }

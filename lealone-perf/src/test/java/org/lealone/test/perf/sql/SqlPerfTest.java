@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.perf.sql;
+package org.lealone.test.perf.sql;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
-public abstract class SqlPerfTest {
+import org.lealone.test.perf.PerfTestBase;
+
+public abstract class SqlPerfTest extends PerfTestBase {
 
     int loopCount = 10;
     int rowCount = 10000;
@@ -44,7 +46,7 @@ public abstract class SqlPerfTest {
         return keys;
     }
 
-    abstract Connection getConnection() throws Exception;
+    protected abstract Connection getConnection() throws Exception;
 
     public void run(String[] args) throws Exception {
         Connection conn = getConnection();
