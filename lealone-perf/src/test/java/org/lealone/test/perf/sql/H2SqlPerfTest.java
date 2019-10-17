@@ -22,7 +22,7 @@ import java.sql.Connection;
 public class H2SqlPerfTest extends SqlPerfTest {
 
     public static void main(String[] args) throws Exception {
-        new H2SqlPerfTest().run(args);
+        new H2SqlPerfTest().run();
     }
 
     @Override

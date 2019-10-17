@@ -15,18 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.test.perf.sql;
+package org.lealone.test.perf.sql.embed;
 
 import java.sql.Connection;
 
 import org.lealone.test.perf.H2PerfTestServer;
+import org.lealone.test.perf.sql.SqlPerfTest;
 
 public class H2EmbeddedSqlPerfTest extends SqlPerfTest {
 
     public static void main(String[] args) throws Exception {
         H2PerfTestServer.setH2Properties();
-
-        new H2EmbeddedSqlPerfTest().run(args);
+        new H2EmbeddedSqlPerfTest().run();
     }
 
     @Override

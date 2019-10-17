@@ -19,108 +19,65 @@ package org.lealone.test.perf.sql;
 
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.CountDownLatch;
 
 import org.lealone.test.perf.PerfTestBase;
 
 public abstract class SqlPerfTest extends PerfTestBase {
 
-    int loopCount = 10;
-    int rowCount = 10000;
-    int threadCount = 4;
-    int[] randomKeys = getRandomKeys();
-
-    int[] getRandomKeys() {
-        int count = rowCount / 10;
-        ArrayList<Integer> list = new ArrayList<>(count);
-        for (int i = 1; i <= count; i++) {
-            list.add(i);
-        }
-        Collections.shuffle(list);
-        int[] keys = new int[count];
-        for (int i = 0; i < count; i++) {
-            keys[i] = list.get(i);
-        }
-        return keys;
-    }
-
     protected abstract Connection getConnection() throws Exception;
 
-    public void run(String[] args) throws Exception {
+    @Override
+    protected void init() throws Exception {
         Connection conn = getConnection();
-        init(conn, rowCount);
-        run0(args);
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate("drop table IF EXISTS SqlPerfTest");
+        stmt.executeUpdate("create table IF NOT EXISTS SqlPerfTest(f1 int primary key , f2 varchar(20))");
+        // stmt.executeUpdate("create index index0 on SqlPerfTest(f2)");
+        long t1 = System.currentTimeMillis();
+        for (int i = 0; i < rowCount; i++) {
+            stmt.executeUpdate("insert into SqlPerfTest values(" + i + ",'value-" + i + "')");
+        }
+        long t2 = System.currentTimeMillis();
+        printResult("insert row count: " + rowCount + ", total time: " + (t2 - t1) + " ms");
+        stmt.close();
         conn.close();
     }
 
-    public void run0(String[] args) throws Exception {
-        int avg = rowCount / 10 / threadCount;
-        avg = rowCount / threadCount;
-        long t1 = System.currentTimeMillis();
-        for (int i = 0; i < loopCount; i++) {
-            long t11 = System.currentTimeMillis();
-            CountDownLatch latch = new CountDownLatch(threadCount);
-            for (int t = 0; t < threadCount; t++) {
-                int start = t * avg;
-                int end = (t + 1) * avg;
-                if (t == threadCount - 1)
-                    end = rowCount;
-                int end2 = end;
-                new Thread(() -> {
-                    Connection conn;
-                    try {
-                        conn = getConnection();
-                        // init(conn, rowCount);
-
-                        // for (int i = 0; i < loopCount; i++) {
-                        update(conn, rowCount / 10, start, end2);
-                        // }
-                        conn.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        latch.countDown();
-                    }
-                }).start();
-            }
-            latch.await();
-            long t22 = System.currentTimeMillis();
-            System.out.println("loop: " + (i + 1) + ", run row count: " + rowCount + ", time: " + (t22 - t11) + " ms");
-        }
-        long t2 = System.currentTimeMillis();
-        System.out.println("run row count: " + rowCount + ",total time: " + (t2 - t1) + " ms");
-    }
-
-    void update(Connection conn, int rowCount, int start, int end) throws Exception {
-        // int[] randomKeys = getRandomKeys();
-        // int rowCount2 = end - start;
-        Statement statement = conn.createStatement();
-        // long t1 = System.currentTimeMillis();
+    protected void update(Statement stmt, int start, int end) throws Exception {
         for (int i = start; i < end; i++) {
             int f1 = i;
-            // for (int i = 0; i < rowCount; i++) {
-            // int f1 = randomKeys[i];
-            String sql = "update SqlPerfTest set f2 = 'pet2' where f1 =" + f1;
-            statement.executeUpdate(sql);
+            if (isRandom())
+                f1 = randomKeys[i];
+            String sql = "update SqlPerfTest set f2 = 'value2' where f1 =" + f1;
+            stmt.executeUpdate(sql);
+            notifyOperationComplete();
         }
-        // long t2 = System.currentTimeMillis();
-        // System.out.println("update row count: " + rowCount2 + ", time: " + (t2 - t1) + " ms");
-        statement.close();
     }
 
-    void init(Connection conn, int rowCount) throws Exception {
-        Statement statement = conn.createStatement();
-        statement.executeUpdate("drop table IF EXISTS SqlPerfTest");
-        statement.executeUpdate("create table IF NOT EXISTS SqlPerfTest(f1 int primary key , f2 varchar(20))");
-        // statement.executeUpdate("create index index0 on SqlPerfTest(f2)");
-        long t1 = System.currentTimeMillis();
-        for (int i = 0; i < rowCount; i++) {
-            statement.executeUpdate("insert into SqlPerfTest values(" + i + ",'value-" + i + "')");
+    @Override
+    protected SqlPerfTestTask createPerfTestTask(int start, int end) throws Exception {
+        return new SqlPerfTestTask(start, end);
+    }
+
+    protected class SqlPerfTestTask extends PerfTestTask {
+        final Connection conn;
+        final Statement stmt;
+
+        protected SqlPerfTestTask(int start, int end) throws Exception {
+            super(start, end);
+            this.conn = getConnection();
+            this.stmt = conn.createStatement();
         }
-        long t2 = System.currentTimeMillis();
-        System.out.println("insert rowCount: " + rowCount + ", time: " + (t2 - t1) + " ms");
-        statement.close();
+
+        @Override
+        public void startPerfTest() throws Exception {
+            update(stmt, start, end);
+        }
+
+        @Override
+        public void stopPerfTest() throws Exception {
+            stmt.close();
+            conn.close();
+        }
     }
 }

@@ -15,34 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.test.perf.transaction;
+package org.lealone.test.perf.sql.embed;
 
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.lealone.storage.DefaultPageOperationHandler;
+import org.lealone.client.jdbc.JdbcStatement;
+import org.lealone.db.SysProperties;
+import org.lealone.server.Scheduler;
 import org.lealone.storage.PageOperation;
 import org.lealone.storage.PageOperationHandlerFactory;
-import org.lealone.storage.aose.AOStorage;
-import org.lealone.storage.aose.AOStorageBuilder;
 import org.lealone.test.amte.AMTransactionEngineTest;
-import org.lealone.transaction.Transaction;
+import org.lealone.test.perf.sql.SqlPerfTest;
 import org.lealone.transaction.TransactionEngine;
-import org.lealone.transaction.TransactionMap;
 
-public class LealoneTransactionPerfTest extends TransactionPerfTest {
+public class LealoneEmbeddedSqlPerfTest extends SqlPerfTest {
 
     public static void main(String[] args) throws Exception {
-        LealoneTransactionPerfTest test = new LealoneTransactionPerfTest();
-        run(test);
+        new LealoneEmbeddedSqlPerfTest().run();
     }
-
-    protected AOStorage storage;
-    protected String storagePath;
 
     private final HashMap<String, String> config = new HashMap<>();
     private final AtomicInteger index = new AtomicInteger(0);
-    private DefaultPageOperationHandler[] handlers;
+    private Scheduler[] handlers;
     private TransactionEngine te;
 
     @Override
@@ -55,6 +52,8 @@ public class LealoneTransactionPerfTest extends TransactionPerfTest {
     protected void init() throws Exception {
         if (!inited.compareAndSet(false, true))
             return;
+        SysProperties.setBaseDir(PERF_TEST_BASE_DIR);
+
         String factoryType = "RoundRobin";
         factoryType = "Random";
         // factoryType = "LoadBalance";
@@ -62,80 +61,70 @@ public class LealoneTransactionPerfTest extends TransactionPerfTest {
         // config.put("page_operation_handler_count", (threadCount + 1) + "");
         createPageOperationHandlers();
 
-        AOStorageBuilder builder = new AOStorageBuilder(config);
-        storagePath = joinDirs("lealone", "aose");
-        int pageSplitSize = 16 * 1024;
-        builder.storagePath(storagePath).compress().reuseSpace().pageSplitSize(pageSplitSize).minFillRate(30);
-        storage = builder.openStorage();
-
         initTransactionEngineConfig(config);
         te = AMTransactionEngineTest.getTransactionEngine(config);
 
-        singleThreadSerialWrite();
+        super.init();
     }
 
     @Override
     protected void destroy() throws Exception {
         te.close();
-        storage.close();
     }
 
     private void createPageOperationHandlers() {
-        handlers = new DefaultPageOperationHandler[threadCount];
+        handlers = new Scheduler[threadCount];
+        HashMap<String, String> config = new HashMap<>();
         for (int i = 0; i < threadCount; i++) {
-            handlers[i] = new DefaultPageOperationHandler(i, config);
+            handlers[i] = new Scheduler(i, config);
+            handlers[i].start();
         }
-        PageOperationHandlerFactory f = PageOperationHandlerFactory.create(config, handlers);
-        f.startHandlers();
-    }
-
-    private void singleThreadSerialWrite() {
-        Transaction t = te.beginTransaction(false);
-        TransactionMap<Integer, String> map = t.openMap(mapName, storage);
-        map.clear();
-        long t1 = System.currentTimeMillis();
-        for (int i = 0; i < rowCount; i++) {
-            map.put(i, "valueaaa");
-        }
-        t.commit();
-        long t2 = System.currentTimeMillis();
-
-        printResult("single-thread serial write time: " + (t2 - t1) + " ms, row count: " + map.size());
+        PageOperationHandlerFactory.create(null, handlers);
     }
 
     @Override
-    protected void write(int start, int end) throws Exception {
-        Transaction t = te.beginTransaction(false);
-        TransactionMap<Integer, String> map = t.openMap(mapName, storage);
+    protected Connection getConnection() throws Exception {
+        return getLealoneConnection(true);
+    }
+
+    @Override
+    protected void update(Statement stmt, int start, int end) throws Exception {
+        JdbcStatement statement = (JdbcStatement) stmt;
         for (int i = start; i < end; i++) {
             Integer key;
             if (isRandom())
                 key = randomKeys[i];
             else
                 key = i;
-            String value = "value-";// "value-" + key;
+            // String value = "value-";// "value-" + key;
             // map.put(key, value);
 
-            Transaction t2 = te.beginTransaction(false);
-            TransactionMap<Integer, String> m = map.getInstance(t2);
-            m.tryUpdate(key, value);
-            t2.commit();
-            // System.out.println(getName() + " key:" + key);
+            String sql = "update SqlPerfTest set f2 = 'value2' where f1 =" + key;
+            statement.executeUpdate(sql);
             notifyOperationComplete();
+            // System.out.println(getName() + " key:" + key);
+            // AsyncHandler<AsyncResult<Integer>> handler = ar -> {
+            // // if (count.decrementAndGet() <= 0) {
+            // //
+            // // endTime.set(System.currentTimeMillis());
+            // // latch.countDown();
+            // // }
+            // notifyOperationComplete();
+            // };
+            // statement.executeUpdateAsync(sql, handler);
         }
     }
 
     @Override
-    protected PerfTestTask createPerfTestTask(int start, int end) throws Exception {
-        return new LealoneTransactionPerfTestTask(start, end);
+    protected LealoneEmbeddedSqlPerfTestTask createPerfTestTask(int start, int end) throws Exception {
+        return new LealoneEmbeddedSqlPerfTestTask(start, end);
     }
 
-    class LealoneTransactionPerfTestTask extends TransactionPerfTestTask implements PageOperation {
+    class LealoneEmbeddedSqlPerfTestTask extends SqlPerfTestTask implements PageOperation {
 
-        LealoneTransactionPerfTestTask(int start, int end) throws Exception {
+        LealoneEmbeddedSqlPerfTestTask(int start, int end) throws Exception {
             super(start, end);
-            DefaultPageOperationHandler h = handlers[index.getAndIncrement()];
-            h.reset(false);
+            Scheduler h = handlers[index.getAndIncrement()];
             h.handlePageOperation(this);
         }
 

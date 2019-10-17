@@ -81,6 +81,7 @@ public abstract class StorageMapPerfTest extends PerfTestBase {
     }
 
     // @Test
+    @Override
     public void run() {
         init();
         loopCount = 5;
@@ -153,6 +154,7 @@ public abstract class StorageMapPerfTest extends PerfTestBase {
         // testConcurrentSkipListMap();
     }
 
+    @Override
     protected void init() {
         String factoryType = "RoundRobin";
         factoryType = "Random";
@@ -354,7 +356,7 @@ public abstract class StorageMapPerfTest extends PerfTestBase {
         return null;
     }
 
-    private void notifyOperationComplete() {
+    private void notifyOperationComplete0() {
         if (pendingPageOperations.decrementAndGet() <= 0) {
             endTime.set(System.currentTimeMillis());
             latch.countDown();
@@ -435,11 +437,11 @@ public abstract class StorageMapPerfTest extends PerfTestBase {
                     key = i;
                 if (async) {
                     map.get(key, ar -> {
-                        notifyOperationComplete();
+                        notifyOperationComplete0();
                     });
                 } else {
                     map.get(i);
-                    notifyOperationComplete();
+                    notifyOperationComplete0();
                 }
             }
         }
@@ -455,7 +457,7 @@ public abstract class StorageMapPerfTest extends PerfTestBase {
 
                 if (async) {
                     PageOperation po = map.createPutOperation(key, value, ar -> {
-                        notifyOperationComplete();
+                        notifyOperationComplete0();
                     });
                     po.run(currentHandler);
                     // PageOperationResult result = po.run(currentHandler);
@@ -465,7 +467,7 @@ public abstract class StorageMapPerfTest extends PerfTestBase {
                     // currentHandler.handlePageOperation(po);
                 } else {
                     map.put(key, value);
-                    notifyOperationComplete();
+                    notifyOperationComplete0();
                 }
             }
         }
@@ -484,7 +486,7 @@ public abstract class StorageMapPerfTest extends PerfTestBase {
 
                 if (async) {
                     PageOperation po = map.createPutOperation(key, value, ar -> {
-                        notifyOperationComplete();
+                        notifyOperationComplete0();
                     });
                     PageOperationResult result = po.run(currentHandler);
                     if (result == PageOperationResult.SHIFTED) {
@@ -492,7 +494,7 @@ public abstract class StorageMapPerfTest extends PerfTestBase {
                     }
                 } else {
                     map.put(key, value);
-                    notifyOperationComplete();
+                    notifyOperationComplete0();
                 }
             }
         }

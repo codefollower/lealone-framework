@@ -17,9 +17,6 @@
  */
 package org.lealone.test.perf.transaction;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.h2.mvstore.MVMap;
 import org.h2.mvstore.MVStore;
 import org.h2.mvstore.db.TransactionStore;
 import org.h2.mvstore.db.TransactionStore.Transaction;
@@ -28,198 +25,59 @@ import org.h2.mvstore.db.TransactionStore.TransactionMap;
 public class H2TransactionPerfTest extends TransactionPerfTest {
 
     public static void main(String[] args) throws Exception {
-        new H2TransactionPerfTest().run();
+        H2TransactionPerfTest test = new H2TransactionPerfTest();
+        run(test);
     }
 
-    static int threadsCount = 4; // Runtime.getRuntime().availableProcessors() * 4;
-    static int count = 90000 * 1;// 50000;
-
-    int loop = 20;
-    int[] randomKeys = getRandomKeys();
-    MVMap<Integer, String> map;
-    String mapName = H2TransactionPerfTest.class.getSimpleName();
-    TransactionStore ts;
-    final AtomicLong startTime = new AtomicLong(0);
-    final AtomicLong endTime = new AtomicLong(0);
+    private TransactionStore ts;
 
     @Override
-    public void run() {
+    protected void init() throws Exception {
+        if (!inited.compareAndSet(false, true))
+            return;
         // MVStore.Builder builder = new MVStore.Builder();
         MVStore store = MVStore.open(null);
-        map = store.openMap(mapName);
         ts = new TransactionStore(store);
         ts.init();
 
         singleThreadSerialWrite();
-        for (int i = 1; i <= loop; i++) {
-            // map.clear();
-
-            // singleThreadRandomWrite();
-            // singleThreadSerialWrite();
-
-            // singleThreadRandomRead();
-            // singleThreadSerialRead();
-
-            multiThreadsRandomWrite(i);
-            multiThreadsSerialWrite(i);
-
-            // multiThreadsRandomRead(i);
-            // multiThreadsSerialRead(i);
-            System.out.println();
-        }
-        // System.out.println("map size: " + map.size());
     }
 
     @Override
-    void singleThreadSerialWrite() {
+    protected void destroy() throws Exception {
+        ts.close();
+    }
+
+    private void singleThreadSerialWrite() {
         Transaction tx1 = ts.begin();
         TransactionMap<Integer, String> map1 = tx1.openMap(mapName);
         long t1 = System.currentTimeMillis();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < rowCount; i++) {
             map1.put(i, "valueaaa");
         }
         tx1.commit();
         long t2 = System.currentTimeMillis();
-        System.out.println("single-thread serial write time: " + (t2 - t1) + " ms, count: " + count);
+        printResult("single-thread serial write time: " + (t2 - t1) + " ms, row count: " + rowCount);
     }
 
     @Override
-    void singleThreadRandomWrite() {
-        long t1 = System.currentTimeMillis();
-        for (int i = 0; i < count; i++) {
-            map.put(randomKeys[i], "valueaaa");
+    protected void write(int start, int end) throws Exception {
+        Transaction tx1 = ts.begin();
+        TransactionMap<Integer, String> map1 = tx1.openMap(mapName);
+        for (int i = start; i < end; i++) {
+            Integer key;
+            if (isRandom())
+                key = randomKeys[i];
+            else
+                key = i;
+            String value = "value-";// "value-" + key;
+            // map.put(key, value);
+
+            Transaction t = ts.begin();
+            TransactionMap<Integer, String> m = map1.getInstance(t, 0);
+            m.put(key, value);
+            t.commit();
+            notifyOperationComplete();
         }
-        long t2 = System.currentTimeMillis();
-        System.out.println("single-thread random write time: " + (t2 - t1) + " ms, count: " + count);
-    }
-
-    @Override
-    void singleThreadSerialRead() {
-        long t1 = System.currentTimeMillis();
-        for (int i = 0; i < count; i++) {
-            map.get(i);
-        }
-        long t2 = System.currentTimeMillis();
-        System.out.println("single-thread serial read time: " + (t2 - t1) + " ms, count: " + count);
-    }
-
-    @Override
-    void singleThreadRandomRead() {
-        long t1 = System.currentTimeMillis();
-        for (int i = 0; i < count; i++) {
-            map.get(randomKeys[i]);
-        }
-        long t2 = System.currentTimeMillis();
-        System.out.println("single-thread random read time: " + (t2 - t1) + " ms, count: " + count);
-    }
-
-    class MyThread extends Thread {
-        int start;
-        int end;
-        boolean read;
-        boolean random;
-
-        MyThread(int start, int end, boolean read, boolean random) {
-            super("MyThread-" + start);
-            this.start = start;
-            this.end = end;
-            this.read = read;
-            this.random = random;
-        }
-
-        void write() throws Exception {
-            // 取最早启动的那个线程的时间
-            startTime.compareAndSet(0, System.currentTimeMillis());
-            Transaction tx1 = ts.begin();
-            TransactionMap<Integer, String> map1 = tx1.openMap(mapName);
-            for (int i = start; i < end; i++) {
-                Integer key;
-                if (random)
-                    key = randomKeys[i];
-                else
-                    key = i;
-                String value = "value-";// "value-" + key;
-                // map.put(key, value);
-
-                Transaction t = ts.begin();
-                TransactionMap<Integer, String> m = map1.getInstance(t, 0);
-                m.put(key, value);
-                t.commit();
-            }
-        }
-
-        void read() throws Exception {
-            for (int i = start; i < end; i++) {
-                if (random)
-                    map.get(randomKeys[i]);
-                else
-                    map.get(i);
-            }
-        }
-
-        @Override
-        public void run() {
-            try {
-                if (read) {
-                    read();
-                } else {
-                    write();
-                }
-                endTime.set(System.currentTimeMillis());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    void multiThreadsSerialRead(int loop) {
-        multiThreads(loop, true, false);
-    }
-
-    @Override
-    void multiThreadsRandomRead(int loop) {
-        multiThreads(loop, true, true);
-    }
-
-    @Override
-    void multiThreadsSerialWrite(int loop) {
-        multiThreads(loop, false, false);
-    }
-
-    @Override
-    void multiThreadsRandomWrite(int loop) {
-        multiThreads(loop, false, true);
-    }
-
-    void multiThreads(int loop, boolean read, boolean random) {
-        startTime.set(0);
-        endTime.set(0);
-        int avg = count / threadsCount;
-        MyThread[] threads = new MyThread[threadsCount];
-        for (int i = 0; i < threadsCount; i++) {
-            int start = i * avg;
-            int end = (i + 1) * avg;
-            if (i == threadsCount - 1)
-                end = count;
-            threads[i] = new MyThread(start, end, read, random);
-        }
-
-        for (int i = 0; i < threadsCount; i++) {
-            threads[i].start();
-        }
-        for (int i = 0; i < threadsCount; i++) {
-            try {
-                threads[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        long totalTime = endTime.get() - startTime.get();
-        long avgTime = totalTime / threadsCount;
-        System.out.println(H2TransactionPerfTest.class.getSimpleName() + " loop: " + loop + ", rows: " + count
-                + ", threads: " + threadsCount + (random ? ", random " : ", serial ") + (read ? "read " : "write")
-                + ", total time: " + totalTime + " ms, avg time: " + avgTime + " ms");
     }
 }

@@ -20,15 +20,32 @@ package org.lealone.test.perf;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.lealone.db.LealoneDatabase;
 import org.lealone.plugins.test.mysql.MySQLPreparedStatementTest;
 import org.lealone.test.TestBase;
+import org.lealone.transaction.amte.log.LogSyncService;
 
-public class PerfTestBase {
+//以单元测试的方式运行会比通过main方法运行得出稍微慢一些的测试结果，
+//这可能是因为单元测试额外启动了一个ReaderThread占用了一些资源
+//-Xms512M -Xmx512M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps
+public abstract class PerfTestBase {
 
     public static final String PERF_TEST_BASE_DIR = "." + File.separatorChar + "target" + File.separatorChar
             + "perf-test-data";
+
+    public static String joinDirs(String... dirs) {
+        StringBuilder s = new StringBuilder(PERF_TEST_BASE_DIR);
+        for (String dir : dirs)
+            s.append(File.separatorChar).append(dir);
+        return s.toString();
+    }
 
     public static Connection getH2Connection() throws Exception {
         return getH2Connection(false);
@@ -46,7 +63,13 @@ public class PerfTestBase {
     }
 
     public static Connection getLealoneConnection() throws Exception {
-        String url = new TestBase().getURL(LealoneDatabase.NAME);
+        return getLealoneConnection(false);
+    }
+
+    public static Connection getLealoneConnection(boolean isEmbedded) throws Exception {
+        TestBase test = new TestBase();
+        test.setEmbedded(isEmbedded);
+        String url = test.getURL(LealoneDatabase.NAME);
         return DriverManager.getConnection(url);
     }
 
@@ -55,17 +78,180 @@ public class PerfTestBase {
     }
 
     protected final int loopCount = 5;
+    protected final int rowCount = 5000;
+    protected final int threadCount = Runtime.getRuntime().availableProcessors();
+    protected final AtomicLong pendingOperations = new AtomicLong(0);
+    protected final AtomicLong startTime = new AtomicLong(0);
+    protected final AtomicLong endTime = new AtomicLong(0);
+    protected final AtomicBoolean inited = new AtomicBoolean(false);
+    protected final int[] randomKeys = getRandomKeys();
+    protected Boolean isRandom;
+    protected Boolean write;
+    private CountDownLatch latch;
+
+    private int[] getRandomKeys() {
+        int count = rowCount;
+        ArrayList<Integer> list = new ArrayList<>(count);
+        for (int i = 1; i <= count; i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list);
+        int[] keys = new int[count];
+        for (int i = 0; i < count; i++) {
+            keys[i] = list.get(i);
+        }
+        return keys;
+    }
+
+    protected void initTransactionEngineConfig(HashMap<String, String> config) {
+        config.put("base_dir", joinDirs("lealone", "amte"));
+        config.put("redo_log_dir", "redo_log");
+        config.put("log_sync_type", LogSyncService.LOG_SYNC_TYPE_INSTANT);
+        // config.put("checkpoint_service_loop_interval", "10"); // 10ms
+        config.put("log_sync_type", LogSyncService.LOG_SYNC_TYPE_PERIODIC);
+        // config.put("log_sync_type", LogSyncService.LOG_SYNC_TYPE_NO_SYNC);
+        config.put("log_sync_period", "500"); // 500ms
+    }
+
+    protected boolean isRandom() {
+        return isRandom != null && isRandom;
+    }
+
+    public static void println() {
+        System.out.println();
+    }
+
+    public void printResult(String str) {
+        System.out.println(this.getClass().getSimpleName() + ": " + str);
+    }
 
     public void printResult(int loop, String str) {
-        System.out.println(this.getClass().getSimpleName() + " loop: " + loop + str);
+        System.out.println(this.getClass().getSimpleName() + ": loop: " + loop + str);
+    }
+
+    public void run(String[] args) throws Exception {
+        run();
     }
 
     public void run() throws Exception {
-        for (int i = 1; i <= loopCount; i++) {
-            run(i);
+        init();
+        try {
+            for (int i = 1; i <= loopCount; i++) {
+                run(i);
+            }
+        } finally {
+            destroy();
         }
     }
 
     public void run(int loop) throws Exception {
+        resetFields();
+        runPerfTestTasks();
+
+        long totalTime = endTime.get() - startTime.get();
+        long avgTime = totalTime / threadCount;
+
+        String str = "";
+        if (isRandom != null) {
+            if (isRandom)
+                str += ", random ";
+            else
+                str += ", serial ";
+
+            if (write != null) {
+                if (write)
+                    str += "write";
+                else
+                    str += "read";
+            } else {
+                str += "write";
+            }
+        }
+        printResult(loop, ", row count: " + rowCount + ", thread count: " + threadCount + str + ", total time: "
+                + totalTime + " ms, avg time: " + avgTime + " ms");
+    }
+
+    protected void resetFields() {
+        startTime.set(0);
+        endTime.set(0);
+        pendingOperations.set(rowCount);
+        latch = new CountDownLatch(1);
+    }
+
+    protected void notifyOperationComplete() {
+        if (pendingOperations.decrementAndGet() <= 0) {
+            endTime.set(System.currentTimeMillis());
+            latch.countDown();
+        }
+    }
+
+    protected void init() throws Exception {
+    }
+
+    protected void destroy() throws Exception {
+    }
+
+    protected PerfTestTask createPerfTestTask(int start, int end) throws Exception {
+        return null;
+    }
+
+    private void runPerfTestTasks() throws Exception {
+        int avg = rowCount / threadCount;
+        PerfTestTask[] tasks = new PerfTestTask[threadCount];
+        for (int i = 0; i < threadCount; i++) {
+            int start = i * avg;
+            int end = (i + 1) * avg;
+            if (i == threadCount - 1)
+                end = rowCount;
+            tasks[i] = createPerfTestTask(start, end);
+        }
+
+        for (int i = 0; i < threadCount; i++) {
+            if (tasks[i].needCreateThread()) {
+                new Thread(tasks[i], tasks[i].name).start();
+            } else {
+                // 什么都不做，后台线程会自己运行
+            }
+        }
+        latch.await();
+        for (int i = 0; i < threadCount; i++) {
+            try {
+                tasks[i].stopPerfTest();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public abstract class PerfTestTask implements Runnable {
+        protected final int start;
+        protected final int end;
+        protected final String name;
+
+        public PerfTestTask(int start, int end) throws Exception {
+            this.start = start;
+            this.end = end;
+            name = getClass().getSimpleName() + "-" + start;
+        }
+
+        @Override
+        public void run() {
+            // 取最早启动的那个线程的时间
+            startTime.compareAndSet(0, System.currentTimeMillis());
+            try {
+                startPerfTest();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public abstract void startPerfTest() throws Exception;
+
+        public void stopPerfTest() throws Exception {
+        }
+
+        public boolean needCreateThread() {
+            return true;
+        }
     }
 }

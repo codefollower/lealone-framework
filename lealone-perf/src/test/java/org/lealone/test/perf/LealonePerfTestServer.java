@@ -26,11 +26,12 @@ public class LealonePerfTestServer extends NodeBase {
 
     // YamlConfigLoader的子类必须有一个无参数的构造函数
     public LealonePerfTestServer() {
-        nodeBaseDirPrefix = "client-server";
+        nodeBaseDirPrefix = "lealone";
     }
 
     @Override
     public void applyConfig(Config config) throws ConfigException {
+        config.base_dir = PerfTestBase.PERF_TEST_BASE_DIR;
         PluginTestBase.enableTcpServer(config);
         super.applyConfig(config);
     }
