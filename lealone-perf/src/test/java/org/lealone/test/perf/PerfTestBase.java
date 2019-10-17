@@ -77,9 +77,9 @@ public abstract class PerfTestBase {
         return MySQLPreparedStatementTest.getMySQLConnection(true);
     }
 
-    protected final int loopCount = 5;
-    protected final int rowCount = 5000;
-    protected final int threadCount = Runtime.getRuntime().availableProcessors();
+    protected int loopCount = 5; // 重复测试次数
+    protected int rowCount = 5000; // 总记录数
+    protected int threadCount = Runtime.getRuntime().availableProcessors();
     protected final AtomicLong pendingOperations = new AtomicLong(0);
     protected final AtomicLong startTime = new AtomicLong(0);
     protected final AtomicLong endTime = new AtomicLong(0);
@@ -89,7 +89,7 @@ public abstract class PerfTestBase {
     protected Boolean write;
     private CountDownLatch latch;
 
-    private int[] getRandomKeys() {
+    protected int[] getRandomKeys() {
         int count = rowCount;
         ArrayList<Integer> list = new ArrayList<>(count);
         for (int i = 1; i <= count; i++) {
@@ -115,6 +115,10 @@ public abstract class PerfTestBase {
 
     protected boolean isRandom() {
         return isRandom != null && isRandom;
+    }
+
+    protected boolean isWrite() {
+        return write != null && write;
     }
 
     public static void println() {
@@ -154,9 +158,9 @@ public abstract class PerfTestBase {
         String str = "";
         if (isRandom != null) {
             if (isRandom)
-                str += ", random ";
+                str += " random ";
             else
-                str += ", serial ";
+                str += " serial ";
 
             if (write != null) {
                 if (write)
@@ -167,6 +171,10 @@ public abstract class PerfTestBase {
                 str += "write";
             }
         }
+        printRunResult(loop, totalTime, avgTime, str);
+    }
+
+    protected void printRunResult(int loop, long totalTime, long avgTime, String str) {
         printResult(loop, ", row count: " + rowCount + ", thread count: " + threadCount + str + ", total time: "
                 + totalTime + " ms, avg time: " + avgTime + " ms");
     }

@@ -27,10 +27,18 @@ public class SyncBTreePerfTest extends StorageMapPerfTest {
     }
 
     @Override
+    protected void init() {
+        if (!inited.compareAndSet(false, true))
+            return;
+        initConfig();
+        openStorage(false);
+        openMap();
+    }
+
+    @Override
     protected void openMap() {
         if (map == null || map.isClosed()) {
-            map = storage.openBTreeMap(SyncBTreePerfTest.class.getSimpleName(), ValueInt.type, ValueString.type,
-                    null);
+            map = storage.openBTreeMap(SyncBTreePerfTest.class.getSimpleName(), ValueInt.type, ValueString.type, null);
         }
     }
 }

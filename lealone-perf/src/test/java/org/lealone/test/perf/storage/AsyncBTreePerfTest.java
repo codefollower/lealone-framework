@@ -18,6 +18,7 @@
 package org.lealone.test.perf.storage;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.lealone.db.value.ValueInt;
@@ -37,8 +38,15 @@ public class AsyncBTreePerfTest extends StorageMapPerfTest {
         new AsyncBTreePerfTest().run();
     }
 
+    private final AtomicInteger index = new AtomicInteger(0);
     private BTreeMap<Integer, String> btreeMap;
     private DefaultPageOperationHandler[] handlers;
+
+    @Override
+    protected void resetFields() {
+        super.resetFields();
+        index.set(0);
+    }
 
     @Override
     protected void testWrite(int loop) {
@@ -66,15 +74,6 @@ public class AsyncBTreePerfTest extends StorageMapPerfTest {
         super.beforeRun();
         // printLeafPageOperationHandlerPercent();
         // printShiftCount(conflictKeys);
-    }
-
-    private void createPageOperationHandlers() {
-        handlers = new DefaultPageOperationHandler[threadCount];
-        for (int i = 0; i < threadCount; i++) {
-            handlers[i] = new DefaultPageOperationHandler(i, config);
-        }
-        PageOperationHandlerFactory f = storage.getPageOperationHandlerFactory();
-        f.setPageOperationHandlers(handlers);
     }
 
     void printShiftCount(int[] keys) {
@@ -140,7 +139,23 @@ public class AsyncBTreePerfTest extends StorageMapPerfTest {
 
     @Override
     protected void init() {
-        super.init();
+        if (!inited.compareAndSet(false, true))
+            return;
+        initConfig();
+        createPageOperationHandlers();
+        openStorage(false);
+        openMap();
+    }
+
+    private void createPageOperationHandlers() {
+        handlers = new DefaultPageOperationHandler[threadCount];
+        for (int i = 0; i < threadCount; i++) {
+            handlers[i] = new DefaultPageOperationHandler(i, config);
+        }
+        PageOperationHandlerFactory f = PageOperationHandlerFactory.create(config, handlers);
+        f.stopHandlers();
+        f.setPageOperationHandlers(handlers);
+        f.startHandlers();
     }
 
     @Override
@@ -152,15 +167,116 @@ public class AsyncBTreePerfTest extends StorageMapPerfTest {
     }
 
     @Override
-    protected Thread getThread(PageOperation pageOperation, int index, int start) {
-        DefaultPageOperationHandler h = handlers[index];
-        h.reset(false);
-        h.handlePageOperation(pageOperation);
-        return new Thread(h, h.getName());
+    protected void printRunResult(int loop, long totalTime, long avgTime, String str) {
+        String shiftStr = getShiftStr();
+
+        if (testConflictOnly)
+            printResult(loop,
+                    ", row count: " + rowCount + ", thread count: " + threadCount + ", conflict keys: "
+                            + conflictKeyCount + shiftStr + ", async write conflict, total time: " + totalTime
+                            + " ms, avg time: " + avgTime + " ms");
+        else
+            printResult(loop, ", row count: " + rowCount + ", thread count: " + threadCount + shiftStr + ", async" + str
+                    + ", total time: " + totalTime + " ms, avg time: " + avgTime + " ms");
+    }
+
+    // 异步场景下线程移交PageOperation的次数
+    private String getShiftStr() {
+        String shiftStr = "";
+        long shiftSum = 0;
+        for (int i = 0; i < threadCount; i++) {
+            DefaultPageOperationHandler h = handlers[i];
+            shiftSum += h.getShiftCount();
+        }
+        shiftStr = ", shift: " + shiftSum;
+        return shiftStr;
     }
 
     @Override
-    public DefaultPageOperationHandler getDefaultPageOperationHandler(int index) {
-        return handlers[index];
+    protected PerfTestTask createPerfTestTask(int start, int end) throws Exception {
+        if (testConflictOnly)
+            return new AsyncBTreeConflictPerfTestTask();
+        else
+            return new AsyncBTreePerfTestTask(start, end);
+    }
+
+    class AsyncBTreePerfTestTask extends StorageMapPerfTestTask implements PageOperation {
+
+        PageOperationHandler currentHandler;
+
+        AsyncBTreePerfTestTask(int start, int end) throws Exception {
+            super(start, end);
+            DefaultPageOperationHandler h = handlers[index.getAndIncrement()];
+            h.reset(false);
+            h.handlePageOperation(this);
+        }
+
+        @Override
+        public PageOperationResult run(PageOperationHandler currentHandler) {
+            this.currentHandler = currentHandler;
+            super.run();
+            return PageOperationResult.SUCCEEDED;
+        }
+
+        @Override
+        public boolean needCreateThread() {
+            return false;
+        }
+
+        @Override
+        protected void read() throws Exception {
+            for (int i = start; i < end; i++) {
+                int key;
+                if (isRandom())
+                    key = randomKeys[i];
+                else
+                    key = i;
+                map.get(key, ar -> {
+                    notifyOperationComplete();
+                });
+            }
+        }
+
+        @Override
+        protected void write() throws Exception {
+            for (int i = start; i < end; i++) {
+                int key;
+                if (isRandom())
+                    key = randomKeys[i];
+                else
+                    key = i;
+                String value = "value-";// "value-" + key;
+
+                PageOperation po = map.createPutOperation(key, value, ar -> {
+                    notifyOperationComplete();
+                });
+                po.run(currentHandler);
+                // PageOperationResult result = po.run(currentHandler);
+                // if (result == PageOperationResult.SHIFTED) {
+                // shiftCount++;
+                // }
+                // currentHandler.handlePageOperation(po);
+            }
+        }
+    }
+
+    class AsyncBTreeConflictPerfTestTask extends AsyncBTreePerfTestTask {
+
+        AsyncBTreeConflictPerfTestTask() throws Exception {
+            super(0, conflictKeyCount);
+        }
+
+        @Override
+        protected void write() throws Exception {
+            for (int i = 0; i < conflictKeyCount; i++) {
+                int key = conflictKeys[i];
+                String value = "value-conflict";
+
+                PageOperation po = map.createPutOperation(key, value, ar -> {
+                    notifyOperationComplete();
+                });
+                po.run(currentHandler);
+            }
+        }
     }
 }
