@@ -53,8 +53,6 @@ public class LealoneTransactionPerfTest extends TransactionPerfTest {
 
     @Override
     protected void init() throws Exception {
-        if (!inited.compareAndSet(false, true))
-            return;
         String factoryType = "RoundRobin";
         factoryType = "Random";
         // factoryType = "LoadBalance";

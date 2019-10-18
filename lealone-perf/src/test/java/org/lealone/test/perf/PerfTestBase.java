@@ -77,27 +77,36 @@ public abstract class PerfTestBase {
         return MySQLPreparedStatementTest.getMySQLConnection(true);
     }
 
+    protected static final int DEFAULT_ROW_COUNT = 5000;
     protected int loopCount = 5; // 重复测试次数
-    protected int rowCount = 5000; // 总记录数
+    protected int rowCount = DEFAULT_ROW_COUNT; // 总记录数
     protected int threadCount = Runtime.getRuntime().availableProcessors();
     protected final AtomicLong pendingOperations = new AtomicLong(0);
     protected final AtomicLong startTime = new AtomicLong(0);
     protected final AtomicLong endTime = new AtomicLong(0);
     protected final AtomicBoolean inited = new AtomicBoolean(false);
-    protected final int[] randomKeys = getRandomKeys();
+    protected final int[] randomKeys;
     protected Boolean isRandom;
     protected Boolean write;
     private CountDownLatch latch;
 
+    protected PerfTestBase() {
+        this(DEFAULT_ROW_COUNT);
+    }
+
+    protected PerfTestBase(int rowCount) {
+        this.rowCount = rowCount;
+        randomKeys = getRandomKeys();
+    }
+
     protected int[] getRandomKeys() {
-        int count = rowCount;
-        ArrayList<Integer> list = new ArrayList<>(count);
-        for (int i = 1; i <= count; i++) {
+        ArrayList<Integer> list = new ArrayList<>(rowCount);
+        for (int i = 0; i < rowCount; i++) {
             list.add(i);
         }
         Collections.shuffle(list);
-        int[] keys = new int[count];
-        for (int i = 0; i < count; i++) {
+        int[] keys = new int[rowCount];
+        for (int i = 0; i < rowCount; i++) {
             keys[i] = list.get(i);
         }
         return keys;
@@ -140,15 +149,19 @@ public abstract class PerfTestBase {
     public void run() throws Exception {
         init();
         try {
-            for (int i = 1; i <= loopCount; i++) {
-                run(i);
-            }
+            runLoop();
         } finally {
             destroy();
         }
     }
 
-    public void run(int loop) throws Exception {
+    protected void runLoop() throws Exception {
+        for (int i = 1; i <= loopCount; i++) {
+            run(i);
+        }
+    }
+
+    protected void run(int loop) throws Exception {
         resetFields();
         runPerfTestTasks();
 

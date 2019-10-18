@@ -24,14 +24,30 @@ import org.lealone.test.perf.PerfTestBase;
 public abstract class TransactionPerfTest extends PerfTestBase {
 
     public static void run(TransactionPerfTest test) throws Exception {
-        test.isRandom = true;
-        test.run();
-        println();
-        test.isRandom = false;
         test.run();
     }
 
     protected final String mapName = getClass().getSimpleName();
+
+    protected TransactionPerfTest() {
+        super(20000);
+    }
+
+    @Override
+    public void run() throws Exception {
+        init();
+        try {
+            isRandom = true;
+            runLoop();
+
+            println();
+
+            isRandom = false;
+            runLoop();
+        } finally {
+            destroy();
+        }
+    }
 
     void testByteBufferAllocate() {
         for (int j = 0; j < 20; j++) {

@@ -33,8 +33,6 @@ public class H2TransactionPerfTest extends TransactionPerfTest {
 
     @Override
     protected void init() throws Exception {
-        if (!inited.compareAndSet(false, true))
-            return;
         // MVStore.Builder builder = new MVStore.Builder();
         MVStore store = MVStore.open(null);
         ts = new TransactionStore(store);
