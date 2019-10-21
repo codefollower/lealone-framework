@@ -104,4 +104,9 @@ public class NettyBuffer implements NetBuffer {
             buffer.writerIndex(ni);
         }
     }
+
+    @Override
+    public NetBuffer flip() {
+        return this;
+    }
 }

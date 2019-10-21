@@ -33,6 +33,7 @@ import org.lealone.transaction.TransactionMap;
 public class LealoneTransactionPerfTest extends TransactionPerfTest {
 
     public static void main(String[] args) throws Exception {
+        printMemoryUsage();
         LealoneTransactionPerfTest test = new LealoneTransactionPerfTest();
         run(test);
     }

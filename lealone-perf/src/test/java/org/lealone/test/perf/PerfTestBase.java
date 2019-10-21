@@ -18,6 +18,8 @@
 package org.lealone.test.perf;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryUsage;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.lealone.db.LealoneDatabase;
+import org.lealone.db.SysProperties;
 import org.lealone.plugins.test.mysql.MySQLPreparedStatementTest;
 import org.lealone.test.TestBase;
 import org.lealone.transaction.amte.log.LogSyncService;
@@ -70,6 +73,7 @@ public abstract class PerfTestBase {
         TestBase test = new TestBase();
         test.setEmbedded(isEmbedded);
         String url = test.getURL(LealoneDatabase.NAME);
+        SysProperties.setBaseDir(joinDirs("lealone"));
         return DriverManager.getConnection(url);
     }
 
@@ -77,10 +81,10 @@ public abstract class PerfTestBase {
         return MySQLPreparedStatementTest.getMySQLConnection(true);
     }
 
-    protected static final int DEFAULT_ROW_COUNT = 5000;
-    protected int loopCount = 5; // 重复测试次数
+    protected static final int DEFAULT_ROW_COUNT = 10000;
+    protected int loopCount = 30; // 重复测试次数
     protected int rowCount = DEFAULT_ROW_COUNT; // 总记录数
-    protected int threadCount = Runtime.getRuntime().availableProcessors();
+    protected int threadCount = Runtime.getRuntime().availableProcessors() + 6;
     protected final AtomicLong pendingOperations = new AtomicLong(0);
     protected final AtomicLong startTime = new AtomicLong(0);
     protected final AtomicLong endTime = new AtomicLong(0);
@@ -119,7 +123,7 @@ public abstract class PerfTestBase {
         // config.put("checkpoint_service_loop_interval", "10"); // 10ms
         config.put("log_sync_type", LogSyncService.LOG_SYNC_TYPE_PERIODIC);
         // config.put("log_sync_type", LogSyncService.LOG_SYNC_TYPE_NO_SYNC);
-        config.put("log_sync_period", "500"); // 500ms
+        config.put("log_sync_period", "50"); // 500ms
     }
 
     protected boolean isRandom() {
@@ -204,6 +208,7 @@ public abstract class PerfTestBase {
             endTime.set(System.currentTimeMillis());
             latch.countDown();
         }
+        // System.out.println(pendingOperations.get());
     }
 
     protected void init() throws Exception {
@@ -274,5 +279,32 @@ public abstract class PerfTestBase {
         public boolean needCreateThread() {
             return true;
         }
+    }
+
+    public static void printMemoryUsage() {
+        long total = Runtime.getRuntime().totalMemory();
+        long free = Runtime.getRuntime().freeMemory();
+        long used = total - free;
+
+        System.out.println("Heap size:");
+        System.out.println("-------------------");
+        System.out.println("TotalMemory: " + formatSize(total));
+        System.out.println("UsedMemory:  " + formatSize(used));
+        System.out.println("FreeMemory:  " + formatSize(free));
+
+        MemoryUsage mu = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+        MemoryUsage nmu = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
+        System.out.println("HeapMemoryUsage: " + mu);
+        System.out.println("NonHeapMemoryUsage: " + nmu);
+    }
+
+    public static String formatSize(long size) {
+        if (size < 1014)
+            return size + "Bytes";
+        if (size >= 1 << 30)
+            return String.format("%.1fG", size / (double) (1 << 30));
+        if (size >= 1 << 20)
+            return String.format("%.1fM", size / (double) (1 << 20));
+        return String.format("%.1fK", size / (double) (1 << 10));
     }
 }

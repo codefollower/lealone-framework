@@ -24,6 +24,7 @@ import java.util.concurrent.CountDownLatch;
 import org.lealone.common.exceptions.DbException;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
+import org.lealone.common.util.ShutdownHookUtils;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
@@ -107,6 +108,9 @@ public class NettyNetClient extends NetClientBase {
                             // 延迟到connect成功后再创建连接
                         }
                     });
+            ShutdownHookUtils.addShutdownHook(this, () -> {
+                close();
+            });
         }
 
         public void close() {

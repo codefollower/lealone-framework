@@ -33,6 +33,8 @@ public class LealonePerfTestServer extends NodeBase {
     public void applyConfig(Config config) throws ConfigException {
         config.base_dir = PerfTestBase.PERF_TEST_BASE_DIR;
         PluginTestBase.enableTcpServer(config);
+        // PluginTestBase.enableVertxNetServer(config);
+        // PluginTestBase.enableNettyNetServer(config);
         super.applyConfig(config);
     }
 

@@ -100,4 +100,10 @@ public class MinaBuffer implements NetBuffer {
         buffer.put(pos, b);
         return this;
     }
+
+    @Override
+    public NetBuffer flip() {
+        buffer.flip();
+        return this;
+    }
 }

@@ -85,4 +85,8 @@ public class VertxBuffer implements NetBuffer {
         return this;
     }
 
+    @Override
+    public NetBuffer flip() {
+        return this;
+    }
 }

@@ -35,12 +35,12 @@ public class LealoneSqlPerfTest extends SqlPerfTest {
 
     @Override
     protected void update(Statement stmt, int start, int end) throws Exception {
-        JdbcStatement Statement = (JdbcStatement) stmt;
+        JdbcStatement statement = (JdbcStatement) stmt;
         for (int i = start; i < end; i++) {
             int f1 = i;
             if (isRandom())
                 f1 = randomKeys[i];
-            Statement.executeUpdateAsync("update SqlPerfTest set f2 = 'value2' where f1 =" + f1, ar -> {
+            statement.executeUpdateAsync("update SqlPerfTest set f2 = 'value2' where f1 =" + f1, ar -> {
                 notifyOperationComplete();
             });
         }
