@@ -53,7 +53,7 @@ import org.lealone.plugins.mysql.server.handler.AuthPacketHandler;
 import org.lealone.plugins.mysql.server.handler.CommandPacketHandler;
 import org.lealone.plugins.mysql.server.handler.PacketHandler;
 import org.lealone.plugins.mysql.util.PacketUtil;
-import org.lealone.sql.PreparedStatement;
+import org.lealone.sql.PreparedSQLStatement;
 
 public class MySQLServerConnection extends AsyncConnection {
 
@@ -193,7 +193,7 @@ public class MySQLServerConnection extends AsyncConnection {
     public void executeStatement(String sql) {
         logger.info("sql: " + sql);
         try {
-            PreparedStatement ps = session.prepareStatement(sql, -1);
+            PreparedSQLStatement ps = session.prepareStatement(sql, -1);
 
             if (ps.isQuery()) {
                 Result result = ps.executeQuery(-1);
