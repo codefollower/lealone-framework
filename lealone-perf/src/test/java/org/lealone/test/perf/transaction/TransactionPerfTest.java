@@ -30,7 +30,7 @@ public abstract class TransactionPerfTest extends PerfTestBase {
     protected final String mapName = getClass().getSimpleName();
 
     protected TransactionPerfTest() {
-        super(20000);
+        super(10000);
     }
 
     @Override

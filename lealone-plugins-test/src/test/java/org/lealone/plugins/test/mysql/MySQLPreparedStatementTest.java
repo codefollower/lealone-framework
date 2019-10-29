@@ -33,7 +33,7 @@ public class MySQLPreparedStatementTest {
     }
 
     public static Connection getMySQLConnection(boolean autoCommit) throws Exception {
-        String driver = "com.mysql.jdbc.Driver";
+        // String driver = "com.mysql.jdbc.Driver";
         int port = MySQLServer.DEFAULT_PORT;
         String db = "mysql";
         String password = "";
@@ -55,8 +55,12 @@ public class MySQLPreparedStatementTest {
         // info.put("allowMultiQueries","true");
 
         // info.put("useServerPrepStmts", "true");
+        // info.put("cachePrepStmts", "true");
+        info.put("rewriteBatchedStatements", "true");
+        info.put("useCompression", "true");
+        info.put("serverTimezone", "GMT");
 
-        Class.forName(driver);
+        // Class.forName(driver);
 
         Connection conn = DriverManager.getConnection(url, info);
         conn.setAutoCommit(autoCommit);

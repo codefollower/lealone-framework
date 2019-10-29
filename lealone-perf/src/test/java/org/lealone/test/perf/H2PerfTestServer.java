@@ -43,6 +43,8 @@ public class H2PerfTestServer {
         list.add("-tcp");
         // list.add("-web");
         // list.add("-ifExists");
+        list.add("-ifNotExists");
+        list.add("-tcpAllowOthers");
         org.h2.tools.Server.main(list.toArray(new String[list.size()]));
     }
 

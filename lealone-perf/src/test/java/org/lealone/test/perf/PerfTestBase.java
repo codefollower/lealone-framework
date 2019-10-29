@@ -62,6 +62,8 @@ public abstract class PerfTestBase {
         } else {
             url = "jdbc:h2:tcp://localhost:9092/CSPerfTestDB";
         }
+        // url += ";OPEN_NEW=true;FORBID_CREATION=false";
+        url += ";FORBID_CREATION=false";
         return DriverManager.getConnection(url, "sa", "");
     }
 
@@ -84,7 +86,7 @@ public abstract class PerfTestBase {
     protected static final int DEFAULT_ROW_COUNT = 10000;
     protected int loopCount = 30; // 重复测试次数
     protected int rowCount = DEFAULT_ROW_COUNT; // 总记录数
-    protected int threadCount = Runtime.getRuntime().availableProcessors() + 6;
+    protected int threadCount = Runtime.getRuntime().availableProcessors() + 1;
     protected final AtomicLong pendingOperations = new AtomicLong(0);
     protected final AtomicLong startTime = new AtomicLong(0);
     protected final AtomicLong endTime = new AtomicLong(0);

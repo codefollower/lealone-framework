@@ -18,6 +18,7 @@
 package org.lealone.test.perf.sql;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 import org.lealone.test.perf.PerfTestBase;
@@ -54,6 +55,28 @@ public abstract class SqlPerfTest extends PerfTestBase {
         }
     }
 
+    protected void prepare(Connection conn, int start, int end) throws Exception {
+        for (int i = start; i < end; i++) {
+            int f1 = i;
+            if (isRandom())
+                f1 = randomKeys[i];
+            String sql = "update SqlPerfTest set f2 = 'value2' where f1 =" + f1;
+            conn.prepareStatement(sql);
+            notifyOperationComplete();
+        }
+    }
+
+    protected void prepare(PreparedStatement ps, int start, int end) throws Exception {
+        for (int i = start; i < end; i++) {
+            int f1 = i;
+            if (isRandom())
+                f1 = randomKeys[i];
+            ps.setInt(1, f1);
+            ps.executeUpdate();
+            notifyOperationComplete();
+        }
+    }
+
     @Override
     protected SqlPerfTestTask createPerfTestTask(int start, int end) throws Exception {
         return new SqlPerfTestTask(start, end);
@@ -62,21 +85,27 @@ public abstract class SqlPerfTest extends PerfTestBase {
     protected class SqlPerfTestTask extends PerfTestTask {
         final Connection conn;
         final Statement stmt;
+        final PreparedStatement ps;
 
         protected SqlPerfTestTask(int start, int end) throws Exception {
             super(start, end);
             this.conn = getConnection();
             this.stmt = conn.createStatement();
+            String sql = "update SqlPerfTest set f2 = 'value2' where f1 =?";
+            this.ps = conn.prepareStatement(sql);
         }
 
         @Override
         public void startPerfTest() throws Exception {
-            update(stmt, start, end);
+            // update(stmt, start, end);
+            // prepare(conn, start, end);
+            prepare(ps, start, end);
         }
 
         @Override
         public void stopPerfTest() throws Exception {
             stmt.close();
+            ps.close();
             conn.close();
         }
     }

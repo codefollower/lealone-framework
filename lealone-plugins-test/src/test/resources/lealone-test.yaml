@@ -56,6 +56,7 @@ protocol_server_engines:
         allow_others: true,
         daemon: false,
         net_factory_name: netty,
-        ssl: false
+        ssl: false,
+        session_timeout: -1
     }
  

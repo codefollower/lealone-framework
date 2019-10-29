@@ -18,9 +18,9 @@
 package org.lealone.test.perf.transaction;
 
 import org.h2.mvstore.MVStore;
-import org.h2.mvstore.db.TransactionStore;
-import org.h2.mvstore.db.TransactionStore.Transaction;
-import org.h2.mvstore.db.TransactionStore.TransactionMap;
+import org.h2.mvstore.tx.Transaction;
+import org.h2.mvstore.tx.TransactionMap;
+import org.h2.mvstore.tx.TransactionStore;
 
 public class H2TransactionPerfTest extends TransactionPerfTest {
 
@@ -72,7 +72,7 @@ public class H2TransactionPerfTest extends TransactionPerfTest {
             // map.put(key, value);
 
             Transaction t = ts.begin();
-            TransactionMap<Integer, String> m = map1.getInstance(t, 0);
+            TransactionMap<Integer, String> m = map1.getInstance(t);
             m.put(key, value);
             t.commit();
             notifyOperationComplete();
