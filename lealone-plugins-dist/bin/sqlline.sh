@@ -24,7 +24,7 @@ if [ "x$JAVA_HOME" = "x" ]; then
     exit 1;
 fi
 
-LEALONE_MAIN=sqlline.SqlLine -ac org.lealone.plugins.sqlline.SqlLineApplication
+LEALONE_MAIN=org.lealone.plugins.sqlline.SqlLine -ac org.lealone.plugins.sqlline.SqlLineApplication
 
 JAVA_OPTS=-Xms10M
 JAVA_OPTS="$JAVA_OPTS -Dlogback.configurationFile=logback.xml"

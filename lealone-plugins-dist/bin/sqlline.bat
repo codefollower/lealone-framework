@@ -23,7 +23,7 @@ pushd %~dp0..
 if NOT DEFINED LEALONE_HOME set LEALONE_HOME=%CD%
 popd
 
-if NOT DEFINED LEALONE_MAIN set LEALONE_MAIN=sqlline.SqlLine -ac org.lealone.plugins.sqlline.SqlLineApplication
+if NOT DEFINED LEALONE_MAIN set LEALONE_MAIN=org.lealone.plugins.sqlline.SqlLine -ac org.lealone.plugins.sqlline.SqlLineApplication
 
 set JAVA_OPTS=-Xms10M^
  -Dlogback.configurationFile=logback.xml^
