@@ -25,7 +25,7 @@ import org.lealone.storage.PageOperation;
 import org.lealone.storage.PageOperationHandlerFactory;
 import org.lealone.storage.aose.AOStorage;
 import org.lealone.storage.aose.AOStorageBuilder;
-import org.lealone.test.amte.AMTransactionEngineTest;
+import org.lealone.test.aote.AMTransactionEngineTest;
 import org.lealone.transaction.Transaction;
 import org.lealone.transaction.TransactionEngine;
 import org.lealone.transaction.TransactionMap;

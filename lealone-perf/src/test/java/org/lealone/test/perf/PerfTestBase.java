@@ -33,7 +33,7 @@ import org.lealone.db.LealoneDatabase;
 import org.lealone.db.SysProperties;
 import org.lealone.plugins.test.mysql.MySQLPreparedStatementTest;
 import org.lealone.test.TestBase;
-import org.lealone.transaction.amte.log.LogSyncService;
+import org.lealone.transaction.aote.log.LogSyncService;
 
 //以单元测试的方式运行会比通过main方法运行得出稍微慢一些的测试结果，
 //这可能是因为单元测试额外启动了一个ReaderThread占用了一些资源

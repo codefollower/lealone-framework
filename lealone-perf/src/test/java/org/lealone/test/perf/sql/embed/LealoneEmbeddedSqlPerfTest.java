@@ -27,7 +27,7 @@ import org.lealone.db.SysProperties;
 import org.lealone.server.Scheduler;
 import org.lealone.storage.PageOperation;
 import org.lealone.storage.PageOperationHandlerFactory;
-import org.lealone.test.amte.AMTransactionEngineTest;
+import org.lealone.test.aote.AMTransactionEngineTest;
 import org.lealone.test.perf.sql.SqlPerfTest;
 import org.lealone.transaction.TransactionEngine;
 
