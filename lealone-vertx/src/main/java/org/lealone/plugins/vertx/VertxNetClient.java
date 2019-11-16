@@ -25,7 +25,7 @@ import org.lealone.common.exceptions.DbException;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
-import org.lealone.net.NetEndpoint;
+import org.lealone.net.NetNode;
 import org.lealone.net.TcpClientConnection;
 
 import io.vertx.core.Vertx;
@@ -67,10 +67,10 @@ public class VertxNetClient extends NetClientBase {
     }
 
     @Override
-    protected void createConnectionInternal(NetEndpoint endpoint, AsyncConnectionManager connectionManager,
+    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
             CountDownLatch latch) throws Exception {
-        InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
-        vertxClient.connect(endpoint.getPort(), endpoint.getHost(), res -> {
+        InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
+        vertxClient.connect(node.getPort(), node.getHost(), res -> {
             try {
                 if (res.succeeded()) {
                     NetSocket socket = res.result();

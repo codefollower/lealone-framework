@@ -28,7 +28,7 @@ import org.lealone.common.util.ShutdownHookUtils;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
-import org.lealone.net.NetEndpoint;
+import org.lealone.net.NetNode;
 import org.lealone.net.TcpClientConnection;
 
 import io.netty.bootstrap.Bootstrap;
@@ -84,9 +84,9 @@ public class NettyNetClient extends NetClientBase {
     }
 
     @Override
-    protected void createConnectionInternal(NetEndpoint endpoint, AsyncConnectionManager connectionManager,
+    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
             CountDownLatch latch) throws Exception {
-        nettyClient.connect(endpoint, connectionManager, latch);
+        nettyClient.connect(node, connectionManager, latch);
     }
 
     private static void removeConnectionInternal(AsyncConnection conn) {
@@ -117,9 +117,9 @@ public class NettyNetClient extends NetClientBase {
             bootstrap.config().group().shutdownGracefully();
         }
 
-        public void connect(NetEndpoint endpoint, AsyncConnectionManager connectionManager, CountDownLatch latch) {
-            final InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
-            bootstrap.connect(endpoint.getHost(), endpoint.getPort()).addListener(new ChannelFutureListener() {
+        public void connect(NetNode node, AsyncConnectionManager connectionManager, CountDownLatch latch) {
+            final InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
+            bootstrap.connect(node.getHost(), node.getPort()).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     try {

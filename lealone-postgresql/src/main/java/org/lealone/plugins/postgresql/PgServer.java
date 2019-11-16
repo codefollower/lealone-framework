@@ -23,7 +23,7 @@ import org.lealone.common.logging.LoggerFactory;
 import org.lealone.db.Constants;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
-import org.lealone.net.NetEndpoint;
+import org.lealone.net.NetNode;
 import org.lealone.net.NetFactory;
 import org.lealone.net.NetFactoryManager;
 import org.lealone.net.NetServer;
@@ -119,7 +119,7 @@ public class PgServer extends DelegatedProtocolServer implements AsyncConnection
         setProtocolServer(netServer);
         netServer.init(config);
 
-        NetEndpoint.setLocalTcpEndpoint(getHost(), getPort());
+        NetNode.setLocalTcpNode(getHost(), getPort());
     }
 
     @Override

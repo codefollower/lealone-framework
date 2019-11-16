@@ -29,7 +29,7 @@ import org.lealone.common.exceptions.DbException;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
-import org.lealone.net.NetEndpoint;
+import org.lealone.net.NetNode;
 import org.lealone.net.TcpClientConnection;
 
 public class MinaNetClient extends NetClientBase {
@@ -73,10 +73,10 @@ public class MinaNetClient extends NetClientBase {
     }
 
     @Override
-    protected void createConnectionInternal(NetEndpoint endpoint, AsyncConnectionManager connectionManager,
+    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
             CountDownLatch latch) throws Exception {
         try {
-            InetSocketAddress inetSocketAddress = endpoint.getInetSocketAddress();
+            InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
             ConnectFuture future = connector.connect(inetSocketAddress);
             future.awaitUninterruptibly();
             if (!future.isConnected()) {
