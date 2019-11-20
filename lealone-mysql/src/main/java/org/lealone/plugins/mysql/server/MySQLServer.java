@@ -38,7 +38,7 @@ public class MySQLServer extends DelegatedProtocolServer implements AsyncConnect
     public static final String DATABASE_NAME = "mysql";
 
     // private static final Logger logger = LoggerFactory.getLogger(MySQLServer.class);
-    public static final int DEFAULT_PORT = 7214;
+    public static final int DEFAULT_PORT = 9214;
 
     private final Set<MySQLServerConnection> connections = Collections.synchronizedSet(new HashSet<MySQLServerConnection>());
 

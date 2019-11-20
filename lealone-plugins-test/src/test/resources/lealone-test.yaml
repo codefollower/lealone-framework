@@ -52,7 +52,7 @@ protocol_server_engines:
   - name: TCP
     enabled: false
     parameters: {
-        port: 7210,
+        port: 9210,
         allow_others: true,
         daemon: false,
         net_factory_name: netty,

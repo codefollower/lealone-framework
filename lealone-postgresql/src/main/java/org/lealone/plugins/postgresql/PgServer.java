@@ -50,7 +50,7 @@ public class PgServer extends DelegatedProtocolServer implements AsyncConnection
      * The default port to use for the PG server.
      * This value is also in the documentation and in the Server javadoc.
      */
-    public static final int DEFAULT_PORT = 7213;
+    public static final int DEFAULT_PORT = 9213;
 
     /**
      * The VARCHAR type.
