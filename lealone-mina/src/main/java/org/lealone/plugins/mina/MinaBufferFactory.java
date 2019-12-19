@@ -38,5 +38,4 @@ public class MinaBufferFactory implements NetBufferFactory {
         buffer.setAutoExpand(true);
         return new MinaBuffer(buffer);
     }
-
 }

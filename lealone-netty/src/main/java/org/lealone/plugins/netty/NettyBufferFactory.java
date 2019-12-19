@@ -39,5 +39,4 @@ public class NettyBufferFactory implements NetBufferFactory {
         ByteBuf buffer = Unpooled.unreleasableBuffer(Unpooled.buffer(initialSizeHint, Integer.MAX_VALUE));
         return new NettyBuffer(buffer);
     }
-
 }

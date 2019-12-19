@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import org.lealone.common.exceptions.DbException;
-import org.lealone.common.logging.Logger;
-import org.lealone.common.logging.LoggerFactory;
 import org.lealone.common.util.ShutdownHookUtils;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
@@ -32,14 +30,10 @@ import org.lealone.net.NetNode;
 import org.lealone.net.TcpClientConnection;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -47,58 +41,20 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class NettyNetClient extends NetClientBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(NettyNetClient.class);
-
     private static final NettyNetClient instance = new NettyNetClient();
 
     public static NettyNetClient getInstance() {
         return instance;
     }
 
-    private static NettyNetClient.NettyClient nettyClient;
-
-    private static synchronized void openNettyClient(NettyNetClient nettyNetClient, Map<String, String> config) {
-        if (nettyClient == null) {
-            nettyClient = new NettyClient(nettyNetClient, config);
-        }
-    }
-
-    private static synchronized void closeNettyClient() {
-        if (nettyClient != null) {
-            nettyClient.close();
-            nettyClient = null;
-        }
-    }
+    private Bootstrap bootstrap;
 
     private NettyNetClient() {
     }
 
     @Override
-    protected void openInternal(Map<String, String> config) {
-        openNettyClient(this, config);
-    }
-
-    @Override
-    protected void closeInternal() {
-        closeNettyClient();
-    }
-
-    @Override
-    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
-            CountDownLatch latch) throws Exception {
-        nettyClient.connect(node, connectionManager, latch);
-    }
-
-    private static void removeConnectionInternal(AsyncConnection conn) {
-        instance.removeConnection(conn.getInetSocketAddress());
-    }
-
-    private static class NettyClient {
-        private final NettyNetClient nettyNetClient;
-        private final Bootstrap bootstrap;
-
-        public NettyClient(NettyNetClient nettyNetClient, Map<String, String> config) {
-            this.nettyNetClient = nettyNetClient;
+    protected synchronized void openInternal(Map<String, String> config) {
+        if (bootstrap == null) {
             EventLoopGroup group = new NioEventLoopGroup();
             bootstrap = new Bootstrap();
             bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true)
@@ -112,69 +68,41 @@ public class NettyNetClient extends NetClientBase {
                 close();
             });
         }
-
-        public void close() {
-            bootstrap.config().group().shutdownGracefully();
-        }
-
-        public void connect(NetNode node, AsyncConnectionManager connectionManager, CountDownLatch latch) {
-            final InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
-            bootstrap.connect(node.getHost(), node.getPort()).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    try {
-                        if (future.isSuccess()) {
-                            SocketChannel ch = (SocketChannel) future.channel();
-                            NettyWritableChannel channel = new NettyWritableChannel(ch);
-                            AsyncConnection conn;
-                            if (connectionManager != null) {
-                                conn = connectionManager.createConnection(channel, false);
-                            } else {
-                                conn = new TcpClientConnection(channel, nettyNetClient);
-                            }
-                            ChannelPipeline p = ch.pipeline();
-                            p.addLast(new NettyClientHandler(connectionManager, conn));
-                            conn.setInetSocketAddress(inetSocketAddress);
-                            nettyNetClient.addConnection(inetSocketAddress, conn);
-                        } else {
-                            throw DbException.convert(future.cause());
-                        }
-                    } finally {
-                        latch.countDown();
-                    }
-                }
-            });
-        }
     }
 
-    private static class NettyClientHandler extends ChannelInboundHandlerAdapter {
+    @Override
+    protected synchronized void closeInternal() {
+        bootstrap.config().group().shutdownGracefully();
+        bootstrap = null;
+    }
 
-        private final AsyncConnectionManager connectionManager;
-        private final AsyncConnection conn;
-
-        public NettyClientHandler(AsyncConnectionManager connectionManager, AsyncConnection conn) {
-            this.connectionManager = connectionManager;
-            this.conn = conn;
-        }
-
-        @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) {
-            if (msg instanceof ByteBuf) {
-                ByteBuf buff = (ByteBuf) msg;
-                conn.handle(new NettyBuffer(buff));
-                buff.release();
+    @Override
+    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
+            CountDownLatch latch) throws Exception {
+        final InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
+        bootstrap.connect(node.getHost(), node.getPort()).addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) throws Exception {
+                try {
+                    if (future.isSuccess()) {
+                        SocketChannel ch = (SocketChannel) future.channel();
+                        NettyWritableChannel writableChannel = new NettyWritableChannel(ch);
+                        AsyncConnection conn;
+                        if (connectionManager != null) {
+                            conn = connectionManager.createConnection(writableChannel, false);
+                        } else {
+                            conn = new TcpClientConnection(writableChannel, NettyNetClient.this);
+                        }
+                        ch.pipeline().addLast(new NettyNetClientHandler(NettyNetClient.this, connectionManager, conn));
+                        conn.setInetSocketAddress(inetSocketAddress);
+                        NettyNetClient.this.addConnection(inetSocketAddress, conn);
+                    } else {
+                        throw DbException.convert(future.cause());
+                    }
+                } finally {
+                    latch.countDown();
+                }
             }
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            ctx.close();
-            String msg = "RemoteAddress " + ctx.channel().remoteAddress();
-            logger.error(msg + " exception: " + cause.getMessage(), cause);
-            logger.info(msg + " closed");
-            if (connectionManager != null)
-                connectionManager.removeConnection(conn);
-            removeConnectionInternal(conn);
-        }
+        });
     }
 }

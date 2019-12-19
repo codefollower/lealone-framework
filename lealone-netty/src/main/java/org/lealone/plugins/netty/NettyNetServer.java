@@ -21,13 +21,16 @@ import java.util.concurrent.CountDownLatch;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
+import org.lealone.net.AsyncConnection;
 import org.lealone.net.NetServerBase;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 //TODO 1.支持SSL 2.支持配置参数
@@ -47,7 +50,15 @@ public class NettyNetServer extends NetServerBase {
             EventLoopGroup workerGroup = bossGroup; // 要不要用额外的线程池?
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-                    .childHandler(new NettyNetServerInitializer(this));
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            NettyWritableChannel channel = new NettyWritableChannel(ch);
+                            AsyncConnection conn = createConnection(channel, true);
+                            ch.pipeline().addLast(new NettyNetServerHandler(NettyNetServer.this, conn));
+                        }
+                    });
+
             CountDownLatch latch = new CountDownLatch(1);
             // 这一行会一直阻塞，所以不能这样用
             // b.bind(port).sync().channel().closeFuture().sync();

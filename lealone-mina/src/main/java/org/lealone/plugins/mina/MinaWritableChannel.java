@@ -70,5 +70,4 @@ public class MinaWritableChannel implements WritableChannel {
     public NetBufferFactory getBufferFactory() {
         return MinaBufferFactory.getInstance();
     }
-
 }
