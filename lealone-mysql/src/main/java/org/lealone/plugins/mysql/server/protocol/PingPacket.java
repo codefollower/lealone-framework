@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.mysql.protocol;
+package org.lealone.plugins.mysql.server.protocol;
 
 /**
- * @author xianmao.hexm
+ * @author xianmao.hexm 2012-4-28
  */
-public class QuitPacket extends MySQLPacket {
-    public static final byte[] QUIT = new byte[] { 1, 0, 0, 0, 1 };
+public class PingPacket extends MySQLPacket {
+    public static final byte[] PING = new byte[] { 1, 0, 0, 0, 14 };
 
     @Override
     public int calcPacketSize() {
@@ -28,7 +28,7 @@ public class QuitPacket extends MySQLPacket {
 
     @Override
     protected String getPacketInfo() {
-        return "MySQL Quit Packet";
+        return "MySQL Ping Packet";
     }
 
 }

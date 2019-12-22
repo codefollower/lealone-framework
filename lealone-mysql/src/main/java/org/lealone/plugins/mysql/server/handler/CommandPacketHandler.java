@@ -19,10 +19,10 @@ package org.lealone.plugins.mysql.server.handler;
 
 import java.io.UnsupportedEncodingException;
 
-import org.lealone.plugins.mysql.protocol.MySQLMessage;
-import org.lealone.plugins.mysql.protocol.MySQLPacket;
-import org.lealone.plugins.mysql.protocol.PacketInput;
 import org.lealone.plugins.mysql.server.MySQLServerConnection;
+import org.lealone.plugins.mysql.server.protocol.MySQLMessage;
+import org.lealone.plugins.mysql.server.protocol.MySQLPacket;
+import org.lealone.plugins.mysql.server.protocol.PacketInput;
 
 public class CommandPacketHandler implements PacketHandler {
 

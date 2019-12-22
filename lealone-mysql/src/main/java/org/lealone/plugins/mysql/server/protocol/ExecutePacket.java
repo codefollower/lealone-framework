@@ -1,4 +1,4 @@
-package org.lealone.plugins.mysql.protocol;
+package org.lealone.plugins.mysql.server.protocol;
 /// *
 // * Copyright 1999-2012 Alibaba Group.
 // *

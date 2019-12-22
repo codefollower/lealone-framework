@@ -44,7 +44,6 @@ public class MinaWritableChannel implements WritableChannel {
     public void write(Object data) {
         if (data instanceof MinaBuffer) {
             IoBuffer buffer = ((MinaBuffer) data).getBuffer();
-            buffer.flip();
             session.write(buffer);
         } else {
             session.write(data);

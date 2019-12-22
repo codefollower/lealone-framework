@@ -15,23 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.mysql.protocol;
-
-import java.nio.ByteBuffer;
+package org.lealone.plugins.mysql.server.protocol;
 
 import org.lealone.common.exceptions.DbException;
 
-public abstract class ResponsePacket extends Packet {
+public abstract class RequestPacket extends Packet {
 
     @Override
-    public void read(PacketInput in) {
-        DbException.throwInternalError("read");
-    }
+    public abstract void read(PacketInput in);
 
     @Override
     public void write(PacketOutput out) {
-        ByteBuffer buffer = out.allocate();
-        buffer = write(buffer, out);
-        out.write(buffer);
+        throw DbException.throwInternalError("write");
+    }
+
+    @Override
+    public int calcPacketSize() {
+        throw DbException.throwInternalError("calcPacketSize");
     }
 }

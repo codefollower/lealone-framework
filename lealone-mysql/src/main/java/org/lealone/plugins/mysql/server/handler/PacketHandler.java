@@ -17,7 +17,7 @@
  */
 package org.lealone.plugins.mysql.server.handler;
 
-import org.lealone.plugins.mysql.protocol.PacketInput;
+import org.lealone.plugins.mysql.server.protocol.PacketInput;
 
 public interface PacketHandler {
 

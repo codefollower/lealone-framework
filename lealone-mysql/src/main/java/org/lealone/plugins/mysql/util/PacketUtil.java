@@ -17,10 +17,10 @@ package org.lealone.plugins.mysql.util;
 
 import java.io.UnsupportedEncodingException;
 
-import org.lealone.plugins.mysql.protocol.ErrorCode;
-import org.lealone.plugins.mysql.protocol.ErrorPacket;
-import org.lealone.plugins.mysql.protocol.FieldPacket;
-import org.lealone.plugins.mysql.protocol.ResultSetHeaderPacket;
+import org.lealone.plugins.mysql.server.protocol.ErrorCode;
+import org.lealone.plugins.mysql.server.protocol.ErrorPacket;
+import org.lealone.plugins.mysql.server.protocol.FieldPacket;
+import org.lealone.plugins.mysql.server.protocol.ResultSetHeaderPacket;
 
 /**
  * @author xianmao.hexm

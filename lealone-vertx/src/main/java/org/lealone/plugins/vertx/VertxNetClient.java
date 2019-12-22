@@ -19,9 +19,9 @@ package org.lealone.plugins.vertx;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
-import org.lealone.common.exceptions.DbException;
+import org.lealone.db.async.AsyncHandler;
+import org.lealone.db.async.AsyncResult;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
@@ -29,14 +29,13 @@ import org.lealone.net.NetNode;
 import org.lealone.net.TcpClientConnection;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetClientOptions;
 import io.vertx.core.net.NetSocket;
 
 public class VertxNetClient extends NetClientBase {
 
     private static Vertx vertx;
-    private static NetClient vertxClient;
+    private static io.vertx.core.net.NetClient vertxClient;
 
     private static synchronized void openVertxClient(Map<String, String> config) {
         if (vertxClient == null) {
@@ -68,30 +67,29 @@ public class VertxNetClient extends NetClientBase {
 
     @Override
     protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
-            CountDownLatch latch) throws Exception {
+            AsyncHandler<AsyncResult<AsyncConnection>> asyncHandler) {
         InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
         vertxClient.connect(node.getPort(), node.getHost(), res -> {
-            try {
-                if (res.succeeded()) {
-                    NetSocket socket = res.result();
-                    VertxWritableChannel channel = new VertxWritableChannel(socket);
-                    AsyncConnection conn;
-                    if (connectionManager != null) {
-                        conn = connectionManager.createConnection(channel, false);
-                    } else {
-                        conn = new TcpClientConnection(channel, this);
-                    }
-                    conn.setInetSocketAddress(inetSocketAddress);
-                    addConnection(inetSocketAddress, conn);
-                    socket.handler(buffer -> {
-                        conn.handle(new VertxBuffer(buffer));
-                    });
+            AsyncResult<AsyncConnection> ar = new AsyncResult<>();
+            if (res.succeeded()) {
+                NetSocket socket = res.result();
+                VertxWritableChannel channel = new VertxWritableChannel(socket);
+                AsyncConnection conn;
+                if (connectionManager != null) {
+                    conn = connectionManager.createConnection(channel, false);
                 } else {
-                    throw DbException.convert(res.cause());
+                    conn = new TcpClientConnection(channel, this);
                 }
-            } finally {
-                latch.countDown();
+                conn.setInetSocketAddress(inetSocketAddress);
+                addConnection(inetSocketAddress, conn);
+                socket.handler(buffer -> {
+                    conn.handle(new VertxBuffer(buffer));
+                });
+                ar.setResult(conn);
+            } else {
+                ar.setCause(res.cause());
             }
+            asyncHandler.handle(ar);
         });
     }
 }

@@ -19,10 +19,9 @@ package org.lealone.plugins.netty;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
-import org.lealone.common.exceptions.DbException;
-import org.lealone.common.util.ShutdownHookUtils;
+import org.lealone.db.async.AsyncHandler;
+import org.lealone.db.async.AsyncResult;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
@@ -64,44 +63,42 @@ public class NettyNetClient extends NetClientBase {
                             // 延迟到connect成功后再创建连接
                         }
                     });
-            ShutdownHookUtils.addShutdownHook(this, () -> {
-                close();
-            });
         }
     }
 
     @Override
     protected synchronized void closeInternal() {
-        bootstrap.config().group().shutdownGracefully();
-        bootstrap = null;
+        if (bootstrap != null) {
+            bootstrap.config().group().shutdownGracefully();
+            bootstrap = null;
+        }
     }
 
     @Override
     protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
-            CountDownLatch latch) throws Exception {
+            AsyncHandler<AsyncResult<AsyncConnection>> asyncHandler) {
         final InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
         bootstrap.connect(node.getHost(), node.getPort()).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
-                try {
-                    if (future.isSuccess()) {
-                        SocketChannel ch = (SocketChannel) future.channel();
-                        NettyWritableChannel writableChannel = new NettyWritableChannel(ch);
-                        AsyncConnection conn;
-                        if (connectionManager != null) {
-                            conn = connectionManager.createConnection(writableChannel, false);
-                        } else {
-                            conn = new TcpClientConnection(writableChannel, NettyNetClient.this);
-                        }
-                        ch.pipeline().addLast(new NettyNetClientHandler(NettyNetClient.this, connectionManager, conn));
-                        conn.setInetSocketAddress(inetSocketAddress);
-                        NettyNetClient.this.addConnection(inetSocketAddress, conn);
+                AsyncResult<AsyncConnection> ar = new AsyncResult<>();
+                if (future.isSuccess()) {
+                    SocketChannel ch = (SocketChannel) future.channel();
+                    NettyWritableChannel writableChannel = new NettyWritableChannel(ch);
+                    AsyncConnection conn;
+                    if (connectionManager != null) {
+                        conn = connectionManager.createConnection(writableChannel, false);
                     } else {
-                        throw DbException.convert(future.cause());
+                        conn = new TcpClientConnection(writableChannel, NettyNetClient.this);
                     }
-                } finally {
-                    latch.countDown();
+                    ch.pipeline().addLast(new NettyNetClientHandler(NettyNetClient.this, connectionManager, conn));
+                    conn.setInetSocketAddress(inetSocketAddress);
+                    NettyNetClient.this.addConnection(inetSocketAddress, conn);
+                    ar.setResult(conn);
+                } else {
+                    ar.setCause(future.cause());
                 }
+                asyncHandler.handle(ar);
             }
         });
     }

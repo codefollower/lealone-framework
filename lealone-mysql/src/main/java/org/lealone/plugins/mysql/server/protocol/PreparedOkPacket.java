@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.mysql.protocol;
+package org.lealone.plugins.mysql.server.protocol;
 
 import java.nio.ByteBuffer;
 
