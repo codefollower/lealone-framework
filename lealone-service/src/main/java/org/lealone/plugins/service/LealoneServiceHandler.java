@@ -30,8 +30,8 @@ import org.lealone.client.jdbc.JdbcConnection;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.common.util.CamelCaseHelper;
-import org.lealone.db.ServerSession;
 import org.lealone.db.service.ServiceExecuterManager;
+import org.lealone.db.session.ServerSession;
 
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;

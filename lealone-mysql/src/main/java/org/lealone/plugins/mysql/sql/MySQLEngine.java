@@ -20,8 +20,8 @@ package org.lealone.plugins.mysql.sql;
 import java.util.Map;
 
 import org.lealone.db.CommandParameter;
-import org.lealone.db.Session;
 import org.lealone.db.schema.Sequence;
+import org.lealone.db.session.Session;
 import org.lealone.db.value.Value;
 import org.lealone.plugins.mysql.server.MySQLServerEngine;
 import org.lealone.sql.IExpression;
@@ -41,7 +41,7 @@ public class MySQLEngine implements SQLEngine {
 
     @Override
     public SQLParser createParser(Session session) {
-        return new MySQLParser((org.lealone.db.ServerSession) session);
+        return new MySQLParser((org.lealone.db.session.ServerSession) session);
     }
 
     @Override

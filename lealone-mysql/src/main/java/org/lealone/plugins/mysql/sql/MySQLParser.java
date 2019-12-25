@@ -17,7 +17,7 @@
  */
 package org.lealone.plugins.mysql.sql;
 
-import org.lealone.db.ServerSession;
+import org.lealone.db.session.ServerSession;
 import org.lealone.sql.Parser;
 
 public class MySQLParser extends Parser {

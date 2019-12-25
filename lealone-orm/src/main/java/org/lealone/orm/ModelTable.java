@@ -18,8 +18,8 @@
 package org.lealone.orm;
 
 import org.lealone.db.Database;
-import org.lealone.db.ServerSession;
-import org.lealone.db.ServerSessionFactory;
+import org.lealone.db.session.ServerSession;
+import org.lealone.db.session.ServerSessionFactory;
 import org.lealone.db.table.Table;
 
 public class ModelTable {
