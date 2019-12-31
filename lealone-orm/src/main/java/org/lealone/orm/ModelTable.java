@@ -84,7 +84,7 @@ public class ModelTable {
                 throw new RuntimeException("'lealone.jdbc.url' must be set");
             }
 
-            session = ServerSessionFactory.getInstance().createSession(url);
+            session = (ServerSession) ServerSessionFactory.getInstance().createSession(url).get();
             Database db = session.getDatabase();
 
             // if (db.getSettings().databaseToUpper) {

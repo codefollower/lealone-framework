@@ -459,7 +459,7 @@ public abstract class Model<T> {
         select.init();
         select.prepare();
         logger.info("execute sql: " + select.getPlanSQL());
-        Result result = select.executeQuery(1);
+        Result result = select.executeQuery(1).get();
         result.next();
         reset();
         return deserialize(result, new HashMap<>(1), new ArrayList<>(1));
@@ -579,7 +579,7 @@ public abstract class Model<T> {
         select.init();
         select.prepare();
         logger.info("execute sql: " + select.getPlanSQL());
-        Result result = select.executeQuery(-1);
+        Result result = select.executeQuery(-1).get();
         reset();
         ArrayList<T> list = new ArrayList<>(result.getRowCount());
         HashMap<Long, Model> models = new HashMap<>(result.getRowCount());
@@ -627,7 +627,7 @@ public abstract class Model<T> {
         select.init();
         select.prepare();
         logger.info("execute sql: " + select.getPlanSQL());
-        Result result = select.executeQuery(-1);
+        Result result = select.executeQuery(-1).get();
         reset();
         result.next();
         return result.currentRow()[0].getInt();
@@ -715,7 +715,7 @@ public abstract class Model<T> {
         update.prepare();
         reset();
         logger.info("execute sql: " + update.getPlanSQL());
-        int count = update.executeUpdate();
+        int count = update.executeUpdate().get();
         if (session.isAutoCommit()) {
             session.commit();
         }
@@ -738,7 +738,7 @@ public abstract class Model<T> {
         delete.prepare();
         reset();
         logger.info("execute sql: " + delete.getPlanSQL());
-        int count = delete.executeUpdate();
+        int count = delete.executeUpdate().get();
         if (session.isAutoCommit()) {
             session.commit();
         }

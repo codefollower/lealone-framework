@@ -20,8 +20,7 @@ package org.lealone.plugins.netty;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import org.lealone.db.async.AsyncHandler;
-import org.lealone.db.async.AsyncResult;
+import org.lealone.db.async.AsyncCallback;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
@@ -76,12 +75,11 @@ public class NettyNetClient extends NetClientBase {
 
     @Override
     protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
-            AsyncHandler<AsyncResult<AsyncConnection>> asyncHandler) {
+            AsyncCallback<AsyncConnection> ac) {
         final InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
         bootstrap.connect(node.getHost(), node.getPort()).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
-                AsyncResult<AsyncConnection> ar = new AsyncResult<>();
                 if (future.isSuccess()) {
                     SocketChannel ch = (SocketChannel) future.channel();
                     NettyWritableChannel writableChannel = new NettyWritableChannel(ch);
@@ -93,12 +91,11 @@ public class NettyNetClient extends NetClientBase {
                     }
                     ch.pipeline().addLast(new NettyNetClientHandler(NettyNetClient.this, connectionManager, conn));
                     conn.setInetSocketAddress(inetSocketAddress);
-                    NettyNetClient.this.addConnection(inetSocketAddress, conn);
-                    ar.setResult(conn);
+                    conn = NettyNetClient.this.addConnection(inetSocketAddress, conn);
+                    ac.setAsyncResult(conn);
                 } else {
-                    ar.setCause(future.cause());
+                    ac.setAsyncResult(future.cause());
                 }
-                asyncHandler.handle(ar);
             }
         });
     }

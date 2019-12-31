@@ -23,8 +23,7 @@ import java.util.Map;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
-import org.lealone.db.async.AsyncHandler;
-import org.lealone.db.async.AsyncResult;
+import org.lealone.db.async.AsyncCallback;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
@@ -62,7 +61,7 @@ public class MinaNetClient extends NetClientBase {
 
     @Override
     protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
-            AsyncHandler<AsyncResult<AsyncConnection>> asyncHandler) {
+            AsyncCallback<AsyncConnection> ac) {
         InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
         ConnectFuture future = connector.connect(inetSocketAddress);
         future.addListener(f -> {
@@ -76,8 +75,8 @@ public class MinaNetClient extends NetClientBase {
                     conn = new TcpClientConnection(writableChannel, this);
                 }
                 conn.setInetSocketAddress(inetSocketAddress);
-                addConnection(inetSocketAddress, conn);
-                asyncHandler.handle(new AsyncResult<>(conn));
+                conn = addConnection(inetSocketAddress, conn);
+                ac.setAsyncResult(conn);
             }
         });
     }

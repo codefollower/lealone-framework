@@ -196,10 +196,10 @@ public class MySQLServerConnection extends AsyncConnection {
             PreparedSQLStatement ps = session.prepareStatement(sql, -1);
 
             if (ps.isQuery()) {
-                Result result = ps.executeQuery(-1);
+                Result result = ps.executeQuery(-1).get();
                 writeQueryResult(result);
             } else {
-                int updateCount = ps.executeUpdate();
+                int updateCount = ps.executeUpdate().get();
                 writeUpdateResult(updateCount);
             }
         } catch (Throwable e) {

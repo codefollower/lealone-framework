@@ -20,8 +20,7 @@ package org.lealone.plugins.vertx;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import org.lealone.db.async.AsyncHandler;
-import org.lealone.db.async.AsyncResult;
+import org.lealone.db.async.AsyncCallback;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
 import org.lealone.net.NetClientBase;
@@ -67,10 +66,9 @@ public class VertxNetClient extends NetClientBase {
 
     @Override
     protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
-            AsyncHandler<AsyncResult<AsyncConnection>> asyncHandler) {
+            AsyncCallback<AsyncConnection> ac) {
         InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
         vertxClient.connect(node.getPort(), node.getHost(), res -> {
-            AsyncResult<AsyncConnection> ar = new AsyncResult<>();
             if (res.succeeded()) {
                 NetSocket socket = res.result();
                 VertxWritableChannel channel = new VertxWritableChannel(socket);
@@ -81,15 +79,14 @@ public class VertxNetClient extends NetClientBase {
                     conn = new TcpClientConnection(channel, this);
                 }
                 conn.setInetSocketAddress(inetSocketAddress);
-                addConnection(inetSocketAddress, conn);
+                AsyncConnection conn2 = addConnection(inetSocketAddress, conn);
                 socket.handler(buffer -> {
-                    conn.handle(new VertxBuffer(buffer));
+                    conn2.handle(new VertxBuffer(buffer));
                 });
-                ar.setResult(conn);
+                ac.setAsyncResult(conn2);
             } else {
-                ar.setCause(res.cause());
+                ac.setAsyncResult(res.cause());
             }
-            asyncHandler.handle(ar);
         });
     }
 }
