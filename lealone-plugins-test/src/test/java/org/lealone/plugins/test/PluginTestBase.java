@@ -30,7 +30,7 @@ import org.lealone.plugins.mysql.server.MySQLServerEngine;
 import org.lealone.plugins.netty.NettyNetFactory;
 import org.lealone.plugins.postgresql.PgServer;
 import org.lealone.plugins.postgresql.PgServerEngine;
-import org.lealone.plugins.vertx.VertxNetFactory;
+import org.lealone.plugins.vertx.net.VertxNetFactory;
 import org.lealone.server.TcpServerEngine;
 
 public class PluginTestBase extends org.lealone.test.sql.SqlTestBase {

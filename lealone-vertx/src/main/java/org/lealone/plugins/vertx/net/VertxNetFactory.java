@@ -15,19 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.service;
+package org.lealone.plugins.vertx.net;
 
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
-import io.vertx.core.spi.VertxMetricsFactory;
-import io.vertx.core.spi.metrics.VertxMetrics;
+import org.lealone.net.NetFactoryBase;
+import org.lealone.net.NetServer;
 
-public class LealoneVertxMetricsFactory implements VertxMetricsFactory {
+public class VertxNetFactory extends NetFactoryBase {
+
+    public static final String NAME = "vertx";
+
+    public VertxNetFactory() {
+        super(NAME, new VertxNetClient());
+    }
 
     @Override
-    public VertxMetrics metrics(Vertx vertx, VertxOptions options) {
-        // TODO Auto-generated method stub
-        return null;
+    public NetServer createNetServer() {
+        return new VertxNetServer();
     }
 
 }

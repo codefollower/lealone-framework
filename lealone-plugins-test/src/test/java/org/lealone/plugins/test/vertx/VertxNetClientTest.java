@@ -18,7 +18,7 @@
 package org.lealone.plugins.test.vertx;
 
 import org.lealone.plugins.test.NetTestBase;
-import org.lealone.plugins.vertx.VertxNetFactory;
+import org.lealone.plugins.vertx.net.VertxNetFactory;
 
 public class VertxNetClientTest extends NetTestBase {
 

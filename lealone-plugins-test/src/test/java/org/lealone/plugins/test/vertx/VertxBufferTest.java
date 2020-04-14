@@ -18,7 +18,7 @@
 package org.lealone.plugins.test.vertx;
 
 import org.lealone.net.AsyncConnection;
-import org.lealone.plugins.vertx.VertxBuffer;
+import org.lealone.plugins.vertx.net.VertxBuffer;
 import org.lealone.server.TcpServerConnection;
 
 import io.vertx.core.buffer.Buffer;

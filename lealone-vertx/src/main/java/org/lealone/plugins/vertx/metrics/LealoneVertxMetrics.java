@@ -15,22 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.vertx;
+package org.lealone.plugins.vertx.metrics;
 
-import org.lealone.net.NetFactoryBase;
-import org.lealone.net.NetServer;
-
-public class VertxNetFactory extends NetFactoryBase {
-
-    public static final String NAME = "vertx";
-
-    public VertxNetFactory() {
-        super(NAME, new VertxNetClient());
-    }
-
-    @Override
-    public NetServer createNetServer() {
-        return new VertxNetServer();
-    }
+public class LealoneVertxMetrics {
 
 }

@@ -15,27 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.vertx;
+package org.lealone.plugins.vertx.metrics;
 
-import org.lealone.net.NetBuffer;
-import org.lealone.net.NetBufferFactory;
+import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
+import io.vertx.core.spi.VertxMetricsFactory;
+import io.vertx.core.spi.metrics.VertxMetrics;
 
-import io.vertx.core.buffer.Buffer;
-
-public class VertxBufferFactory implements NetBufferFactory {
-
-    private static final VertxBufferFactory instance = new VertxBufferFactory();
-
-    public static VertxBufferFactory getInstance() {
-        return instance;
-    }
-
-    private VertxBufferFactory() {
-    }
+public class LealoneVertxMetricsFactory implements VertxMetricsFactory {
 
     @Override
-    public NetBuffer createBuffer(int initialSizeHint) {
-        return new VertxBuffer(Buffer.buffer(initialSizeHint));
+    public VertxMetrics metrics(Vertx vertx, VertxOptions options) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
