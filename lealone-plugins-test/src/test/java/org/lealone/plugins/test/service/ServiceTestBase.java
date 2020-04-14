@@ -19,7 +19,7 @@ package org.lealone.plugins.test.service;
 
 import java.lang.management.ManagementFactory;
 
-import io.vertx.core.impl.FileResolver;
+import io.vertx.core.file.impl.FileResolver;
 import io.vertx.core.spi.resolver.ResolverProvider;
 
 public class ServiceTestBase extends org.lealone.test.TestBase {

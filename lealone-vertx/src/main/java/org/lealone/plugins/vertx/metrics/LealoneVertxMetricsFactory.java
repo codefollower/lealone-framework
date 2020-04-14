@@ -17,7 +17,6 @@
  */
 package org.lealone.plugins.vertx.metrics;
 
-import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.spi.VertxMetricsFactory;
 import io.vertx.core.spi.metrics.VertxMetrics;
@@ -25,9 +24,8 @@ import io.vertx.core.spi.metrics.VertxMetrics;
 public class LealoneVertxMetricsFactory implements VertxMetricsFactory {
 
     @Override
-    public VertxMetrics metrics(Vertx vertx, VertxOptions options) {
+    public VertxMetrics metrics(VertxOptions arg0) {
         // TODO Auto-generated method stub
         return null;
     }
-
 }

@@ -24,8 +24,8 @@ import org.lealone.common.security.EncryptionOptions.ClientEncryptionOptions;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
+import io.vertx.core.file.impl.FileResolver;
 import io.vertx.core.http.ClientAuth;
-import io.vertx.core.impl.FileResolver;
 import io.vertx.core.net.JksOptions;
 import io.vertx.core.net.NetClientOptions;
 import io.vertx.core.net.NetServer;

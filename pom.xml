@@ -131,12 +131,17 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <properties>
+        <vertx.version>3.9.0</vertx.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.vertx</groupId>
                 <artifactId>vertx-core</artifactId>
-                <version>3.5.1</version><!--
+                <version>${vertx.version}</version><!--
                 <exclusions>
                     <exclusion>
                         <groupId>com.fasterxml.jackson.core</groupId>
@@ -155,7 +160,7 @@
             <dependency>
                 <groupId>io.vertx</groupId>
                 <artifactId>vertx-unit</artifactId>
-                <version>3.5.1</version>
+                <version>${vertx.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

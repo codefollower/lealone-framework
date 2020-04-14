@@ -24,7 +24,7 @@ import org.lealone.p2p.config.Config;
 import org.lealone.plugins.test.PluginServerStart;
 import org.lealone.plugins.test.PluginTestBase;
 
-import io.vertx.core.impl.FileResolver;
+import io.vertx.core.file.impl.FileResolver;
 import io.vertx.core.spi.resolver.ResolverProvider;
 
 public class VertxNetServerStart extends PluginServerStart {

@@ -64,7 +64,7 @@ public class LealoneHttpServer {
         // 放在最后
         setStaticHandler(vertx, router, webRoot);
 
-        server.requestHandler(router::accept).listen(port, res -> {
+        server.requestHandler(router::handle).listen(port, res -> {
             if (res.succeeded()) {
                 logger.info("web root: " + webRoot);
                 logger.info("sockjs path: " + path);
