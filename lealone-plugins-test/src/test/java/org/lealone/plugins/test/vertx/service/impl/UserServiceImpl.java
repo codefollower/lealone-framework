@@ -15,16 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.service;
+package org.lealone.plugins.test.vertx.service.impl;
 
-import org.lealone.plugins.test.SqlScript;
-import org.lealone.test.TestBase.SqlExecuter;
+import org.lealone.plugins.test.orm.generated.User;
+import org.lealone.plugins.test.vertx.service.generated.UserService;
 
-public class ServiceProvider {
+public class UserServiceImpl implements UserService {
 
-    public static void createService(SqlExecuter executer) {
-        SqlScript.createUserService(executer);
-        SqlScript.createHelloWorldService(executer);
+    @Override
+    public Long add(User user) {
+        return user.insert();
+    }
+
+    @Override
+    public User find(String name) {
+        return User.dao.where().name.eq(name).findOne();
+    }
+
+    @Override
+    public Integer update(User user) {
+        return user.update();
+    }
+
+    @Override
+    public Integer delete(String name) {
+        return User.dao.where().name.eq(name).delete();
     }
 
 }

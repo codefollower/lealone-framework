@@ -15,44 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.service.fullstack;
+package org.lealone.plugins.test.vertx.service.fullstack;
 
-import org.lealone.plugins.service.LealoneHttpServer;
 import org.lealone.plugins.test.SqlScript;
-import org.lealone.plugins.test.service.ServiceConsumer;
-import org.lealone.plugins.test.service.ServiceProvider;
+import org.lealone.plugins.vertx.service.LealoneHttpServer;
 import org.lealone.test.UnitTestBase;
 
-public class FullStackTest extends UnitTestBase {
+public class FrontendOrmTest extends UnitTestBase {
 
     public static void main(String[] args) {
-        new FullStackTest().runTest(true, false);
+        new FrontendOrmTest().runTest(true, false);
     }
 
     @Override
     public void test() {
-        // 设置jdbc url(可选)
-        setJdbcUrl();
-
         // 创建user表
         SqlScript.createUserTable(this);
-
-        // 创建服务
-        ServiceProvider.createService(this);
-
-        // 从后端调用服务
-        ServiceConsumer.callService(getURL());
-
         // 启动HttpServer
-        // 在浏览器中打开下面这个URL，测试从前端发起服务调用，在console里面看结果:
-        // http://localhost:8080/fullStackTest.html
+        // 在浏览器中打开下面这个URL，测试在前端直接执行crud，在console里面看结果:
+        // http://localhost:8080/crud.html
         LealoneHttpServer.start(8080, "../lealone-js/src/main/js,../lealone-js/src/test/js");
-    }
-
-    private void setJdbcUrl() {
-        String url = getURL();
-        System.setProperty("lealone.jdbc.url", url);
-        System.out.println("jdbc url: " + url);
     }
 
 }

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.service;
+package org.lealone.plugins.vertx.service;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;

@@ -47,7 +47,6 @@
         <module>lealone-postgresql</module>
         <module>lealone-js</module>
         <module>lealone-orm</module>
-        <module>lealone-service</module>
         <module>lealone-sqlline</module>
         <module>lealone-perf</module>
         <module>lealone-plugins-dist</module>
@@ -131,40 +130,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <properties>
-        <vertx.version>3.9.0</vertx.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-core</artifactId>
-                <version>${vertx.version}</version><!--
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-databind</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-codec-http</artifactId>
-                    </exclusion>
-                </exclusions>-->
-            </dependency>
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-unit</artifactId>
-                <version>${vertx.version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>

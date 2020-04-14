@@ -48,9 +48,9 @@ import org.lealone.sql.expression.aggregate.Aggregate;
 import org.lealone.sql.optimizer.TableFilter;
 import org.lealone.transaction.Transaction;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import io.vertx.core.json.JsonObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Base root model bean.
@@ -833,8 +833,14 @@ public abstract class Model<T> {
 
     @Override
     public String toString() {
-        JsonObject json = JsonObject.mapFrom(this);
-        return json.encode();
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString;
+        try {
+            jsonString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            jsonString = e.getMessage();
+        }
+        return jsonString;
     }
 
     /**

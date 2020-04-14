@@ -1,8 +1,8 @@
-package org.lealone.plugins.test.service.generated.executer;
+package org.lealone.plugins.test.vertx.service.generated.executer;
 
 import io.vertx.core.json.JsonArray;
 import org.lealone.db.service.ServiceExecuter;
-import org.lealone.plugins.test.service.impl.HelloWorldServiceImpl;
+import org.lealone.plugins.test.vertx.service.impl.HelloWorldServiceImpl;
 
 /**
  * Service executer for 'hello_world_service'.

@@ -15,31 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.service.impl;
+package org.lealone.plugins.test.vertx.service;
 
 import org.lealone.plugins.test.orm.generated.User;
-import org.lealone.plugins.test.service.generated.UserService;
+import org.lealone.plugins.test.vertx.service.generated.HelloWorldService;
+import org.lealone.plugins.test.vertx.service.generated.UserService;
 
-public class UserServiceImpl implements UserService {
+public class ServiceConsumer {
 
-    @Override
-    public Long add(User user) {
-        return user.insert();
-    }
+    public static void callService(String url) {
+        HelloWorldService helloWorldService = HelloWorldService.create(url);
+        helloWorldService.sayHello();
+        String r = helloWorldService.sayGoodbyeTo("zhh");
+        System.out.println(r);
 
-    @Override
-    public User find(String name) {
-        return User.dao.where().name.eq(name).findOne();
-    }
+        UserService userService = UserService.create(url);
 
-    @Override
-    public Integer update(User user) {
-        return user.update();
-    }
+        User user = new User().name.set("zhh").phone.set(123);
+        userService.add(user);
 
-    @Override
-    public Integer delete(String name) {
-        return User.dao.where().name.eq(name).delete();
+        user = userService.find("zhh");
+
+        user.notes.set("call remote service");
+        userService.update(user);
+
+        userService.delete("zhh");
     }
 
 }

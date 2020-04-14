@@ -18,9 +18,9 @@
 package org.lealone.plugins.test;
 
 import org.lealone.plugins.test.orm.OrmTest;
-import org.lealone.plugins.test.service.ServiceStart;
-import org.lealone.plugins.test.service.impl.HelloWorldServiceImpl;
-import org.lealone.plugins.test.service.impl.UserServiceImpl;
+import org.lealone.plugins.test.vertx.service.ServiceStart;
+import org.lealone.plugins.test.vertx.service.impl.HelloWorldServiceImpl;
+import org.lealone.plugins.test.vertx.service.impl.UserServiceImpl;
 import org.lealone.test.TestBase.SqlExecuter;
 import org.lealone.test.UnitTestBase;
 
