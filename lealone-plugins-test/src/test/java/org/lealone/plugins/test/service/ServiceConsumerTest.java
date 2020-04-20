@@ -15,13 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.service;
+package org.lealone.plugins.test.service;
 
+import org.junit.Test;
 import org.lealone.plugins.test.orm.generated.User;
-import org.lealone.plugins.test.vertx.service.generated.HelloWorldService;
-import org.lealone.plugins.test.vertx.service.generated.UserService;
+import org.lealone.plugins.test.service.generated.HelloWorldService;
+import org.lealone.plugins.test.service.generated.UserService;
+import org.lealone.test.sql.SqlTestBase;
 
-public class ServiceConsumer {
+public class ServiceConsumerTest extends SqlTestBase {
+    @Test
+    public void testService() {
+        callService(getURL());
+    }
 
     public static void callService(String url) {
         HelloWorldService helloWorldService = HelloWorldService.create(url);
@@ -41,5 +47,4 @@ public class ServiceConsumer {
 
         userService.delete("zhh");
     }
-
 }

@@ -1,10 +1,10 @@
-package org.lealone.plugins.test.vertx.service.generated.executor;
+package org.lealone.plugins.test.service.generated.executor;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.lealone.db.service.ServiceExecutor;
 import org.lealone.plugins.test.orm.generated.User;
-import org.lealone.plugins.test.vertx.service.impl.UserServiceImpl;
+import org.lealone.plugins.test.service.impl.UserServiceImpl;
 
 /**
  * Service executor for 'user_service'.

@@ -15,31 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.service.impl;
+package org.lealone.plugins.test.vertx.fullstack;
 
-import org.lealone.plugins.test.orm.generated.User;
-import org.lealone.plugins.test.vertx.service.generated.UserService;
+import org.lealone.plugins.test.SqlScript;
+import org.lealone.plugins.vertx.service.LealoneHttpServer;
+import org.lealone.test.UnitTestBase;
 
-public class UserServiceImpl implements UserService {
+public class FrontendOrmTest extends UnitTestBase {
 
-    @Override
-    public Long add(User user) {
-        return user.insert();
+    public static void main(String[] args) {
+        new FrontendOrmTest().runTest(true, false);
     }
 
     @Override
-    public User find(String name) {
-        return User.dao.where().name.eq(name).findOne();
-    }
-
-    @Override
-    public Integer update(User user) {
-        return user.update();
-    }
-
-    @Override
-    public Integer delete(String name) {
-        return User.dao.where().name.eq(name).delete();
+    public void test() {
+        // 创建user表
+        SqlScript.createUserTable(this);
+        // 启动HttpServer
+        // 在浏览器中打开下面这个URL，测试在前端直接执行crud，在console里面看结果:
+        // http://localhost:8080/crud.html
+        LealoneHttpServer.start(8080, "../lealone-js/src/main/js,../lealone-js/src/test/js");
     }
 
 }

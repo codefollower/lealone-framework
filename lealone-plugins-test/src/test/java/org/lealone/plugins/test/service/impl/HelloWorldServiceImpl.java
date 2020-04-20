@@ -15,16 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.service;
+package org.lealone.plugins.test.service.impl;
 
-import org.lealone.plugins.test.SqlScript;
-import org.lealone.test.TestBase.SqlExecutor;
+import org.lealone.plugins.test.service.generated.HelloWorldService;
 
-public class ServiceProvider {
+public class HelloWorldServiceImpl implements HelloWorldService {
 
-    public static void createService(SqlExecutor executor) {
-        SqlScript.createUserService(executor);
-        SqlScript.createHelloWorldService(executor);
+    @Override
+    public void sayHello() {
+        System.out.println("Hello World");
+    }
+
+    @Override
+    public String sayGoodbyeTo(String name) {
+        return "Bye " + name;
     }
 
 }

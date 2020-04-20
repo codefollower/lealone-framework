@@ -15,20 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.service;
+package org.lealone.plugins.test.vertx;
 
 import java.lang.management.ManagementFactory;
 
 import io.vertx.core.file.impl.FileResolver;
 import io.vertx.core.spi.resolver.ResolverProvider;
 
-public class ServiceTestBase extends org.lealone.test.TestBase {
+public class VertxTestBase extends org.lealone.test.TestBase {
 
     static {
         setVertxProperties();
     }
 
-    public ServiceTestBase() {
+    public VertxTestBase() {
         optimizeVertx();
     }
 

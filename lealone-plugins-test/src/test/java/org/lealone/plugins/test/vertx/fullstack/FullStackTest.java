@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.service.fullstack;
+package org.lealone.plugins.test.vertx.fullstack;
 
 import org.lealone.plugins.test.SqlScript;
-import org.lealone.plugins.test.vertx.service.ServiceConsumer;
-import org.lealone.plugins.test.vertx.service.ServiceProvider;
+import org.lealone.plugins.test.service.ServiceConsumerTest;
+import org.lealone.plugins.test.service.ServiceProviderTest;
 import org.lealone.plugins.vertx.service.LealoneHttpServer;
 import org.lealone.test.UnitTestBase;
 
@@ -38,10 +38,10 @@ public class FullStackTest extends UnitTestBase {
         SqlScript.createUserTable(this);
 
         // 创建服务
-        ServiceProvider.createService(this);
+        ServiceProviderTest.createService(this);
 
         // 从后端调用服务
-        ServiceConsumer.callService(getURL());
+        ServiceConsumerTest.callService(getURL());
 
         // 启动HttpServer
         // 在浏览器中打开下面这个URL，测试从前端发起服务调用，在console里面看结果:

@@ -15,17 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.service;
+package org.lealone.plugins.test.service;
 
 import org.lealone.common.exceptions.ConfigException;
 import org.lealone.p2p.config.Config;
 import org.lealone.plugins.test.PluginServerStart;
 import org.lealone.plugins.test.PluginTestBase;
 
-public class ServiceStart extends PluginServerStart {
+public class ServiceServerStart extends PluginServerStart {
 
     public static void main(String[] args) {
-        start(ServiceStart.class);
+        start(ServiceServerStart.class);
     }
 
     @Override

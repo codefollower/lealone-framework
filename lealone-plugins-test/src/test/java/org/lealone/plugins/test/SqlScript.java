@@ -18,9 +18,9 @@
 package org.lealone.plugins.test;
 
 import org.lealone.plugins.test.orm.OrmTest;
-import org.lealone.plugins.test.vertx.service.ServiceStart;
-import org.lealone.plugins.test.vertx.service.impl.HelloWorldServiceImpl;
-import org.lealone.plugins.test.vertx.service.impl.UserServiceImpl;
+import org.lealone.plugins.test.service.ServiceServerStart;
+import org.lealone.plugins.test.service.impl.HelloWorldServiceImpl;
+import org.lealone.plugins.test.service.impl.UserServiceImpl;
 import org.lealone.test.TestBase.SqlExecutor;
 import org.lealone.test.UnitTestBase;
 
@@ -46,7 +46,7 @@ public class SqlScript {
     }
 
     private static final String MODEL_PACKAGE_NAME = OrmTest.class.getPackage().getName() + ".generated";
-    private static final String SERVICE_PACKAGE_NAME = ServiceStart.class.getPackage().getName() + ".generated";
+    private static final String SERVICE_PACKAGE_NAME = ServiceServerStart.class.getPackage().getName() + ".generated";
     private static final String GENERATED_CODE_PATH = "./src/test/java";
 
     public static void createUserTable(SqlExecutor executor) {

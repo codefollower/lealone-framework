@@ -15,20 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.service.impl;
+package org.lealone.plugins.test.service.impl;
 
-import org.lealone.plugins.test.vertx.service.generated.HelloWorldService;
+import org.lealone.plugins.test.orm.generated.User;
+import org.lealone.plugins.test.service.generated.UserService;
 
-public class HelloWorldServiceImpl implements HelloWorldService {
+public class UserServiceImpl implements UserService {
 
     @Override
-    public void sayHello() {
-        System.out.println("Hello World");
+    public Long add(User user) {
+        return user.insert();
     }
 
     @Override
-    public String sayGoodbyeTo(String name) {
-        return "Bye " + name;
+    public User find(String name) {
+        return User.dao.where().name.eq(name).findOne();
+    }
+
+    @Override
+    public Integer update(User user) {
+        return user.update();
+    }
+
+    @Override
+    public Integer delete(String name) {
+        return User.dao.where().name.eq(name).delete();
     }
 
 }

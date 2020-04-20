@@ -15,26 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.service.fullstack;
+package org.lealone.plugins.test.service;
 
+import org.junit.Test;
 import org.lealone.plugins.test.SqlScript;
-import org.lealone.plugins.vertx.service.LealoneHttpServer;
-import org.lealone.test.UnitTestBase;
+import org.lealone.test.sql.SqlTestBase;
 
-public class FrontendOrmTest extends UnitTestBase {
-
-    public static void main(String[] args) {
-        new FrontendOrmTest().runTest(true, false);
-    }
-
-    @Override
-    public void test() {
+public class ServiceProviderTest extends SqlTestBase {
+    @Test
+    public void testService() {
         // 创建user表
         SqlScript.createUserTable(this);
-        // 启动HttpServer
-        // 在浏览器中打开下面这个URL，测试在前端直接执行crud，在console里面看结果:
-        // http://localhost:8080/crud.html
-        LealoneHttpServer.start(8080, "../lealone-js/src/main/js,../lealone-js/src/test/js");
+        createService(this);
     }
 
+    public static void createService(SqlExecutor executor) {
+        SqlScript.createUserService(executor);
+        SqlScript.createHelloWorldService(executor);
+    }
 }
