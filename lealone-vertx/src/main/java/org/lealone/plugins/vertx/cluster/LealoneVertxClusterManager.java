@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.shareddata.AsyncMap;
@@ -42,68 +43,57 @@ public class LealoneVertxClusterManager implements ClusterManager {
 
     @Override
     public <K, V> void getAsyncMultiMap(String name, Handler<AsyncResult<AsyncMultiMap<K, V>>> resultHandler) {
-        // TODO Auto-generated method stub
-
+        VertxAsyncMultiMap<K, V> map = new VertxAsyncMultiMap<>();
+        resultHandler.handle(Future.succeededFuture(map));
     }
 
     @Override
     public <K, V> void getAsyncMap(String name, Handler<AsyncResult<AsyncMap<K, V>>> resultHandler) {
-        // TODO Auto-generated method stub
-
+        VertxAsyncMap<K, V> map = new VertxAsyncMap<>();
+        resultHandler.handle(Future.succeededFuture(map));
     }
 
     @Override
     public <K, V> Map<K, V> getSyncMap(String name) {
-        // TODO Auto-generated method stub
-        return null;
+        return new VertxSyncMap<K, V>();
     }
 
     @Override
     public void getLockWithTimeout(String name, long timeout, Handler<AsyncResult<Lock>> resultHandler) {
-        // TODO Auto-generated method stub
-
+        VertxLock lock = new VertxLock();
+        resultHandler.handle(Future.succeededFuture(lock));
     }
 
     @Override
     public void getCounter(String name, Handler<AsyncResult<Counter>> resultHandler) {
-        // TODO Auto-generated method stub
-
+        VertxCounter counter = new VertxCounter();
+        resultHandler.handle(Future.succeededFuture(counter));
     }
 
     @Override
     public String getNodeID() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public List<String> getNodes() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void nodeListener(NodeListener listener) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void join(Handler<AsyncResult<Void>> resultHandler) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void leave(Handler<AsyncResult<Void>> resultHandler) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public boolean isActive() {
-        // TODO Auto-generated method stub
         return false;
     }
-
 }
