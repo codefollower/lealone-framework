@@ -1,19 +1,19 @@
-package org.lealone.plugins.test.vertx.service.generated.executer;
+package org.lealone.plugins.test.vertx.service.generated.executor;
 
 import io.vertx.core.json.JsonArray;
-import org.lealone.db.service.ServiceExecuter;
+import org.lealone.db.service.ServiceExecutor;
 import org.lealone.plugins.test.vertx.service.impl.HelloWorldServiceImpl;
 
 /**
- * Service executer for 'hello_world_service'.
+ * Service executor for 'hello_world_service'.
  *
  * THIS IS A GENERATED OBJECT, DO NOT MODIFY THIS CLASS.
  */
-public class HelloWorldServiceExecuter implements ServiceExecuter {
+public class HelloWorldServiceExecutor implements ServiceExecutor {
 
     private final HelloWorldServiceImpl s = new HelloWorldServiceImpl();
 
-    public HelloWorldServiceExecuter() {
+    public HelloWorldServiceExecutor() {
     }
 
     @Override

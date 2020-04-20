@@ -21,7 +21,7 @@ import org.lealone.plugins.test.orm.OrmTest;
 import org.lealone.plugins.test.vertx.service.ServiceStart;
 import org.lealone.plugins.test.vertx.service.impl.HelloWorldServiceImpl;
 import org.lealone.plugins.test.vertx.service.impl.UserServiceImpl;
-import org.lealone.test.TestBase.SqlExecuter;
+import org.lealone.test.TestBase.SqlExecutor;
 import org.lealone.test.UnitTestBase;
 
 public class SqlScript {
@@ -49,49 +49,49 @@ public class SqlScript {
     private static final String SERVICE_PACKAGE_NAME = ServiceStart.class.getPackage().getName() + ".generated";
     private static final String GENERATED_CODE_PATH = "./src/test/java";
 
-    public static void createUserTable(SqlExecuter executer) {
+    public static void createUserTable(SqlExecutor executor) {
         System.out.println("create table: user");
 
         // 创建表: user
-        executer.execute("create table user(name char(10) primary key, notes varchar, phone int, id long)" //
+        executor.execute("create table user(name char(10) primary key, notes varchar, phone int, id long)" //
                 + " package '" + MODEL_PACKAGE_NAME + "'" //
                 + " generate code '" + GENERATED_CODE_PATH + "'");
     }
 
-    public static void createCustomerTable(SqlExecuter executer) {
+    public static void createCustomerTable(SqlExecutor executor) {
         System.out.println("create table: customer");
 
-        executer.execute("create table customer(id long primary key, name char(10), notes varchar, phone int)" //
+        executor.execute("create table customer(id long primary key, name char(10), notes varchar, phone int)" //
                 + " package '" + MODEL_PACKAGE_NAME + "'" //
                 + " generate code '" + GENERATED_CODE_PATH + "'" // 生成领域模型类和查询器类的代码
         );
     }
 
-    public static void createCustomerAddressTable(SqlExecuter executer) {
+    public static void createCustomerAddressTable(SqlExecutor executor) {
         System.out.println("create table: customer_address");
 
-        executer.execute("create table customer_address(customer_id long, city varchar, street varchar, "
+        executor.execute("create table customer_address(customer_id long, city varchar, street varchar, "
                 + " FOREIGN KEY(customer_id) REFERENCES customer(id))" //
                 + " package '" + MODEL_PACKAGE_NAME + "'" //
                 + " generate code '" + GENERATED_CODE_PATH + "'" //
         );
     }
 
-    public static void createProductTable(SqlExecuter executer) {
+    public static void createProductTable(SqlExecutor executor) {
         System.out.println("create table: product");
 
-        executer.execute("create table product(product_id long primary key, product_name varchar, "
+        executor.execute("create table product(product_id long primary key, product_name varchar, "
                 + " category varchar, unit_price double)" //
                 + " package '" + MODEL_PACKAGE_NAME + "'" //
                 + " generate code '" + GENERATED_CODE_PATH + "'" // 生成领域模型类和查询器类的代码
         );
     }
 
-    public static void createOrderTable(SqlExecuter executer) {
+    public static void createOrderTable(SqlExecutor executor) {
         System.out.println("create table: order");
 
         // order是关键字，索引要用特殊方式表式
-        executer.execute(
+        executor.execute(
                 "create table `order`(customer_id long, order_id int primary key, order_date date, total double,"
                         + " FOREIGN KEY(customer_id) REFERENCES customer(id))" //
                         + " package '" + MODEL_PACKAGE_NAME + "'" //
@@ -99,11 +99,11 @@ public class SqlScript {
         );
     }
 
-    public static void createOrderItemTable(SqlExecuter executer) {
+    public static void createOrderItemTable(SqlExecutor executor) {
         System.out.println("create table: order_item");
 
         // order是关键字，索引要用特殊方式表式
-        executer.execute("create table order_item(order_id int, product_id long, product_count int, "
+        executor.execute("create table order_item(order_id int, product_id long, product_count int, "
                 + " FOREIGN KEY(order_id) REFERENCES `order`(order_id)," //
                 + " FOREIGN KEY(product_id) REFERENCES product(product_id))" //
                 + " package '" + MODEL_PACKAGE_NAME + "'" //
@@ -111,7 +111,7 @@ public class SqlScript {
         );
     }
 
-    public static void createAllModelPropertyTable(SqlExecuter executer) {
+    public static void createAllModelPropertyTable(SqlExecutor executor) {
         // 21种模型属性类型，目前不支持GEOMETRY类型
         // INT
         // BOOLEAN
@@ -134,7 +134,7 @@ public class SqlScript {
         // CLOB
         // UUID
         // ARRAY
-        executer.execute("CREATE TABLE all_model_property (" //
+        executor.execute("CREATE TABLE all_model_property (" //
                 + " f1  INT," //
                 + " f2  BOOLEAN," //
                 + " f3  TINYINT," //
@@ -163,11 +163,11 @@ public class SqlScript {
         System.out.println("create table: all_model_property");
     }
 
-    public static void createUserService(SqlExecuter executer) {
+    public static void createUserService(SqlExecutor executor) {
         System.out.println("create service: user_service");
 
         // 创建服务: user_service
-        executer.execute("create service if not exists user_service (" //
+        executor.execute("create service if not exists user_service (" //
                 + " add(user user) long," // 第一个user是参数名，第二个user是参数类型
                 + " find(name varchar) user," //
                 + " update(user user) int," //
@@ -178,11 +178,11 @@ public class SqlScript {
                 + " generate code '" + GENERATED_CODE_PATH + "'");
     }
 
-    public static void createHelloWorldService(SqlExecuter executer) {
+    public static void createHelloWorldService(SqlExecutor executor) {
         System.out.println("create service: hello_world_service");
 
         // 创建服务: hello_world_service
-        executer.execute("create service hello_world_service (" //
+        executor.execute("create service hello_world_service (" //
                 + "             say_hello() void," //
                 + "             say_goodbye_to(name varchar) varchar" //
                 + "         ) package '" + SERVICE_PACKAGE_NAME + "'" //

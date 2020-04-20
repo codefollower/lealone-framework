@@ -1,21 +1,21 @@
-package org.lealone.plugins.test.vertx.service.generated.executer;
+package org.lealone.plugins.test.vertx.service.generated.executor;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.lealone.db.service.ServiceExecuter;
+import org.lealone.db.service.ServiceExecutor;
 import org.lealone.plugins.test.orm.generated.User;
 import org.lealone.plugins.test.vertx.service.impl.UserServiceImpl;
 
 /**
- * Service executer for 'user_service'.
+ * Service executor for 'user_service'.
  *
  * THIS IS A GENERATED OBJECT, DO NOT MODIFY THIS CLASS.
  */
-public class UserServiceExecuter implements ServiceExecuter {
+public class UserServiceExecutor implements ServiceExecutor {
 
     private final UserServiceImpl s = new UserServiceImpl();
 
-    public UserServiceExecuter() {
+    public UserServiceExecutor() {
     }
 
     @Override

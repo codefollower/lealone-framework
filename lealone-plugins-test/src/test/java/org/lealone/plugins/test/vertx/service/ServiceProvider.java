@@ -18,13 +18,13 @@
 package org.lealone.plugins.test.vertx.service;
 
 import org.lealone.plugins.test.SqlScript;
-import org.lealone.test.TestBase.SqlExecuter;
+import org.lealone.test.TestBase.SqlExecutor;
 
 public class ServiceProvider {
 
-    public static void createService(SqlExecuter executer) {
-        SqlScript.createUserService(executer);
-        SqlScript.createHelloWorldService(executer);
+    public static void createService(SqlExecutor executor) {
+        SqlScript.createUserService(executor);
+        SqlScript.createHelloWorldService(executor);
     }
 
 }
