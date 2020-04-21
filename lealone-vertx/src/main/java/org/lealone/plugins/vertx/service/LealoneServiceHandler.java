@@ -30,7 +30,7 @@ import org.lealone.client.jdbc.JdbcConnection;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.common.util.CamelCaseHelper;
-import org.lealone.db.service.ServiceExecutorManager;
+import org.lealone.db.service.Service;
 import org.lealone.db.session.ServerSession;
 
 import io.vertx.core.Handler;
@@ -84,7 +84,7 @@ public class LealoneServiceHandler implements Handler<SockJSSocket> {
         switch (type) {
         case 1:
             try {
-                result = ServiceExecutorManager.executeServiceWithReturnValue(serviceName, json);
+                result = Service.execute(serviceName, json);
                 ja.add(2);
             } catch (Exception e) {
                 ja.add(3);
