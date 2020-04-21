@@ -15,24 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.service.demo;
+package org.lealone.plugins.test.service;
 
 import org.junit.Test;
 import org.lealone.test.sql.SqlTestBase;
 
-public class Provider extends SqlTestBase {
-
-    private static final String SERVICE_PACKAGE_NAME = Provider.class.getPackage().getName() + ".generated";
-    private static final String GENERATED_CODE_PATH = "./src/test/java";
-
+public class DropServiceTest extends SqlTestBase {
     @Test
-    public void createService() {
-        // 创建服务: demo_service
-        executeUpdate("create service if not exists demo_service (" //
-                + "        say_hello(name varchar) varchar" //
-                + "    )" //
-                + "    package '" + SERVICE_PACKAGE_NAME + "'" //
-                + "    implement by '" + DemoServiceImpl.class.getName() + "'" //
-                + "    generate code '" + GENERATED_CODE_PATH + "'");
+    public void dropService() {
+        executeUpdate("drop service if exists demo_service");
     }
 }
