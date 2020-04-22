@@ -17,10 +17,10 @@
  */
 package org.lealone.plugins.test.vertx.server;
 
-import org.lealone.plugins.test.SqlScript;
-import org.lealone.plugins.test.service.ServiceConsumerTest;
-import org.lealone.plugins.test.service.ServiceProviderTest;
 import org.lealone.test.UnitTestBase;
+import org.lealone.test.orm.SqlScript;
+import org.lealone.test.service.ServiceConsumerTest;
+import org.lealone.test.service.ServiceProviderTest;
 
 public class FullStackTest extends UnitTestBase {
 

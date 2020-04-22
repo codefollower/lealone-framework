@@ -17,8 +17,8 @@
  */
 package org.lealone.plugins.test.vertx.server;
 
-import org.lealone.plugins.test.SqlScript;
 import org.lealone.test.UnitTestBase;
+import org.lealone.test.orm.SqlScript;
 
 public class FrontendOrmTest extends UnitTestBase {
 

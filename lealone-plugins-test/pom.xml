@@ -80,10 +80,5 @@
             <artifactId>lealone-js</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-orm</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 </project>

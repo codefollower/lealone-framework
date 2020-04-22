@@ -1,9 +1,9 @@
-package org.lealone.plugins.test.service.generated;
+package org.lealone.test.service.generated;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.lealone.client.ClientServiceProxy;
-import org.lealone.plugins.test.orm.generated.User;
+import org.lealone.test.orm.generated.User;
 
 /**
  * Service interface for 'user_service'.

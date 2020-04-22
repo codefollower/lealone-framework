@@ -1,4 +1,4 @@
-package org.lealone.plugins.test.orm.generated;
+package org.lealone.test.orm.generated;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,7 +10,7 @@ import org.lealone.orm.ModelTable;
 import org.lealone.orm.property.PInteger;
 import org.lealone.orm.property.PLong;
 import org.lealone.orm.property.PString;
-import org.lealone.plugins.test.orm.generated.User.UserDeserializer;
+import org.lealone.test.orm.generated.User.UserDeserializer;
 
 /**
  * Model for table 'USER'.
