@@ -35,6 +35,7 @@
         <module>../lealone-database/lealone-aote</module>
         <module>../lealone-database/lealone-aose</module>
         <module>../lealone-database/lealone-p2p</module>
+        <module>../lealone-database/lealone-orm</module>
         <module>../lealone-database/lealone-main</module>
         <module>../lealone-database/lealone-test</module>
         <module>lealone-mina</module>
@@ -46,7 +47,6 @@
         <module>lealone-mysql</module>
         <module>lealone-postgresql</module>
         <module>lealone-js</module>
-        <module>lealone-orm</module>
         <module>lealone-sqlline</module>
         <module>lealone-perf</module>
         <module>lealone-plugins-dist</module>
