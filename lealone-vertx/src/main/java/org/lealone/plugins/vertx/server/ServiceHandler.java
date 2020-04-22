@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.vertx.service;
+package org.lealone.plugins.vertx.server;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,9 +39,9 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.handler.sockjs.SockJSSocket;
 
-public class LealoneServiceHandler implements Handler<SockJSSocket> {
+public class ServiceHandler implements Handler<SockJSSocket> {
 
-    private static final Logger logger = LoggerFactory.getLogger(LealoneServiceHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceHandler.class);
     private static final ConcurrentSkipListMap<Integer, Connection> currentConnections = new ConcurrentSkipListMap<>();
 
     private static void removeConnection(Integer key) {
@@ -59,7 +59,8 @@ public class LealoneServiceHandler implements Handler<SockJSSocket> {
         });
 
         sockJSSocket.handler(buffer -> {
-            LealoneServiceHandler.handle(sockJSSocket, buffer.getString(0, buffer.length()));
+            Buffer ret = ServiceHandler.handle(sockJSSocket, buffer.getString(0, buffer.length()));
+            sockJSSocket.end(ret);
         });
     }
 

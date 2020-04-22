@@ -15,26 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.test.vertx.fullstack;
+package org.lealone.plugins.test.vertx.server;
 
-import org.lealone.plugins.test.SqlScript;
-import org.lealone.plugins.vertx.service.LealoneHttpServer;
+import java.util.HashMap;
+
+import org.lealone.plugins.vertx.server.HttpServer;
 import org.lealone.test.UnitTestBase;
 
-public class FrontendOrmTest extends UnitTestBase {
+public class HttpServerTest extends UnitTestBase {
 
     public static void main(String[] args) {
-        new FrontendOrmTest().runTest(true, false);
+        new HttpServerTest().runTest(true, false);
     }
 
     @Override
     public void test() {
-        // 创建user表
-        SqlScript.createUserTable(this);
         // 启动HttpServer
-        // 在浏览器中打开下面这个URL，测试在前端直接执行crud，在console里面看结果:
-        // http://localhost:8080/crud.html
-        LealoneHttpServer.start(8080, "../lealone-js/src/main/js,../lealone-js/src/test/js");
+        // 在浏览器中打开下面这个URL:
+        // http://localhost:8080/vueTest.html
+        startHttpServer();
     }
 
+    static void startHttpServer() {
+        HashMap<String, String> config = new HashMap<>();
+        config.put("web_root", "../lealone-js/src/main/js,../lealone-js/src/test/js");
+        HttpServer server = new HttpServer();
+        server.init(config);
+        server.start();
+    }
 }

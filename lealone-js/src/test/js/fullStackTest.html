@@ -8,13 +8,13 @@
     <h1>FullStackTest, see console log</h1>
 	<script >
 
-	var s = lealone.getService("hello_world_service");
+	var s = lealone.getService("test.public.hello_world_service");
 	s.sayHello();
 	s.sayGoodbyeTo("zhh", function(message) {
 	    console.log(message);
 	});
 	
-	s = lealone.getService("user_service");
+	s = lealone.getService("test.public.user_service");
 	 
 	var user = { name: "zhh", phone: 123 }
 	s.add(user, function(rowId) {

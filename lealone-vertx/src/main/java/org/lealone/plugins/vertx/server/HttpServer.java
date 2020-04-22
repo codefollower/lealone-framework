@@ -15,16 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.vertx.service;
+package org.lealone.plugins.vertx.server;
+
+import java.util.Map;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
+import org.lealone.server.ProtocolServerBase;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
@@ -32,50 +34,104 @@ import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 
-public class LealoneHttpServer {
+public class HttpServer extends ProtocolServerBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(LealoneHttpServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
 
-    public static void start(int port, String webRoot) {
-        start(port, webRoot, null);
+    public static final int DEFAULT_HTTP_PORT = 8080;
+
+    private String webRoot;
+    private String apiPath;
+    private Vertx vertx;
+    private io.vertx.core.http.HttpServer vertxHttpServer;
+
+    @Override
+    public String getName() {
+        return getClass().getSimpleName();
     }
 
-    public static void start(int port, String webRoot, String apiPath) {
+    @Override
+    public String getType() {
+        return HttpServerEngine.NAME;
+    }
+
+    @Override
+    public void init(Map<String, String> config) {
+        if (!config.containsKey("port"))
+            config.put("port", String.valueOf(DEFAULT_HTTP_PORT));
+
+        webRoot = config.get("web_root");
+        apiPath = config.get("api_path");
+        super.init(config);
+    }
+
+    @Override
+    public synchronized void start() {
+        if (isStarted())
+            return;
+        startVertxHttpServer();
+        super.start();
+    }
+
+    @Override
+    public synchronized void stop() {
+        if (isStopped())
+            return;
+        super.stop();
+
+        if (vertxHttpServer != null) {
+            vertxHttpServer.close();
+            vertxHttpServer = null;
+        }
+        if (vertx != null) {
+            vertx.close();
+            vertx = null;
+        }
+    }
+
+    private void startVertxHttpServer() {
         if (apiPath == null)
             apiPath = "/_lealone_sockjs_/*";
         final String path = apiPath;
         VertxOptions opt = new VertxOptions();
         opt.setBlockedThreadCheckInterval(Integer.MAX_VALUE);
-        Vertx vertx = Vertx.vertx(opt);
-        HttpServer server = vertx.createHttpServer();
+        vertx = Vertx.vertx(opt);
+        vertxHttpServer = vertx.createHttpServer();
         Router router = Router.router(vertx);
 
         String syncRequestUrl = "/_lealone_sync_request_";
         router.post(syncRequestUrl).handler(BodyHandler.create());
         router.post(syncRequestUrl).handler(routingContext -> {
             String command = routingContext.request().params().get("command");
-            Buffer result = LealoneServiceHandler.handle(routingContext, command);
+            Buffer result = ServiceHandler.handle(routingContext, command);
             routingContext.request().response().headers().set("Access-Control-Allow-Origin", "*");
             routingContext.request().response().end(result);
         });
 
         router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET).allowedMethod(HttpMethod.POST));
-        setSockJSHandler(vertx, router, apiPath);
+        setSockJSHandler(router);
         // 放在最后
-        setStaticHandler(vertx, router, webRoot);
+        setStaticHandler(router);
 
-        server.requestHandler(router::handle).listen(port, res -> {
+        vertxHttpServer.requestHandler(router::handle).listen(port, host, res -> {
             if (res.succeeded()) {
                 logger.info("web root: " + webRoot);
                 logger.info("sockjs path: " + path);
-                logger.info("http server is now listening on port: " + server.actualPort());
+                logger.info("http server is now listening on port: " + vertxHttpServer.actualPort());
             } else {
                 logger.error("failed to bind " + port + " port!", res.cause());
             }
         });
     }
 
-    private static void setStaticHandler(Vertx vertx, Router router, String webRoot) {
+    private void setSockJSHandler(Router router) {
+        SockJSHandlerOptions options = new SockJSHandlerOptions().setHeartbeatInterval(2000);
+        SockJSHandler sockJSHandler = SockJSHandler.create(vertx, options);
+        sockJSHandler.socketHandler(new ServiceHandler());
+        router.route(apiPath).handler(sockJSHandler);
+    }
+
+    private void setStaticHandler(Router router) {
         for (String root : webRoot.split(",", -1)) {
             root = root.trim();
             if (root.isEmpty())
@@ -85,12 +141,4 @@ public class LealoneHttpServer {
             router.route("/*").handler(sh);
         }
     }
-
-    private static void setSockJSHandler(Vertx vertx, Router router, String apiPath) {
-        SockJSHandlerOptions options = new SockJSHandlerOptions().setHeartbeatInterval(2000);
-        SockJSHandler sockJSHandler = SockJSHandler.create(vertx, options);
-        sockJSHandler.socketHandler(new LealoneServiceHandler());
-        router.route(apiPath).handler(sockJSHandler);
-    }
-
 }
