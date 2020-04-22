@@ -38,7 +38,7 @@ public class HttpServerTest extends UnitTestBase {
 
     static void startHttpServer() {
         HashMap<String, String> config = new HashMap<>();
-        config.put("web_root", "../lealone-js/src/main/js,../lealone-js/src/test/js");
+        config.put("web_root", "../lealone-vertx/src/main/resources/js,../lealone-vertx/src/test/resources");
         HttpServer server = new HttpServer();
         server.init(config);
         server.start();

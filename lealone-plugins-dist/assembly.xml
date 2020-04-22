@@ -38,7 +38,7 @@
             <outputDirectory>bin</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>lealone-js/src/main/js</directory>
+            <directory>lealone-vertx/src/main/resources/js</directory>
             <outputDirectory>js</outputDirectory>
         </fileSet>
     </fileSets>
