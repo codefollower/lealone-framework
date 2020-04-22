@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import org.lealone.plugins.vertx.server.HttpServer;
 import org.lealone.test.UnitTestBase;
+import org.lealone.test.orm.SqlScript;
 
 public class HttpServerTest extends UnitTestBase {
 
@@ -42,5 +43,9 @@ public class HttpServerTest extends UnitTestBase {
         HttpServer server = new HttpServer();
         server.init(config);
         server.start();
+    }
+
+    static void setCodePath() {
+        SqlScript.setCodePath("../../lealone-database/lealone-test/src/test/java");
     }
 }

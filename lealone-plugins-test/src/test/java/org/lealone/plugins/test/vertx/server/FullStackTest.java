@@ -17,14 +17,14 @@
  */
 package org.lealone.plugins.test.vertx.server;
 
-import org.lealone.test.UnitTestBase;
 import org.lealone.test.orm.SqlScript;
 import org.lealone.test.service.ServiceConsumerTest;
 import org.lealone.test.service.ServiceProviderTest;
 
-public class FullStackTest extends UnitTestBase {
+public class FullStackTest extends HttpServerTest {
 
     public static void main(String[] args) {
+        setCodePath();
         new FullStackTest().runTest(true, false);
     }
 
@@ -45,7 +45,7 @@ public class FullStackTest extends UnitTestBase {
         // 启动HttpServer
         // 在浏览器中打开下面这个URL，测试从前端发起服务调用，在console里面看结果:
         // http://localhost:8080/fullStackTest.html
-        HttpServerTest.startHttpServer();
+        startHttpServer();
     }
 
     private void setJdbcUrl() {

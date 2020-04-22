@@ -17,12 +17,12 @@
  */
 package org.lealone.plugins.test.vertx.server;
 
-import org.lealone.test.UnitTestBase;
 import org.lealone.test.orm.SqlScript;
 
-public class FrontendOrmTest extends UnitTestBase {
+public class FrontendOrmTest extends HttpServerTest {
 
     public static void main(String[] args) {
+        setCodePath();
         new FrontendOrmTest().runTest(true, false);
     }
 
@@ -34,6 +34,6 @@ public class FrontendOrmTest extends UnitTestBase {
         // 启动HttpServer
         // 在浏览器中打开下面这个URL，测试在前端直接执行crud，在console里面看结果:
         // http://localhost:8080/crudTest.html
-        HttpServerTest.startHttpServer();
+        startHttpServer();
     }
 }
