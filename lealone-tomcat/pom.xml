@@ -25,60 +25,27 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>lealone-plugins-test</artifactId>
+    <artifactId>lealone-tomcat</artifactId>
     <packaging>jar</packaging>
     <version>5.0.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>org.lealone</groupId>
-            <artifactId>lealone-mina</artifactId>
+            <artifactId>lealone-client</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.lealone</groupId>
-            <artifactId>lealone-netty</artifactId>
+            <artifactId>lealone-db</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-vertx</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-tomcat</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-mvstore</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-mysql</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-postgresql</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-wiredtiger</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-rocksdb</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-test</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.34</version>
         </dependency>
     </dependencies>
 </project>
