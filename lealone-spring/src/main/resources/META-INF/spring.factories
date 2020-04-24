@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration=\
+org.lealone.plugins.spring.LealoneServletWebServerFactoryConfiguration

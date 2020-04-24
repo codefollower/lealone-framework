@@ -42,6 +42,7 @@
         <module>lealone-netty</module>
         <module>lealone-vertx</module>
         <module>lealone-tomcat</module>
+        <module>lealone-spring</module>
         <module>lealone-mvstore</module>
         <module>lealone-wiredtiger</module>
         <module>lealone-rocksdb</module>
