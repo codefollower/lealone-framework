@@ -29,6 +29,7 @@ import org.lealone.storage.PageOperationHandler;
 import org.lealone.storage.PageOperationHandlerFactory;
 import org.lealone.storage.aose.btree.BTreeMap;
 import org.lealone.storage.aose.btree.BTreePage;
+import org.lealone.storage.aose.btree.PageOperations.Put;
 import org.lealone.storage.aose.btree.PageReference;
 
 // -Xms512M -Xmx512M -XX:+PrintGCDetails -XX:+PrintGCTimeStamps
@@ -247,7 +248,7 @@ public class AsyncBTreePerfTest extends StorageMapPerfTest {
                     key = i;
                 String value = "value-";// "value-" + key;
 
-                PageOperation po = map.createPutOperation(key, value, ar -> {
+                PageOperation po = new Put<>(btreeMap, key, value, ar -> {
                     notifyOperationComplete();
                 });
                 po.run(currentHandler);
@@ -272,7 +273,7 @@ public class AsyncBTreePerfTest extends StorageMapPerfTest {
                 int key = conflictKeys[i];
                 String value = "value-conflict";
 
-                PageOperation po = map.createPutOperation(key, value, ar -> {
+                PageOperation po = new Put<>(btreeMap, key, value, ar -> {
                     notifyOperationComplete();
                 });
                 po.run(currentHandler);
