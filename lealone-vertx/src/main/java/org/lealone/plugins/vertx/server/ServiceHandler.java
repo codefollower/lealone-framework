@@ -105,6 +105,7 @@ public class ServiceHandler implements Handler<SockJSSocket> {
         switch (type) {
         case 1:
             try {
+                logger.info("execute service: " + serviceName);
                 result = Service.execute(serviceName, json);
                 ja.add(2);
             } catch (Exception e) {
