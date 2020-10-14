@@ -127,7 +127,7 @@ public class HttpServer extends ProtocolServerBase {
     private void setSockJSHandler(Router router) {
         SockJSHandlerOptions options = new SockJSHandlerOptions().setHeartbeatInterval(2000);
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx, options);
-        sockJSHandler.socketHandler(new ServiceHandler());
+        sockJSHandler.socketHandler(new ServiceHandler(config));
         router.route(apiPath).handler(sockJSHandler);
     }
 

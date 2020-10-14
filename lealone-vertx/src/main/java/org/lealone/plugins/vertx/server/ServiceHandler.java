@@ -24,12 +24,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.lealone.client.jdbc.JdbcConnection;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.common.util.CamelCaseHelper;
+import org.lealone.common.util.StringUtils;
 import org.lealone.db.service.Service;
 import org.lealone.db.session.ServerSession;
 
@@ -48,6 +50,14 @@ public class ServiceHandler implements Handler<SockJSSocket> {
         currentConnections.remove(key);
     }
 
+    private final String defaultDatabase;
+    private final String defaultSchema;
+
+    public ServiceHandler(Map<String, String> config) {
+        defaultDatabase = config.get("default_database");
+        defaultSchema = config.get("default_schema");
+    }
+
     @Override
     public void handle(SockJSSocket sockJSSocket) {
         sockJSSocket.endHandler(v -> {
@@ -59,23 +69,33 @@ public class ServiceHandler implements Handler<SockJSSocket> {
         });
 
         sockJSSocket.handler(buffer -> {
-            Buffer ret = ServiceHandler.handle(sockJSSocket, buffer.getString(0, buffer.length()));
+            Buffer ret = ServiceHandler.handle(sockJSSocket, buffer.getString(0, buffer.length()), defaultDatabase,
+                    defaultSchema);
             sockJSSocket.end(ret);
         });
     }
 
     public static Buffer handle(Object lock, String command) {
+        return handle(lock, command, null, null);
+    }
+
+    public static Buffer handle(Object lock, String command, String defaultDatabase, String defaultSchema) {
         String a[] = command.split(";");
         int type = Integer.parseInt(a[0]);
         if (type < 500) {
-            return executeService(a, type);
+            return executeService(a, type, defaultDatabase, defaultSchema);
         } else {
             return executeSql(lock, a, type);
         }
     }
 
-    private static Buffer executeService(String a[], int type) {
+    private static Buffer executeService(String a[], int type, String defaultDatabase, String defaultSchema) {
         String serviceName = CamelCaseHelper.toUnderscoreFromCamel(a[1]);
+        String[] serviceNameArray = StringUtils.arraySplit(serviceName, '.');
+        if (serviceNameArray.length == 2 && defaultDatabase != null && defaultSchema != null)
+            serviceName = defaultDatabase + "." + defaultSchema + "." + serviceName;
+        else if (serviceNameArray.length == 3 && defaultDatabase != null)
+            serviceName = defaultDatabase + "." + serviceName;
         String json = null;
         if (a.length >= 3) {
             json = a[2];
