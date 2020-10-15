@@ -26,7 +26,7 @@
     <version>5.0.0-SNAPSHOT</version>
 
     <modules>
-        <module>../lealone-database/lealone-common</module>
+        <!--<module>../lealone-database/lealone-common</module>
         <module>../lealone-database/lealone-net</module>
         <module>../lealone-database/lealone-client</module>
         <module>../lealone-database/lealone-server</module>
@@ -37,7 +37,7 @@
         <module>../lealone-database/lealone-p2p</module>
         <module>../lealone-database/lealone-orm</module>
         <module>../lealone-database/lealone-main</module>
-        <module>../lealone-database/lealone-test</module>
+        <module>../lealone-database/lealone-test</module>-->
         <module>lealone-mina</module>
         <module>lealone-netty</module>
         <module>lealone-vertx</module>
@@ -139,4 +139,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/lealone/Lealone</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/lealone/Lealone</url>
+        </repository>
+    </distributionManagement>
 </project>
