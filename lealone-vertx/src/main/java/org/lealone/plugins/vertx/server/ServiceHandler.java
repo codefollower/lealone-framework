@@ -89,6 +89,24 @@ public class ServiceHandler implements Handler<SockJSSocket> {
         }
     }
 
+    public Buffer executeService(String serviceName, String methodName, Map<String, String> methodArgs) {
+        String[] serviceNameArray = StringUtils.arraySplit(serviceName, '.');
+        if (serviceNameArray.length == 1 && defaultDatabase != null && defaultSchema != null)
+            serviceName = defaultDatabase + "." + defaultSchema + "." + serviceName;
+        else if (serviceNameArray.length == 2 && defaultDatabase != null)
+            serviceName = defaultDatabase + "." + serviceName;
+
+        String result = null;
+        try {
+            logger.info("execute service: " + serviceName);
+            result = Service.execute(serviceName, methodName, methodArgs);
+        } catch (Exception e) {
+            result = "failed to execute service: " + serviceName + ", cause: " + e.getMessage();
+            logger.error(result, e);
+        }
+        return Buffer.buffer(result);
+    }
+
     private static Buffer executeService(String a[], int type, String defaultDatabase, String defaultSchema) {
         String serviceName = CamelCaseHelper.toUnderscoreFromCamel(a[1]);
         String[] serviceNameArray = StringUtils.arraySplit(serviceName, '.');

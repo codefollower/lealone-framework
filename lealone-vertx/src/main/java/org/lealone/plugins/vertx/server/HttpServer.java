@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
+import org.lealone.common.util.CaseInsensitiveMap;
 import org.lealone.db.ConnectionInfo;
 import org.lealone.db.Constants;
 import org.lealone.db.SysProperties;
@@ -34,6 +35,7 @@ import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -193,6 +195,16 @@ public class HttpServer extends ProtocolServerBase {
             routingContext.request().response().end(result);
         });
 
+        final ServiceHandler serviceHandler = new ServiceHandler(config);
+        String servicePath = "/service/:serviceName/:methodName";
+        router.post(servicePath).handler(BodyHandler.create());
+        router.post(servicePath).handler(routingContext -> {
+            handleHttpServiceRequest(serviceHandler, routingContext);
+        });
+        router.get(servicePath).handler(routingContext -> {
+            handleHttpServiceRequest(serviceHandler, routingContext);
+        });
+
         router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET).allowedMethod(HttpMethod.POST));
         setSockJSHandler(router);
         // 放在最后
@@ -207,6 +219,18 @@ public class HttpServer extends ProtocolServerBase {
                 logger.error("failed to bind " + port + " port!", res.cause());
             }
         });
+    }
+
+    private void handleHttpServiceRequest(final ServiceHandler serviceHandler, RoutingContext routingContext) {
+        String serviceName = routingContext.request().params().get("serviceName");
+        String methodName = routingContext.request().params().get("methodName");
+        CaseInsensitiveMap<String> methodArgs = new CaseInsensitiveMap<>();
+        for (Map.Entry<String, String> e : routingContext.request().params().entries()) {
+            methodArgs.put(e.getKey(), e.getValue());
+        }
+        Buffer result = serviceHandler.executeService(serviceName, methodName, methodArgs);
+        routingContext.request().response().headers().set("Access-Control-Allow-Origin", "*");
+        routingContext.request().response().end(result);
     }
 
     private void setSockJSHandler(Router router) {
