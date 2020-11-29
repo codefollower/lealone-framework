@@ -42,9 +42,9 @@ import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 
-public class HttpServer extends ProtocolServerBase {
+public class VertxServer extends ProtocolServerBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(VertxServer.class);
 
     public static final int DEFAULT_HTTP_PORT = 8080;
 
@@ -56,7 +56,7 @@ public class HttpServer extends ProtocolServerBase {
 
     private boolean inited;
 
-    public HttpServer() {
+    public VertxServer() {
         config = new HashMap<>();
     }
 
@@ -67,7 +67,7 @@ public class HttpServer extends ProtocolServerBase {
 
     @Override
     public String getType() {
-        return HttpServerEngine.NAME;
+        return VertxServerEngine.NAME;
     }
 
     public String getWebRoot() {

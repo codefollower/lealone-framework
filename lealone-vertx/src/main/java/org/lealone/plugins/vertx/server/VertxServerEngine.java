@@ -22,32 +22,32 @@ import java.util.Map;
 import org.lealone.server.ProtocolServer;
 import org.lealone.server.ProtocolServerEngineBase;
 
-public class HttpServerEngine extends ProtocolServerEngineBase {
+public class VertxServerEngine extends ProtocolServerEngineBase {
 
-    public static final String NAME = "HTTP";
-    private final HttpServer httpServer = new HttpServer();
+    public static final String NAME = "VERTX";
+    private final VertxServer vertxServer = new VertxServer();
 
-    public HttpServerEngine() {
+    public VertxServerEngine() {
         super(NAME);
     }
 
     @Override
     public ProtocolServer getProtocolServer() {
-        return httpServer;
+        return vertxServer;
     }
 
     @Override
     public void init(Map<String, String> config) {
-        httpServer.init(config);
+        vertxServer.init(config);
     }
 
     @Override
     public void close() {
-        httpServer.stop();
+        vertxServer.stop();
     }
 
     @Override
     protected ProtocolServer getProtocolServer(int port) {
-        return httpServer;
+        return vertxServer;
     }
 }
