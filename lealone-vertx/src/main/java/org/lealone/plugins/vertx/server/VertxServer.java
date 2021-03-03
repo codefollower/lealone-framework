@@ -225,7 +225,7 @@ public class VertxServer extends ProtocolServerBase {
     private void handleHttpServiceRequest(final ServiceHandler serviceHandler, RoutingContext routingContext) {
         String serviceName = routingContext.request().params().get("serviceName");
         String methodName = routingContext.request().params().get("methodName");
-        CaseInsensitiveMap<String> methodArgs = new CaseInsensitiveMap<>();
+        CaseInsensitiveMap<Object> methodArgs = new CaseInsensitiveMap<>();
         for (Map.Entry<String, String> e : routingContext.request().params().entries()) {
             methodArgs.put(e.getKey(), e.getValue());
         }

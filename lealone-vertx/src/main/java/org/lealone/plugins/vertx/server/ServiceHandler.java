@@ -89,7 +89,7 @@ public class ServiceHandler implements Handler<SockJSSocket> {
         }
     }
 
-    public Buffer executeService(String serviceName, String methodName, Map<String, String> methodArgs) {
+    public Buffer executeService(String serviceName, String methodName, Map<String, Object> methodArgs) {
         String[] serviceNameArray = StringUtils.arraySplit(serviceName, '.');
         if (serviceNameArray.length == 1 && defaultDatabase != null && defaultSchema != null)
             serviceName = defaultDatabase + "." + defaultSchema + "." + serviceName;
