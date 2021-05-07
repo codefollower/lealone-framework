@@ -45,9 +45,4 @@ public class VertxServerEngine extends ProtocolServerEngineBase {
     public void close() {
         vertxServer.stop();
     }
-
-    @Override
-    protected ProtocolServer getProtocolServer(int port) {
-        return vertxServer;
-    }
 }

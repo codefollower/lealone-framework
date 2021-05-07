@@ -38,11 +38,6 @@ public class MySQLServerEngine extends ProtocolServerEngineBase {
     }
 
     @Override
-    protected ProtocolServer getProtocolServer(int port) {
-        return server;
-    }
-
-    @Override
     public void init(Map<String, String> config) {
         server.init(config);
     }

@@ -18,8 +18,7 @@
 package org.lealone.plugins.test.vertx.server;
 
 import org.lealone.test.orm.SqlScript;
-import org.lealone.test.service.ServiceConsumerTest;
-import org.lealone.test.service.ServiceProviderTest;
+import org.lealone.test.service.generated.HelloWorldService;
 
 public class FullStackTest extends HttpServerTest {
 
@@ -37,10 +36,10 @@ public class FullStackTest extends HttpServerTest {
         SqlScript.createUserTable(this);
 
         // 创建服务
-        ServiceProviderTest.createService(this);
+        createService(this);
 
         // 从后端调用服务
-        ServiceConsumerTest.callService(getURL());
+        callService(getURL());
 
         // 启动HttpServer
         // 在浏览器中打开下面这个URL，测试从前端发起服务调用，在console里面看结果:
@@ -52,5 +51,17 @@ public class FullStackTest extends HttpServerTest {
         String url = getURL();
         System.setProperty("lealone.jdbc.url", url);
         System.out.println("jdbc url: " + url);
+    }
+
+    private static void createService(SqlExecutor executor) {
+        SqlScript.createUserService(executor);
+        SqlScript.createHelloWorldService(executor);
+    }
+
+    private static void callService(String url) {
+        HelloWorldService helloWorldService = HelloWorldService.create(url);
+        helloWorldService.sayHello();
+        String r = helloWorldService.sayGoodbyeTo("zhh");
+        System.out.println(r);
     }
 }

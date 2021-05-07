@@ -33,7 +33,7 @@ public class AsyncJdbcPerfTest extends JdbcPerfTest {
     protected void write(JdbcStatement stmt, int start, int end) throws Exception {
         for (int i = start; i < end; i++) {
             String sql = "INSERT INTO JdbcPerfTest(f1, f2) VALUES(" + i + "," + i * 10 + ")";
-            stmt.executeUpdateAsync(sql, res -> {
+            stmt.executeUpdateAsync(sql).onComplete(res -> {
                 notifyOperationComplete();
             });
         }
@@ -57,9 +57,10 @@ public class AsyncJdbcPerfTest extends JdbcPerfTest {
         };
         for (int i = start; i < end; i++) {
             if (!random)
-                stmt.executeQueryAsync("SELECT * FROM JdbcPerfTest where f1 = " + i, handler);
+                stmt.executeQueryAsync("SELECT * FROM JdbcPerfTest where f1 = " + i).onComplete(handler);
             else
-                stmt.executeQueryAsync("SELECT * FROM JdbcPerfTest where f1 = " + this.random.nextInt(end), handler);
+                stmt.executeQueryAsync("SELECT * FROM JdbcPerfTest where f1 = " + this.random.nextInt(end))
+                        .onComplete(handler);
         }
     }
 }

@@ -193,7 +193,7 @@ public class MySQLServerConnection extends AsyncConnection {
     public void executeStatement(String sql) {
         logger.info("sql: " + sql);
         try {
-            PreparedSQLStatement ps = session.prepareStatement(sql, -1);
+            PreparedSQLStatement ps = (PreparedSQLStatement) session.prepareSQLCommand(sql, -1);
 
             if (ps.isQuery()) {
                 Result result = ps.executeQuery(-1).get();

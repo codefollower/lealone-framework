@@ -37,11 +37,6 @@ public class PgServerEngine extends ProtocolServerEngineBase {
     }
 
     @Override
-    protected ProtocolServer getProtocolServer(int port) {
-        return pgServer;
-    }
-
-    @Override
     public void init(Map<String, String> config) {
         pgServer.init(config);
     }

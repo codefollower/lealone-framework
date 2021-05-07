@@ -45,9 +45,4 @@ public class TomcatServerEngine extends ProtocolServerEngineBase {
     public void close() {
         tomcatServer.stop();
     }
-
-    @Override
-    protected ProtocolServer getProtocolServer(int port) {
-        return tomcatServer;
-    }
 }

@@ -42,7 +42,7 @@ public class LealoneSqlPerfTest extends SqlPerfTest {
             int f1 = i;
             if (isRandom())
                 f1 = randomKeys[i];
-            statement.executeUpdateAsync("update SqlPerfTest set f2 = 'value2' where f1 =" + f1, ar -> {
+            statement.executeUpdateAsync("update SqlPerfTest set f2 = 'value2' where f1 =" + f1).onComplete(ar -> {
                 notifyOperationComplete();
             });
         }
@@ -56,7 +56,7 @@ public class LealoneSqlPerfTest extends SqlPerfTest {
             if (isRandom())
                 f1 = randomKeys[i];
             ps2.setInt(1, f1);
-            ps2.executeUpdateAsync(ar -> {
+            ps2.executeUpdateAsync().onComplete(ar -> {
                 notifyOperationComplete();
             });
         }
