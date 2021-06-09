@@ -1,5 +1,5 @@
 # Lealone-Plugins
-与 Lealone 集成的各类插件(例如网络框架、不同数据库的协议与SQL语法、存储引擎)
+与 Lealone 集成的各类插件(例如网络框架、存储引擎)
 
 ## 网络层插件
 
@@ -28,13 +28,3 @@
 ### [lealone-rocksdb](https://github.com/lealone/Lealone-Plugins/tree/master/lealone-rocksdb)
 使用 [RocksDB](https://github.com/facebook/rocksdb) 作为额外的 Lealone 存储引擎
 
-
-## 数据库协议与SQL语法插件
-
-
-### [lealone-postgresql](https://github.com/lealone/Lealone-Plugins/tree/master/lealone-postgresql)
-支持现有的 [PostgreSQL](https://www.postgresql.org/) 客户端访问 Lealone 数据库
-
-
-### [lealone-mysql](https://github.com/lealone/Lealone-Plugins/tree/master/lealone-mysql)
-支持现有的 [MySQL](https://www.mysql.com/) 客户端用MySQL的协议和SQL语法访问 Lealone 数据库
