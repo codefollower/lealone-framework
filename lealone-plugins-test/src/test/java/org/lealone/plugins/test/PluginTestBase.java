@@ -81,7 +81,7 @@ public class PluginTestBase extends org.lealone.test.sql.SqlTestBase {
         def.name = protocolServerName;
         def.getParameters().put("port", port + "");
         def.getParameters().put("allow_others", "true");
-
+        def.getParameters().put("__runInMainThread__", "true");
         config.protocol_server_engines.add(def);
     }
 

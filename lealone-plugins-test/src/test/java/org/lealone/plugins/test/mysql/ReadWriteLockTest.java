@@ -29,7 +29,7 @@ public class ReadWriteLockTest {
         // prop.setProperty("MULTI_THREADED", "true");
         // return DriverManager.getConnection(url, prop);
 
-        return MySQLPreparedStatementTest.getMySQLConnection(true);
+        return MySQLJdbcTest.getMySQLConnection();
     }
 
     static String url = "jdbc:h2:mem:mydb";

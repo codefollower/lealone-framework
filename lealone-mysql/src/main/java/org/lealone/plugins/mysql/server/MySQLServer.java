@@ -26,9 +26,9 @@ import java.util.Set;
 import org.lealone.db.LealoneDatabase;
 import org.lealone.net.AsyncConnection;
 import org.lealone.net.AsyncConnectionManager;
-import org.lealone.net.NetNode;
 import org.lealone.net.NetFactory;
 import org.lealone.net.NetFactoryManager;
+import org.lealone.net.NetNode;
 import org.lealone.net.NetServer;
 import org.lealone.net.WritableChannel;
 import org.lealone.server.DelegatedProtocolServer;
@@ -36,11 +36,10 @@ import org.lealone.server.DelegatedProtocolServer;
 public class MySQLServer extends DelegatedProtocolServer implements AsyncConnectionManager {
 
     public static final String DATABASE_NAME = "mysql";
-
-    // private static final Logger logger = LoggerFactory.getLogger(MySQLServer.class);
     public static final int DEFAULT_PORT = 9214;
 
-    private final Set<MySQLServerConnection> connections = Collections.synchronizedSet(new HashSet<MySQLServerConnection>());
+    private final Set<MySQLServerConnection> connections = Collections
+            .synchronizedSet(new HashSet<MySQLServerConnection>());
 
     @Override
     public String getName() {
@@ -70,6 +69,11 @@ public class MySQLServer extends DelegatedProtocolServer implements AsyncConnect
         String sql = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME //
                 + " PARAMETERS(DEFAULT_SQL_ENGINE='" + MySQLServerEngine.NAME + "')";
         LealoneDatabase.getInstance().getSystemSession().prepareStatementLocal(sql).executeUpdate();
+    }
+
+    @Override
+    public boolean runInMainThread() {
+        return protocolServer.runInMainThread();
     }
 
     @Override

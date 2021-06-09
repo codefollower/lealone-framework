@@ -31,7 +31,7 @@ public class PgServerStart extends PluginServerStart {
     @Override
     public void applyConfig(Config config) throws ConfigException {
         PluginTestBase.enablePgServer(config);
-        PluginTestBase.enableMinaNetServer(config);
+        // PluginTestBase.enableMinaNetServer(config);
         // PluginTestBase.enableNettyNetServer(config);
         super.applyConfig(config);
     }

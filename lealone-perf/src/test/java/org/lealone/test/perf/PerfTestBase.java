@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.lealone.db.LealoneDatabase;
 import org.lealone.db.SysProperties;
-import org.lealone.plugins.test.mysql.MySQLPreparedStatementTest;
+import org.lealone.plugins.test.mysql.MySQLJdbcTest;
 import org.lealone.test.TestBase;
 import org.lealone.transaction.aote.log.LogSyncService;
 
@@ -80,7 +80,7 @@ public abstract class PerfTestBase {
     }
 
     public static Connection getMySqlConnection() throws Exception {
-        return MySQLPreparedStatementTest.getMySQLConnection(true);
+        return MySQLJdbcTest.getMySQLConnection(true, 3306);
     }
 
     protected static final int DEFAULT_ROW_COUNT = 10000;

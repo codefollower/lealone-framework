@@ -19,31 +19,19 @@ package org.lealone.plugins.test.postgresql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Properties;
 
 import org.lealone.plugins.postgresql.PgServer;
+import org.lealone.plugins.test.mysql.MySQLJdbcTest;
 
-public class PgStatementTest {
+public class PgJdbcTest {
 
     public static void main(String[] args) throws Exception {
         String url = "jdbc:postgresql://localhost:" + PgServer.DEFAULT_PORT + "/pg_test";
         Properties info = new Properties();
         info.put("user", "test");
         info.put("password", "test");
-
         Connection conn = DriverManager.getConnection(url, info);
-        Statement statement = conn.createStatement();
-        statement.executeUpdate("drop table if exists pet");
-        statement.executeUpdate("create table if not exists pet(name varchar(20), age int)");
-        statement.executeUpdate("insert into pet values('pet1', 2)");
-        statement.close();
-        ResultSet rs = statement.executeQuery("select count(*) from pet");
-        rs.next();
-        System.out.println("count: " + rs.getInt(1));
-        rs.close();
-        statement.close();
-        conn.close();
+        MySQLJdbcTest.crud(conn);
     }
 }

@@ -20,29 +20,25 @@ package org.lealone.plugins.test.mysql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
 import org.lealone.plugins.mysql.server.MySQLServer;
 
-public class MySQLPreparedStatementTest {
+public class MySQLJdbcTest {
 
-    private static Connection getMySQLConnection() throws Exception {
-        return getMySQLConnection(true);
+    public static Connection getMySQLConnection() throws Exception {
+        return getMySQLConnection(true, MySQLServer.DEFAULT_PORT);
     }
 
-    public static Connection getMySQLConnection(boolean autoCommit) throws Exception {
+    public static Connection getMySQLConnection(boolean autoCommit, int port) throws Exception {
         // String driver = "com.mysql.jdbc.Driver";
-        int port = MySQLServer.DEFAULT_PORT;
+        // Class.forName(driver);
+
         String db = "mysql";
         String password = "";
-
-        // port = 8077;
-        // db = "dbtest";
-        // password = "zhh";
-
-        port = 3306;
         db = "test";
         password = "zhh";
 
@@ -59,8 +55,6 @@ public class MySQLPreparedStatementTest {
         info.put("rewriteBatchedStatements", "true");
         info.put("useCompression", "true");
         info.put("serverTimezone", "GMT");
-
-        // Class.forName(driver);
 
         Connection conn = DriverManager.getConnection(url, info);
         conn.setAutoCommit(autoCommit);
@@ -80,46 +74,33 @@ public class MySQLPreparedStatementTest {
         }
     }
 
-    static void print(int[] array) {
-        if (array == null)
-            System.err.println("array=null");
-
-        System.err.println("array.length=" + array.length);
-        for (int i : array) {
-            System.err.println("i=" + i);
-        }
+    public static void main(String[] args) throws Exception {
+        Connection conn = getMySQLConnection();
+        crud(conn);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void crud(Connection conn) {
         try {
-            // Connection[] a = new Connection[100];
-            // for (int i = 0; i < 100; i++)
-            // a[i] = getMySQLConnection();
-            // for (int i = 0; i < 100; i++)
-            // a[i].close();
-            Connection conn = getMySQLConnection();
             Statement statement = conn.createStatement();
             statement.executeUpdate("drop table if exists pet");
             statement.executeUpdate("create table if not exists pet(name varchar(20), age int)");
             statement.executeUpdate("insert into pet values('pet1', 2)");
+
+            ResultSet rs = statement.executeQuery("select count(*) from pet");
+            rs.next();
+            System.out.println("Statement.executeQuery count: " + rs.getInt(1));
+            rs.close();
             statement.close();
-            // conn.close();
-            // String sql = null;
-            // String sql = "select * from pet where name = ? ON DUPLICATE KEY UPDATE ";
-            String sql = "select * from pet where age=? or name=?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            System.err.println(stmt.getClass().getName());
 
-            long t1 = System.currentTimeMillis();
-            for (int i = 0; i < 2000; i++) {
-                stmt.setInt(1, i);
-                stmt.setString(2, i + "");
-                stmt.executeQuery();
-            }
+            String sql = "select name, age from pet where name=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "pet1");
+            rs = ps.executeQuery();
+            rs.next();
+            System.out.println("PreparedStatement.executeQuery name: " + rs.getString(1) + ", age: " + rs.getInt(2));
+            rs.close();
+            ps.close();
 
-            System.err.println(System.currentTimeMillis() - t1);
-
-            stmt.close();
             conn.close();
         } catch (SQLException e) {
             sqlException(e);
