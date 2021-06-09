@@ -45,7 +45,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.16</version>
+            <version>8.0.16</version>
             <!--6.0.2太新了，直接连MySQL 5.7在没做更多配置前都抛错-->
             <!--<version>6.0.2</version>
             <version>8.0.16</version>-->
