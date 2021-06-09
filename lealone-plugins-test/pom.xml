@@ -62,11 +62,6 @@
         </dependency>
         <dependency>
             <groupId>org.lealone</groupId>
-            <artifactId>lealone-postgresql</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
             <artifactId>lealone-wiredtiger</artifactId>
             <version>${project.version}</version>
         </dependency>

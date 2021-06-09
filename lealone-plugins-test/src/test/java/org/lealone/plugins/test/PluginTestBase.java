@@ -25,11 +25,7 @@ import org.lealone.net.nio.NioNetFactory;
 import org.lealone.p2p.config.Config;
 import org.lealone.p2p.config.Config.PluggableEngineDef;
 import org.lealone.plugins.mina.MinaNetFactory;
-import org.lealone.plugins.mysql.server.MySQLServer;
-import org.lealone.plugins.mysql.server.MySQLServerEngine;
 import org.lealone.plugins.netty.NettyNetFactory;
-import org.lealone.plugins.postgresql.PgServer;
-import org.lealone.plugins.postgresql.PgServerEngine;
 import org.lealone.plugins.vertx.net.VertxNetFactory;
 import org.lealone.server.TcpServerEngine;
 
@@ -61,14 +57,6 @@ public class PluginTestBase extends org.lealone.test.sql.SqlTestBase {
 
     public static void enableTcpServer(Config config) {
         enableProtocolServer(config, TcpServerEngine.NAME, Constants.DEFAULT_TCP_PORT);
-    }
-
-    public static void enablePgServer(Config config) {
-        enableProtocolServer(config, PgServerEngine.NAME, PgServer.DEFAULT_PORT);
-    }
-
-    public static void enableMySQLServer(Config config) {
-        enableProtocolServer(config, MySQLServerEngine.NAME, MySQLServer.DEFAULT_PORT);
     }
 
     private static void enableProtocolServer(Config config, String protocolServerName, int port) {

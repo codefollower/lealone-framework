@@ -25,13 +25,13 @@ import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.lealone.db.LealoneDatabase;
 import org.lealone.db.SysProperties;
-import org.lealone.plugins.test.mysql.MySQLJdbcTest;
 import org.lealone.test.TestBase;
 import org.lealone.transaction.aote.log.LogSyncService;
 
@@ -80,7 +80,21 @@ public abstract class PerfTestBase {
     }
 
     public static Connection getMySqlConnection() throws Exception {
-        return MySQLJdbcTest.getMySQLConnection(true, 3306);
+        String url = "jdbc:mysql://localhost:3306/test";
+
+        Properties info = new Properties();
+        info.put("user", "root");
+        info.put("password", "zhh");
+        // info.put("holdResultsOpenOverStatementClose","true");
+        // info.put("allowMultiQueries","true");
+
+        // info.put("useServerPrepStmts", "true");
+        // info.put("cachePrepStmts", "true");
+        info.put("rewriteBatchedStatements", "true");
+        info.put("useCompression", "true");
+        info.put("serverTimezone", "GMT");
+
+        return DriverManager.getConnection(url, info);
     }
 
     protected static final int DEFAULT_ROW_COUNT = 10000;
