@@ -46,7 +46,6 @@ public class NettyNetClientHandler extends ChannelInboundHandlerAdapter {
         if (msg instanceof ByteBuf) {
             ByteBuf buff = (ByteBuf) msg;
             conn.handle(new NettyBuffer(buff));
-            buff.release();
         }
     }
 

@@ -20,7 +20,6 @@ package org.lealone.plugins.netty;
 import org.lealone.net.NetBuffer;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 public class NettyBuffer implements NetBuffer {
 
@@ -35,30 +34,8 @@ public class NettyBuffer implements NetBuffer {
     }
 
     @Override
-    public NettyBuffer appendBuffer(NetBuffer buff) {
-        if (buff instanceof NettyBuffer) {
-            this.buffer.writeBytes(((NettyBuffer) buff).getBuffer());
-        }
-        return this;
-    }
-
-    @Override
     public int length() {
         return buffer.writerIndex();
-    }
-
-    @Override
-    public NettyBuffer slice(int start, int end) {
-        return new NettyBuffer(buffer.slice(start, end - start));
-    }
-
-    @Override
-    public NettyBuffer getBuffer(int start, int end) {
-        byte[] bytes = new byte[end - start];
-        buffer.getBytes(start, bytes, 0, end - start);
-        ByteBuf subBuffer = Unpooled.unreleasableBuffer(Unpooled.buffer(bytes.length, Integer.MAX_VALUE))
-                .writeBytes(bytes);
-        return new NettyBuffer(subBuffer);
     }
 
     @Override

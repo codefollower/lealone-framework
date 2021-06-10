@@ -37,5 +37,4 @@ public class VertxBufferFactory implements NetBufferFactory {
     public NetBuffer createBuffer(int initialSizeHint) {
         return new VertxBuffer(Buffer.buffer(initialSizeHint));
     }
-
 }

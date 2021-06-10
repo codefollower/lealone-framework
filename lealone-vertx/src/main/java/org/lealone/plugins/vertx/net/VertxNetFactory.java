@@ -32,5 +32,4 @@ public class VertxNetFactory extends NetFactoryBase {
     public NetServer createNetServer() {
         return new VertxNetServer();
     }
-
 }

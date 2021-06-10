@@ -34,26 +34,8 @@ public class VertxBuffer implements NetBuffer {
     }
 
     @Override
-    public VertxBuffer appendBuffer(NetBuffer buff) {
-        if (buff instanceof VertxBuffer) {
-            this.buffer.appendBuffer(((VertxBuffer) buff).getBuffer());
-        }
-        return this;
-    }
-
-    @Override
     public int length() {
         return buffer.length();
-    }
-
-    @Override
-    public VertxBuffer slice(int start, int end) {
-        return new VertxBuffer(buffer.slice(start, end));
-    }
-
-    @Override
-    public VertxBuffer getBuffer(int start, int end) {
-        return new VertxBuffer(buffer.getBuffer(start, end));
     }
 
     @Override
