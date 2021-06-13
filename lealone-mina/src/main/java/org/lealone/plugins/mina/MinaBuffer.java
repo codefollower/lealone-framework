@@ -47,6 +47,11 @@ public class MinaBuffer implements NetBuffer {
     }
 
     @Override
+    public void read(byte[] dst, int off, int len) {
+        buffer.get(dst, off, len);
+    }
+
+    @Override
     public MinaBuffer appendByte(byte b) {
         buffer.put(b);
         return this;

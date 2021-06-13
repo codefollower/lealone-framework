@@ -44,6 +44,11 @@ public class VertxBuffer implements NetBuffer {
     }
 
     @Override
+    public void read(byte[] dst, int off, int len) {
+        buffer.getBytes(off, off + len, dst);
+    }
+
+    @Override
     public VertxBuffer appendByte(byte b) {
         buffer.appendByte(b);
         return this;

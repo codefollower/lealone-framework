@@ -44,6 +44,11 @@ public class NettyBuffer implements NetBuffer {
     }
 
     @Override
+    public void read(byte[] dst, int off, int len) {
+        buffer.getBytes(off, dst, 0, len);
+    }
+
+    @Override
     public NettyBuffer appendByte(byte b) {
         buffer.writeByte(b);
         return this;
