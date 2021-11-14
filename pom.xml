@@ -35,7 +35,6 @@
         <module>lealone-wiredtiger</module>
         <module>lealone-rocksdb</module>
         <module>lealone-sqlline</module>
-        <module>lealone-perf</module>
         <module>lealone-plugins-dist</module>
         <module>lealone-plugins-test</module>
     </modules>
