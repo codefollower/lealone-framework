@@ -24,9 +24,19 @@ import io.netty.buffer.ByteBuf;
 public class NettyBuffer implements NetBuffer {
 
     private final ByteBuf buffer;
+    private int length;
+    private boolean onlyOnePacket;
+    private boolean forWrite;
 
-    public NettyBuffer(ByteBuf buff) {
-        this.buffer = buff;
+    public NettyBuffer(ByteBuf buffer) {
+        this.buffer = buffer;
+        this.forWrite = true;
+    }
+
+    public NettyBuffer(ByteBuf buffer, boolean onlyOnePacket) {
+        this.buffer = buffer;
+        this.onlyOnePacket = onlyOnePacket;
+        length = buffer.readableBytes();
     }
 
     public ByteBuf getBuffer() {
@@ -35,7 +45,9 @@ public class NettyBuffer implements NetBuffer {
 
     @Override
     public int length() {
-        return buffer.writerIndex();
+        if (forWrite)
+            return buffer.writerIndex();
+        return length;
     }
 
     @Override
@@ -90,5 +102,16 @@ public class NettyBuffer implements NetBuffer {
     @Override
     public NetBuffer flip() {
         return this;
+    }
+
+    @Override
+    public boolean isOnlyOnePacket() {
+        return onlyOnePacket;
+    }
+
+    @Override
+    public void recycle() {
+        // if (forWrite)
+        buffer.release();
     }
 }

@@ -85,7 +85,7 @@ public class VertxNetServer extends NetServerBase {
             String host = socket.remoteAddress().host();
             if (VertxNetServer.this.allow(host)) {
                 VertxWritableChannel channel = new VertxWritableChannel(socket);
-                AsyncConnection conn = VertxNetServer.this.createConnection(channel, true);
+                AsyncConnection conn = VertxNetServer.this.createConnection(channel);
                 socket.handler(buffer -> {
                     conn.handle(new VertxBuffer(buffer));
                 });

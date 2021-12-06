@@ -39,12 +39,14 @@ public class MinaNetClient extends NetClientBase {
     }
 
     private NioSocketConnector connector;
+    private Map<String, String> config;
 
     private MinaNetClient() {
     }
 
     @Override
     protected synchronized void openInternal(Map<String, String> config) {
+        this.config = config;
         if (connector == null) {
             connector = new NioSocketConnector();
             connector.setHandler(new MinaNetClientHandler(this));
@@ -60,7 +62,7 @@ public class MinaNetClient extends NetClientBase {
     }
 
     @Override
-    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
+    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager, int maxSharedSize,
             AsyncCallback<AsyncConnection> ac) {
         InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
         ConnectFuture future = connector.connect(inetSocketAddress);
@@ -72,7 +74,7 @@ public class MinaNetClient extends NetClientBase {
                 if (connectionManager != null) {
                     conn = connectionManager.createConnection(writableChannel, false);
                 } else {
-                    conn = new TcpClientConnection(writableChannel, this);
+                    conn = new TcpClientConnection(writableChannel, this, maxSharedSize);
                 }
                 conn.setInetSocketAddress(inetSocketAddress);
                 conn = addConnection(inetSocketAddress, conn);
@@ -82,11 +84,11 @@ public class MinaNetClient extends NetClientBase {
     }
 
     AsyncConnection getConnection(IoSession session) {
-        return getConnection(getInetSocketAddress(session));
+        return getConnection(config, getInetSocketAddress(session));
     }
 
     void removeConnection(IoSession session) {
-        removeConnection(getInetSocketAddress(session));
+        removeConnection(getConnection(session));
     }
 
     private InetSocketAddress getInetSocketAddress(IoSession session) {

@@ -17,6 +17,8 @@
  */
 package org.lealone.plugins.netty;
 
+import java.nio.ByteBuffer;
+
 import org.lealone.common.exceptions.DbException;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
@@ -54,8 +56,31 @@ public class NettyNetServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof ByteBuf) {
             ByteBuf buff = (ByteBuf) msg;
-            conn.handle(new NettyBuffer(buff.copy()));
-            buff.release();
+            while (true) {
+                // 每次循环重新取一次，一些实现会返回不同的Buffer
+                ByteBuffer packetLengthByteBuffer = conn.getPacketLengthByteBuffer();
+                int packetLengthByteBufferCapacity = packetLengthByteBuffer.capacity();
+                if (buff.readableBytes() >= packetLengthByteBufferCapacity) {
+                    buff.markReaderIndex();
+                    buff.readBytes(packetLengthByteBuffer);
+                    packetLengthByteBuffer.flip();
+                    int packetLength = conn.getPacketLength();
+                    packetLengthByteBuffer.clear();
+                    if (buff.readableBytes() >= packetLength) {
+                        int wIndex = buff.writerIndex();
+                        int rIndex = buff.readerIndex();
+                        buff.setIndex(rIndex + packetLength, wIndex);
+                        NettyBuffer buffer = new NettyBuffer(buff.slice(rIndex, packetLength), true);
+                        conn.handle(buffer);
+                    } else {
+                        buff.resetReaderIndex();
+                        return;
+                    }
+                } else {
+                    return;
+                }
+            }
+            // buff.release();
         } else {
             throw DbException.throwInternalError("msg type is " + msg.getClass().getName() + " not ByteBuf");
         }

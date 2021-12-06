@@ -74,7 +74,7 @@ public class NettyNetClient extends NetClientBase {
     }
 
     @Override
-    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
+    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager, int maxSharedSize,
             AsyncCallback<AsyncConnection> ac) {
         final InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
         bootstrap.connect(node.getHost(), node.getPort()).addListener(new ChannelFutureListener() {
@@ -87,7 +87,7 @@ public class NettyNetClient extends NetClientBase {
                     if (connectionManager != null) {
                         conn = connectionManager.createConnection(writableChannel, false);
                     } else {
-                        conn = new TcpClientConnection(writableChannel, NettyNetClient.this);
+                        conn = new TcpClientConnection(writableChannel, NettyNetClient.this, maxSharedSize);
                     }
                     ch.pipeline().addLast(new NettyNetClientHandler(NettyNetClient.this, connectionManager, conn));
                     conn.setInetSocketAddress(inetSocketAddress);

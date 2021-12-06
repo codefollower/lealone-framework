@@ -21,7 +21,7 @@ import org.lealone.net.NetBuffer;
 import org.lealone.net.NetBufferFactory;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import io.netty.buffer.PooledByteBufAllocator;
 
 public class NettyBufferFactory implements NetBufferFactory {
 
@@ -31,12 +31,16 @@ public class NettyBufferFactory implements NetBufferFactory {
         return instance;
     }
 
+    private PooledByteBufAllocator allocator = new PooledByteBufAllocator(true);
+
     private NettyBufferFactory() {
     }
 
     @Override
     public NetBuffer createBuffer(int initialSizeHint) {
-        ByteBuf buffer = Unpooled.unreleasableBuffer(Unpooled.buffer(initialSizeHint, Integer.MAX_VALUE));
+        ByteBuf buffer;
+        // buffer = Unpooled.unreleasableBuffer(Unpooled.buffer(initialSizeHint, Integer.MAX_VALUE));
+        buffer = allocator.buffer(initialSizeHint);
         return new NettyBuffer(buffer);
     }
 }

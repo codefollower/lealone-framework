@@ -21,6 +21,7 @@ package org.lealone.plugins.wiredtiger;
 import java.nio.ByteBuffer;
 import java.util.AbstractSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -363,7 +364,7 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
                     @Override
                     public Entry<K, V> next() {
                         K k = cursor.next();
-                        return new DataUtils.MapEntry<K, V>(k, cursor.getValue());
+                        return new MapEntry<K, V>(k, cursor.getValue());
                     }
 
                     @Override
@@ -397,5 +398,37 @@ public class WTMap<K, V> extends StorageMapBase<K, V> {
     @Override
     public void close() {
         wtSession.close(null);
+    }
+
+    /**
+     * An entry of a map.
+     *
+     * @param <K> the key type
+     * @param <V> the value type
+     */
+    public static class MapEntry<K, V> implements Map.Entry<K, V> {
+
+        private final K key;
+        private final V value;
+
+        public MapEntry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public V setValue(V value) {
+            throw DataUtils.newUnsupportedOperationException("Updating the value is not supported");
+        }
     }
 }

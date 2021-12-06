@@ -57,6 +57,6 @@ public class NettyNetClientHandler extends ChannelInboundHandlerAdapter {
         logger.info(msg + " closed");
         if (connectionManager != null)
             connectionManager.removeConnection(conn);
-        nettyNetClient.removeConnection(conn.getInetSocketAddress());
+        nettyNetClient.removeConnection(conn);
     }
 }

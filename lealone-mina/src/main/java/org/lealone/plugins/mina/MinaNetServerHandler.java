@@ -42,7 +42,7 @@ public class MinaNetServerHandler extends IoHandlerAdapter {
     public void sessionCreated(IoSession session) throws Exception {
         logger.info("Session created, RemoteAddress: " + session.getRemoteAddress());
         MinaWritableChannel writableChannel = new MinaWritableChannel(session);
-        AsyncConnection conn = server.createConnection(writableChannel, true);
+        AsyncConnection conn = server.createConnection(writableChannel);
         connections.put(session, conn);
     }
 

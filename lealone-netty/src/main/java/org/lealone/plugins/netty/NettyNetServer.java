@@ -54,7 +54,7 @@ public class NettyNetServer extends NetServerBase {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             NettyWritableChannel channel = new NettyWritableChannel(ch);
-                            AsyncConnection conn = createConnection(channel, true);
+                            AsyncConnection conn = createConnection(channel);
                             ch.pipeline().addLast(new NettyNetServerHandler(NettyNetServer.this, conn));
                         }
                     });
@@ -85,5 +85,15 @@ public class NettyNetServer extends NetServerBase {
             bossGroup.shutdownGracefully();
             bossGroup = null;
         }
+    }
+
+    @Override
+    public Runnable getRunnable() {
+        return () -> {
+            NettyNetServer.this.run();
+        };
+    }
+
+    private void run() {
     }
 }

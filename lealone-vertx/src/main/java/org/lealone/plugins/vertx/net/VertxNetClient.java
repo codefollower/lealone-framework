@@ -65,7 +65,7 @@ public class VertxNetClient extends NetClientBase {
     }
 
     @Override
-    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager,
+    protected void createConnectionInternal(NetNode node, AsyncConnectionManager connectionManager, int maxSharedSize,
             AsyncCallback<AsyncConnection> ac) {
         InetSocketAddress inetSocketAddress = node.getInetSocketAddress();
         vertxClient.connect(node.getPort(), node.getHost(), res -> {
@@ -76,7 +76,7 @@ public class VertxNetClient extends NetClientBase {
                 if (connectionManager != null) {
                     conn = connectionManager.createConnection(channel, false);
                 } else {
-                    conn = new TcpClientConnection(channel, this);
+                    conn = new TcpClientConnection(channel, this, maxSharedSize);
                 }
                 conn.setInetSocketAddress(inetSocketAddress);
                 AsyncConnection conn2 = addConnection(inetSocketAddress, conn);
