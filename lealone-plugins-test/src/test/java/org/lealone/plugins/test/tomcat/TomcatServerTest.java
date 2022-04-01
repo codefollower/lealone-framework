@@ -33,7 +33,7 @@ import org.lealone.test.UnitTestBase;
 public class TomcatServerTest extends UnitTestBase {
 
     public static void main(String[] args) {
-        new TomcatServerTest().runTest(true, false);
+        new TomcatServerTest().runTest(true);
     }
 
     @Override

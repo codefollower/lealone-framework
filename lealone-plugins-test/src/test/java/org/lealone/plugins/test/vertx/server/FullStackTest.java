@@ -24,7 +24,7 @@ public class FullStackTest extends HttpServerTest {
 
     public static void main(String[] args) {
         setCodePath();
-        new FullStackTest().runTest(true, false);
+        new FullStackTest().runTest(true);
     }
 
     @Override

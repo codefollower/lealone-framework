@@ -106,8 +106,9 @@ public class MVStorageMap<K, V> extends StorageMapBase<K, V> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean areValuesEqual(Object a, Object b) {
-        return a == b || a != null && b != null && mvMap.getValueType().compare(a, b) == 0;
+        return a == b || a != null && b != null && mvMap.getValueType().compare((V) a, (V) b) == 0;
         // 在1.4.199版本中已经没有这个方法
         // return mvMap.areValuesEqual(a, b);
     }

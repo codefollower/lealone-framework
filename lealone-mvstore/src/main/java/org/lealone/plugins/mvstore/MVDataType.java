@@ -23,7 +23,7 @@ import org.h2.mvstore.WriteBuffer;
 import org.lealone.db.DataBuffer;
 import org.lealone.storage.type.StorageDataType;
 
-public class MVDataType implements org.h2.mvstore.type.DataType {
+public class MVDataType extends org.h2.mvstore.type.BasicDataType<Object> {
 
     private final StorageDataType type;
 
@@ -50,11 +50,11 @@ public class MVDataType implements org.h2.mvstore.type.DataType {
     }
 
     @Override
-    public void write(WriteBuffer buff, Object[] obj, int len, boolean key) {
+    public void write(WriteBuffer buff, Object obj, int len) {
         DataBuffer db = DataBuffer.create();
         for (int i = 0; i < len; i++) {
             db.reset();
-            type.write(db, obj[i]);
+            type.write(db, cast(obj)[i]);
             buff.put(db.getAndFlipBuffer());
         }
         db.close();
@@ -66,9 +66,14 @@ public class MVDataType implements org.h2.mvstore.type.DataType {
     }
 
     @Override
-    public void read(ByteBuffer buff, Object[] obj, int len, boolean key) {
+    public void read(ByteBuffer buff, Object obj, int len) {
         for (int i = 0; i < len; i++) {
-            obj[i] = read(buff);
+            cast(obj)[i] = read(buff);
         }
+    }
+
+    @Override
+    public Object[] createStorage(int size) {
+        return new Object[size];
     }
 }

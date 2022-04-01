@@ -53,8 +53,8 @@ public class LealoneTomcatServletWebServerFactoryCustomizer
         if (tomcatProperties.getRedirectContextRoot() != null) {
             customizeRedirectContextRoot(factory, tomcatProperties.getRedirectContextRoot());
         }
-        if (tomcatProperties.getUseRelativeRedirects() != null) {
-            customizeUseRelativeRedirects(factory, tomcatProperties.getUseRelativeRedirects());
+        if (tomcatProperties.isUseRelativeRedirects()) {
+            customizeUseRelativeRedirects(factory, tomcatProperties.isUseRelativeRedirects());
         }
         factory.setDisableMBeanRegistry(!tomcatProperties.getMbeanregistry().isEnabled());
     }

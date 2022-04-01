@@ -23,7 +23,7 @@ public class FrontendOrmTest extends HttpServerTest {
 
     public static void main(String[] args) {
         setCodePath();
-        new FrontendOrmTest().runTest(true, false);
+        new FrontendOrmTest().runTest(true);
     }
 
     @Override

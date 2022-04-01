@@ -26,7 +26,7 @@ import org.lealone.test.orm.SqlScript;
 public class HttpServerTest extends UnitTestBase {
 
     public static void main(String[] args) {
-        new HttpServerTest().runTest(true, false);
+        new HttpServerTest().runTest(true);
     }
 
     @Override

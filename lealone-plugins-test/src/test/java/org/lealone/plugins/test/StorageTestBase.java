@@ -21,7 +21,6 @@ public class StorageTestBase extends PluginTestBase {
 
     public StorageTestBase(String storageEngineName) {
         super("Storage_Test");
-        initTransactionEngine();
         setStorageEngineName(storageEngineName);
         setEmbedded(true);
         printURL();
