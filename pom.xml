@@ -34,6 +34,7 @@
         <module>lealone-mvstore</module>
         <module>lealone-wiredtiger</module>
         <module>lealone-rocksdb</module>
+        <module>lealone-memory</module>
         <module>lealone-sqlline</module>
         <module>lealone-plugins-dist</module>
         <module>lealone-plugins-test</module>
@@ -59,10 +60,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
+                    <version>3.8.1</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
+                        <release>8</release>
                         <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>
