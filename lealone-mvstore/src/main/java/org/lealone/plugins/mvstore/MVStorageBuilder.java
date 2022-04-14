@@ -85,19 +85,4 @@ public class MVStorageBuilder extends StorageBuilder {
         builder.backgroundExceptionHandler(exceptionHandler);
         return super.backgroundExceptionHandler(exceptionHandler);
     }
-
-    @Override
-    public StorageBuilder reuseSpace() {
-        return super.reuseSpace();
-    }
-
-    @Override
-    public StorageBuilder minFillRate(int minFillRate) {
-        return super.minFillRate(minFillRate);
-    }
-
-    @Override
-    public StorageBuilder db(Object db) {
-        return super.db(db);
-    }
 }
