@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.catalina.servlets.DefaultServlet;
 import org.lealone.plugins.tomcat.server.TomcatServer;
 import org.lealone.test.UnitTestBase;
 
@@ -75,6 +76,8 @@ public class TomcatServerTest extends UnitTestBase {
                 }
             }
         });
-        server.addServletMappingDecoded("/", "myServlet");
+        server.addServlet("defaultServlet", new DefaultServlet());
+        server.addServletMappingDecoded("/myServlet", "myServlet");
+        server.addServletMappingDecoded("/*", "defaultServlet");
     }
 }
