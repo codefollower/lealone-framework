@@ -151,21 +151,6 @@
         </moduleSet>
         <moduleSet>
             <includes>
-                <include>org.lealone:lealone-wiredtiger</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-wiredtiger</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-        <moduleSet>
-            <includes>
                 <include>org.lealone:lealone-memory</include>
             </includes>
             <binaries>

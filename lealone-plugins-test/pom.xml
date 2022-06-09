@@ -57,11 +57,6 @@
         </dependency>
         <dependency>
             <groupId>org.lealone</groupId>
-            <artifactId>lealone-wiredtiger</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
             <artifactId>lealone-rocksdb</artifactId>
             <version>${project.version}</version>
         </dependency>

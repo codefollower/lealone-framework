@@ -31,7 +31,6 @@
         <module>lealone-vertx</module>
         <module>lealone-spring</module>
         <module>lealone-mvstore</module>
-        <module>lealone-wiredtiger</module>
         <module>lealone-rocksdb</module>
         <module>lealone-memory</module>
         <module>lealone-sqlline</module>
