@@ -17,10 +17,6 @@
 
 ## 存储层插件
 
-### [lealone-wiredtiger](https://github.com/lealone/Lealone-Plugins/tree/master/lealone-wiredtiger)
-使用 [WiredTiger](http://www.wiredtiger.com/) 作为额外的 Lealone 存储引擎
-
-
 ### [lealone-mvstore](https://github.com/lealone/Lealone-Plugins/tree/master/lealone-mvstore)
 使用 [H2](http://www.h2database.com/html/main.html) 数据库的 [MVStore](http://www.h2database.com/html/mvstore.html) 作为额外的 Lealone 存储引擎
 
