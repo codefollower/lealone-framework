@@ -24,7 +24,7 @@
     </formats>
 
     <baseDirectory>/</baseDirectory>
-    <fileSets>
+    <fileSets><!--
         <fileSet>
             <directory>../lealone-database/lealone-dist/bin</directory>
             <outputDirectory>bin</outputDirectory>
@@ -32,7 +32,7 @@
         <fileSet>
             <directory>../lealone-database/lealone-dist/conf</directory>
             <outputDirectory>conf</outputDirectory>
-        </fileSet>
+        </fileSet>-->
         <fileSet>
             <directory>lealone-plugins-dist/bin</directory>
             <outputDirectory>bin</outputDirectory>
@@ -51,11 +51,11 @@
         <file>
             <source>lealone-client/target/lealone-client-${project.version}-all.jar</source>
             <outputDirectory>lib/client</outputDirectory>
-        </file>-->
+        </file>
         <file>
             <source>../lealone-database/lealone-dist/target/lealone-${project.version}.jar</source>
             <outputDirectory>lib</outputDirectory>
-        </file>
+        </file>-->
     </files>
 
     <moduleSets>
@@ -96,21 +96,6 @@
             <binaries>
                 <unpack>false</unpack>
                 <outputDirectory>plugins/lealone-vertx</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-        <moduleSet>
-            <includes>
-                <include>org.lealone:lealone-tomcat</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-tomcat</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>

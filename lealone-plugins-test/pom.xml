@@ -47,11 +47,6 @@
         </dependency>
         <dependency>
             <groupId>org.lealone</groupId>
-            <artifactId>lealone-tomcat</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
             <artifactId>lealone-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
