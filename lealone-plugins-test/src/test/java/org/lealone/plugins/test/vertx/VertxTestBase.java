@@ -17,8 +17,6 @@
  */
 package org.lealone.plugins.test.vertx;
 
-import java.lang.management.ManagementFactory;
-
 import io.vertx.core.file.impl.FileResolver;
 import io.vertx.core.spi.resolver.ResolverProvider;
 
@@ -38,20 +36,20 @@ public class VertxTestBase extends org.lealone.test.TestBase {
         // 生成一个类似"Thread-XXX"这样的线程
         System.setProperty(ResolverProvider.DISABLE_DNS_RESOLVER_PROP_NAME, "true");
 
-        disableSSLContext();
+        // disableSSLContext();
     }
 
-    @SuppressWarnings("restriction")
-    private static void disableSSLContext() {
-        // 这一行可以屏蔽在io.vertx.core.net.impl.SSLHelper类的static初始代码中调用耗时的SSLContext.getInstance("TLS")
-        // 但是在JDK 1.8.0_112-b15中不能正常启动，
-        // 在我自己构建的openjdk8-b132中就可以正常启动(能减少700ms以上)
-        String version = ManagementFactory.getRuntimeMXBean().getVmVersion();
-        if (version.equals("25.71-b00-fastdebug")) {
-            sun.security.jca.Providers.setProviderList(null);
-        }
-        // sun.security.jca.Providers.setProviderList(Providers.getProviderList());
-    }
+    // @SuppressWarnings("restriction")
+    // private static void disableSSLContext() {
+    // // 这一行可以屏蔽在io.vertx.core.net.impl.SSLHelper类的static初始代码中调用耗时的SSLContext.getInstance("TLS")
+    // // 但是在JDK 1.8.0_112-b15中不能正常启动，
+    // // 在我自己构建的openjdk8-b132中就可以正常启动(能减少700ms以上)
+    // String version = ManagementFactory.getRuntimeMXBean().getVmVersion();
+    // if (version.equals("25.71-b00-fastdebug")) {
+    // sun.security.jca.Providers.setProviderList(null);
+    // }
+    // // sun.security.jca.Providers.setProviderList(Providers.getProviderList());
+    // }
 
     private static void setVertxProperties() {
         System.setProperty(FileResolver.DISABLE_FILE_CACHING_PROP_NAME, "true");

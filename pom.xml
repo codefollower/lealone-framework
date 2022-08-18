@@ -26,12 +26,9 @@
     <version>5.0.0-SNAPSHOT</version>
 
     <modules>
-        <module>lealone-mina</module>
-        <module>lealone-netty</module>
         <module>lealone-vertx</module>
         <module>lealone-spring</module>
         <module>lealone-mvstore</module>
-        <module>lealone-rocksdb</module>
         <module>lealone-memory</module>
         <module>lealone-sqlline</module>
         <module>lealone-plugins-dist</module>

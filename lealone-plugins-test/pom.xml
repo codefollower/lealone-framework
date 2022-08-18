@@ -32,16 +32,6 @@
     <dependencies>
         <dependency>
             <groupId>org.lealone</groupId>
-            <artifactId>lealone-mina</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-netty</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
             <artifactId>lealone-vertx</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -53,11 +43,6 @@
         <dependency>
             <groupId>org.lealone</groupId>
             <artifactId>lealone-mvstore</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-rocksdb</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

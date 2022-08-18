@@ -21,11 +21,9 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 import org.lealone.db.Constants;
+import org.lealone.main.config.Config;
+import org.lealone.main.config.Config.PluggableEngineDef;
 import org.lealone.net.nio.NioNetFactory;
-import org.lealone.p2p.config.Config;
-import org.lealone.p2p.config.Config.PluggableEngineDef;
-import org.lealone.plugins.mina.MinaNetFactory;
-import org.lealone.plugins.netty.NettyNetFactory;
 import org.lealone.plugins.vertx.net.VertxNetFactory;
 import org.lealone.server.TcpServerEngine;
 
@@ -71,14 +69,6 @@ public class PluginTestBase extends org.lealone.test.sql.SqlTestBase {
         def.getParameters().put("allow_others", "true");
         def.getParameters().put("__runInMainThread__", "true");
         config.protocol_server_engines.add(def);
-    }
-
-    public static void enableMinaNetServer(Config config) {
-        enableNetServer(config, MinaNetFactory.NAME);
-    }
-
-    public static void enableNettyNetServer(Config config) {
-        enableNetServer(config, NettyNetFactory.NAME);
     }
 
     public static void enableVertxNetServer(Config config) {

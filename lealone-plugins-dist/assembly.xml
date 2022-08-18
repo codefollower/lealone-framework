@@ -61,36 +61,6 @@
     <moduleSets>
         <moduleSet>
             <includes>
-                <include>org.lealone:lealone-mina</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-mina</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-        <moduleSet>
-            <includes>
-                <include>org.lealone:lealone-netty</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-netty</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-        <moduleSet>
-            <includes>
                 <include>org.lealone:lealone-vertx</include>
             </includes>
             <binaries>
@@ -126,21 +96,6 @@
             <binaries>
                 <unpack>false</unpack>
                 <outputDirectory>plugins/lealone-mvstore</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-        <moduleSet>
-            <includes>
-                <include>org.lealone:lealone-rocksdb</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-rocksdb</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
