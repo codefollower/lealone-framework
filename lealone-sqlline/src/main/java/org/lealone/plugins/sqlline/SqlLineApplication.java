@@ -31,7 +31,6 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
-import org.lealone.common.util.Utils;
 import org.lealone.db.Constants;
 
 import com.typesafe.config.Config;
@@ -51,8 +50,9 @@ public class SqlLineApplication extends Application {
 
     public static void main(String[] args) throws IOException {
         StringBuilder buff = new StringBuilder(100);
-        buff.append(Constants.URL_PREFIX).append(Constants.URL_TCP).append("//").append(Constants.DEFAULT_HOST)
-                .append(':').append(Constants.DEFAULT_TCP_PORT).append('/').append(Constants.PROJECT_NAME);
+        buff.append(Constants.URL_PREFIX).append(Constants.URL_TCP).append("//")
+                .append(Constants.DEFAULT_HOST).append(':').append(Constants.DEFAULT_TCP_PORT)
+                .append('/').append(Constants.PROJECT_NAME);
         String url = buff.toString();
         logger.info("jdbc url: " + url);
         String[] args2 = { "-ac", SqlLineApplication.class.getName(), //
@@ -83,7 +83,8 @@ public class SqlLineApplication extends Application {
     public SqlLineApplication(String configName, String overrideConfigName) {
         this.config = overrideConfig(overrideConfigName, loadConfig(configName));
         if (config.isEmpty()) {
-            logger.warn("Was unable to find / load [{}]. Will use default SqlLine configuration.", configName);
+            logger.warn("Was unable to find / load [{}]. Will use default SqlLine configuration.",
+                    configName);
         }
     }
 
@@ -107,7 +108,7 @@ public class SqlLineApplication extends Application {
 
     @Override
     public String getVersion() {
-        return "Lealone version: " + Utils.getReleaseVersionString();
+        return "Lealone version: " + Constants.RELEASE_VERSION;
     }
 
     @Override
@@ -150,11 +151,12 @@ public class SqlLineApplication extends Application {
         }
 
         List<CommandHandler> commandHandlers = sqlLine.getCommandHandlers().stream()
-                .filter(c -> c.getNames().stream().noneMatch(commandsToExclude::contains)).collect(Collectors.toList());
+                .filter(c -> c.getNames().stream().noneMatch(commandsToExclude::contains))
+                .collect(Collectors.toList());
 
         if (reloadConnect) {
-            commandHandlers.add(new ReflectiveCommandHandler(sqlLine, new StringsCompleter(getConnectionUrlExamples()),
-                    "connect", "open"));
+            commandHandlers.add(new ReflectiveCommandHandler(sqlLine,
+                    new StringsCompleter(getConnectionUrlExamples()), "connect", "open"));
         }
 
         return commandHandlers;
@@ -181,7 +183,8 @@ public class SqlLineApplication extends Application {
         if (config.hasPath(PROMPT_WITH_SCHEMA) && config.getBoolean(PROMPT_WITH_SCHEMA)) {
             return new PromptHandler(sqlLine) {
                 @Override
-                protected AttributedString getDefaultPrompt(int connectionIndex, String url, String defaultPrompt) {
+                protected AttributedString getDefaultPrompt(int connectionIndex, String url,
+                        String defaultPrompt) {
                     AttributedStringBuilder builder = new AttributedStringBuilder();
                     builder.style(resolveStyle("f:y"));
                     builder.append("lealone");

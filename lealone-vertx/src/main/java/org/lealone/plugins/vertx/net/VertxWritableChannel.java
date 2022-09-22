@@ -17,6 +17,7 @@
  */
 package org.lealone.plugins.vertx.net;
 
+import org.lealone.net.NetBuffer;
 import org.lealone.net.NetBufferFactory;
 import org.lealone.net.WritableChannel;
 
@@ -31,7 +32,7 @@ public class VertxWritableChannel implements WritableChannel {
     }
 
     @Override
-    public void write(Object data) {
+    public void write(NetBuffer data) {
         if (data instanceof VertxBuffer) {
             socket.write(((VertxBuffer) data).getBuffer());
         }

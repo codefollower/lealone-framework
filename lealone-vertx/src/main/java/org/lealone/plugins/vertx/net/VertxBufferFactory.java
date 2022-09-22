@@ -17,6 +17,8 @@
  */
 package org.lealone.plugins.vertx.net;
 
+import org.lealone.db.DataBuffer;
+import org.lealone.db.DataBufferFactory;
 import org.lealone.net.NetBuffer;
 import org.lealone.net.NetBufferFactory;
 
@@ -34,7 +36,12 @@ public class VertxBufferFactory implements NetBufferFactory {
     }
 
     @Override
-    public NetBuffer createBuffer(int initialSizeHint) {
+    public NetBuffer createBuffer(int initialSizeHint, DataBufferFactory dataBufferFactory) {
         return new VertxBuffer(Buffer.buffer(initialSizeHint));
+    }
+
+    @Override
+    public NetBuffer createBuffer(DataBuffer dataBuffer) {
+        return new VertxBuffer(Buffer.buffer(dataBuffer.getBuffer().array()));
     }
 }
