@@ -16,12 +16,12 @@
 
 `mvn package -Dmaven.test.skip=true`
 
-生成的文件放在 `lealone-polyglot\target` 目录
+生成的文件放在 `polyglot\target` 目录
 
 
 ## 运行 Lealone 数据库
 
-进入 `lealone-polyglot\target` 目录，运行: `java -jar lealone-5.0.0-SNAPSHOT.jar`
+进入 `polyglot\target` 目录，运行: `java -jar lealone-5.0.0-SNAPSHOT.jar`
 
 ```java
 Lealone version: 5.0.0-SNAPSHOT
@@ -64,7 +64,7 @@ def hello(name):
 
 ## 在 Lealone 数据库中创建服务
 
-打开一个新的命令行窗口，进入 `lealone-polyglot\target` 目录，
+打开一个新的命令行窗口，进入 `polyglot\target` 目录，
 
 运行: `java -jar lealone-5.0.0-SNAPSHOT.jar -client`
 

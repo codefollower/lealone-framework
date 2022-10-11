@@ -19,12 +19,12 @@ PostgreSQL JDBC Driver 支持 9.x 和 42.x 两个系列版本
 
 `mvn package -Dmaven.test.skip=true`
 
-生成的文件放在 `lealone-xsql\target` 目录
+生成的文件放在 `xsql\target` 目录
 
 
 ## 运行 Lealone 数据库
 
-进入 `lealone-xsql\target` 目录，运行: `java -jar lealone-5.0.0-SNAPSHOT.jar`
+进入 `xsql\target` 目录，运行: `java -jar lealone-5.0.0-SNAPSHOT.jar`
 
 ```java
 E:\lealone\lealone-xsql\lealone-xsql\target>java -jar lealone-5.0.0-SNAPSHOT.jar
