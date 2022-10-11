@@ -114,5 +114,5 @@ test=>
 
 ## 在 IDE 中运行
 
-代码导入 IDE 后，直接运行 [MySQLServerStart](https://github.com/lealone/Lealone-xSQL/blob/main/lealone-mysql/src/test/java/org/lealone/xsql/mysql/test/MySQLServerStart.java) 或 [PgServerStart](https://github.com/lealone/Lealone-xSQL/blob/main/lealone-postgresql/src/test/java/org/lealone/xsql/postgresql/test/PgServerStart.java) 
+代码导入 IDE 后，直接运行 [MySQLServerStart](https://github.com/lealone/Lealone-Plugins/blob/master/xsql/mysql/src/test/java/org/lealone/xsql/mysql/test/MySQLServerStart.java) 或 [PgServerStart](https://github.com/lealone/Lealone-Plugins/blob/master/xsql/postgresql/src/test/java/org/lealone/xsql/postgresql/test/PgServerStart.java) 
 
