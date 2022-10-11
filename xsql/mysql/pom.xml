@@ -25,8 +25,8 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <!-- 5.1.47   6.0.2   8.0.27 --> 
-            <version>8.0.27</version>
+            <!-- 5.1.47   6.0.2   8.0.28 --> 
+            <version>8.0.28</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -56,14 +56,14 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <!-- 5.1.47   6.0.2   8.0.27 --> 
-            <version>8.0.27</version>
+            <!-- 5.1.47   6.0.2   8.0.28 --> 
+            <version>8.0.28</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <!-- 9.4.1212   42.3.1 --> 
-            <version>42.3.1</version>
+            <!-- 9.4.1212   42.3.7 --> 
+            <version>42.3.7</version>
         </dependency>
         <dependency>
             <groupId>com.datastax.oss</groupId>
