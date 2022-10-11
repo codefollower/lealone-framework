@@ -18,21 +18,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.lealone.plugins</groupId>
+        <artifactId>plugins-parent</artifactId>
+        <version>5.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-    <name>lealone plugins project</name>
-    <groupId>org.lealone.plugins</groupId>
-    <artifactId>plugins-parent</artifactId>
+    <name>lealone xsql engine project</name>
+    <artifactId>xsql-parent</artifactId>
     <packaging>pom</packaging>
     <version>5.0.0-SNAPSHOT</version>
 
     <modules>
-        <module>client</module>
-        <module>polyglot</module>
-        <module>storage</module>
-        <module>web</module>
+        <module>mysql</module>
+        <module>postgresql</module>
         <module>xsql</module>
-        <module>test</module>
-        <module>dist</module>
     </modules>
 
     <build>
@@ -44,10 +45,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -89,43 +86,35 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.4</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.12</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.2-beta-5</version>
-                    <configuration>
-                        <finalName>lealone-${project.version}</finalName>
-                        <descriptors>
-                            <descriptor>dist/assembly.xml</descriptor>
-                        </descriptors>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.1</version>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
-    <repositories>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.lealone</groupId>
+                <artifactId>lealone-main</artifactId>
+                <version>${project.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.lealone</groupId>
+                        <artifactId>lealone-web</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.lealone</groupId>
+                        <artifactId>lealone-orm</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

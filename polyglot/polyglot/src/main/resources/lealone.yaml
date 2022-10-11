@@ -1,0 +1,13 @@
+# Copyright Lealone Database Group.
+# Licensed under the Server Side Public License, v 1.
+# Initial Developer: zhh
+
+protocol_server_engines:
+  - name: HTTP
+    enabled: true
+    parameters: {
+        port: 9000,
+        environment: prod,
+        web_root: ./web,
+        jdbc_url: "jdbc:lealone:embed:lealone"
+    }

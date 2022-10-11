@@ -1,0 +1,25 @@
+# Copyright Lealone Database Group.
+# Licensed under the Server Side Public License, v 1.
+# Initial Developer: zhh
+
+base_dir: ./target/data
+
+sql_engines:
+  - name: PostgreSQL
+    enabled: true
+    parameters: {
+        # key1: v1,
+        # key2: v2,
+    }
+
+protocol_server_engines:
+  - name: PostgreSQL
+    enabled: true
+    parameters: {
+        port: 9510,
+        trace: false,
+        allow_others: true,
+        use_event_loop: false,
+        daemon: false,
+        ssl: false
+    }
