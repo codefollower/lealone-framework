@@ -34,7 +34,6 @@
         <module>bench</module>
         <module>create-app</module>
         <module>test</module>
-        <module>dist</module>
     </modules>
 
     <build>
@@ -101,7 +100,7 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.2-beta-5</version>
                     <configuration>
-                        <finalName>lealone-${project.version}</finalName>
+                        <finalName>lealone-plugins-${project.version}</finalName>
                         <descriptors>
                             <descriptor>dist/assembly.xml</descriptor>
                         </descriptors>
