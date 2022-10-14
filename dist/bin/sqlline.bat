@@ -26,13 +26,12 @@ popd
 if NOT DEFINED LEALONE_MAIN set LEALONE_MAIN=org.lealone.plugins.sqlline.SqlLine -ac org.lealone.plugins.sqlline.SqlLineApplication
 
 set JAVA_OPTS=-Xms10M^
- -Dlogback.configurationFile=logback.xml^
  -Dlealone.logdir="%LEALONE_HOME%\logs"
 
 REM ***** CLASSPATH library setting *****
 
 REM Ensure that any user defined CLASSPATH variables are not used on startup
-set CLASSPATH="%LEALONE_HOME%\conf;%LEALONE_HOME%\lib\client\*"
+set CLASSPATH="%LEALONE_HOME%\conf;%LEALONE_HOME%\lib\*;%LEALONE_HOME%\plugins\lealone-sqlline\*"
 goto okClasspath
 
 :okClasspath

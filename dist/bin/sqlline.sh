@@ -27,10 +27,9 @@ fi
 LEALONE_MAIN=org.lealone.plugins.sqlline.SqlLine -ac org.lealone.plugins.sqlline.SqlLineApplication
 
 JAVA_OPTS=-Xms10M
-JAVA_OPTS="$JAVA_OPTS -Dlogback.configurationFile=logback.xml"
 JAVA_OPTS="$JAVA_OPTS -Dlealone.logdir=$LEALONE_HOME/logs"
 
-CLASSPATH=$LEALONE_HOME/conf:%LEALONE_HOME%/lib/client/*
+CLASSPATH=$LEALONE_HOME/conf:%LEALONE_HOME%/lib/*:%LEALONE_HOME%/plugins/lealone-sqlline/*
 
 if [ "x$1" = "x" ]; then
     LEALONE_PARAMS="$1"
