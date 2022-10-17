@@ -41,9 +41,9 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.handler.sockjs.SockJSSocket;
 
-public class ServiceHandler implements Handler<SockJSSocket> {
+public class ServiceHandlerOld implements Handler<SockJSSocket> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceHandlerOld.class);
     private static final ConcurrentSkipListMap<Integer, Connection> currentConnections = new ConcurrentSkipListMap<>();
 
     private static void removeConnection(Integer key) {
@@ -53,7 +53,7 @@ public class ServiceHandler implements Handler<SockJSSocket> {
     private final String defaultDatabase;
     private final String defaultSchema;
 
-    public ServiceHandler(Map<String, String> config) {
+    public ServiceHandlerOld(Map<String, String> config) {
         defaultDatabase = config.get("default_database");
         defaultSchema = config.get("default_schema");
     }
@@ -69,7 +69,7 @@ public class ServiceHandler implements Handler<SockJSSocket> {
         });
 
         sockJSSocket.handler(buffer -> {
-            Buffer ret = ServiceHandler.handle(sockJSSocket, buffer.getString(0, buffer.length()), defaultDatabase,
+            Buffer ret = ServiceHandlerOld.handle(sockJSSocket, buffer.getString(0, buffer.length()), defaultDatabase,
                     defaultSchema);
             sockJSSocket.end(ret);
         });

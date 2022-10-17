@@ -36,17 +36,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-client</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-db</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-service</artifactId>
             <version>${project.version}</version>

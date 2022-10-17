@@ -19,8 +19,8 @@ package ${packageName}.web;
 
 import java.util.Map;
 
-import org.lealone.server.http.HttpServer;
-import org.lealone.server.vertx.VertxRouter;
+import org.lealone.plugins.service.http.HttpServer;
+import org.lealone.plugins.vertx.VertxRouter;
 
 public class ${appClassName}Router extends VertxRouter {
 

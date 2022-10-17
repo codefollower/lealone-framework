@@ -22,7 +22,7 @@ import ${packageName}.main.${appClassName};
 import org.lealone.common.exceptions.ConfigException;
 import org.lealone.main.config.Config;
 import org.lealone.main.config.YamlConfigLoader;
-import org.lealone.server.http.HttpServerEngine;
+import org.lealone.plugins.service.http.HttpServerEngine;
 
 public class ${appClassName}Test extends YamlConfigLoader {
 

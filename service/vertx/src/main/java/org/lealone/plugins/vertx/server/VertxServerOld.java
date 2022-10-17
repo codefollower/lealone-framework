@@ -27,6 +27,7 @@ import org.lealone.db.ConnectionInfo;
 import org.lealone.db.Constants;
 import org.lealone.db.PluginManager;
 import org.lealone.db.SysProperties;
+import org.lealone.plugins.vertx.VertxServerEngine;
 import org.lealone.server.ProtocolServerBase;
 import org.lealone.transaction.TransactionEngine;
 
@@ -42,9 +43,9 @@ import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 
-public class VertxServer extends ProtocolServerBase {
+public class VertxServerOld extends ProtocolServerBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(VertxServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(VertxServerOld.class);
 
     public static final int DEFAULT_HTTP_PORT = 8080;
 
@@ -56,7 +57,7 @@ public class VertxServer extends ProtocolServerBase {
 
     private boolean inited;
 
-    public VertxServer() {
+    public VertxServerOld() {
         config = new HashMap<>();
     }
 
@@ -191,12 +192,12 @@ public class VertxServer extends ProtocolServerBase {
         router.post(syncRequestUrl).handler(BodyHandler.create());
         router.post(syncRequestUrl).handler(routingContext -> {
             String command = routingContext.request().params().get("command");
-            Buffer result = ServiceHandler.handle(routingContext, command);
+            Buffer result = ServiceHandlerOld.handle(routingContext, command);
             routingContext.request().response().headers().set("Access-Control-Allow-Origin", "*");
             routingContext.request().response().end(result);
         });
 
-        final ServiceHandler serviceHandler = new ServiceHandler(config);
+        final ServiceHandlerOld serviceHandler = new ServiceHandlerOld(config);
         String servicePath = "/service/:serviceName/:methodName";
         router.post(servicePath).handler(BodyHandler.create());
         router.post(servicePath).handler(routingContext -> {
@@ -206,7 +207,8 @@ public class VertxServer extends ProtocolServerBase {
             handleHttpServiceRequest(serviceHandler, routingContext);
         });
 
-        router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET).allowedMethod(HttpMethod.POST));
+        router.route().handler(
+                CorsHandler.create("*").allowedMethod(HttpMethod.GET).allowedMethod(HttpMethod.POST));
         setSockJSHandler(router);
         // 放在最后
         setStaticHandler(router);
@@ -222,7 +224,8 @@ public class VertxServer extends ProtocolServerBase {
         });
     }
 
-    private void handleHttpServiceRequest(final ServiceHandler serviceHandler, RoutingContext routingContext) {
+    private void handleHttpServiceRequest(final ServiceHandlerOld serviceHandler,
+            RoutingContext routingContext) {
         String serviceName = routingContext.request().params().get("serviceName");
         String methodName = routingContext.request().params().get("methodName");
         CaseInsensitiveMap<Object> methodArgs = new CaseInsensitiveMap<>();
@@ -237,7 +240,7 @@ public class VertxServer extends ProtocolServerBase {
     private void setSockJSHandler(Router router) {
         SockJSHandlerOptions options = new SockJSHandlerOptions().setHeartbeatInterval(2000);
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx, options);
-        sockJSHandler.socketHandler(new ServiceHandler(config));
+        sockJSHandler.socketHandler(new ServiceHandlerOld(config));
         router.route(apiPath).handler(sockJSHandler);
     }
 

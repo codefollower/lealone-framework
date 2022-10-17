@@ -20,7 +20,7 @@ package org.lealone.plugins.test.vertx.server;
 import java.util.HashMap;
 
 import org.lealone.plugins.test.orm.SqlScript;
-import org.lealone.plugins.vertx.server.VertxServer;
+import org.lealone.plugins.vertx.server.VertxServerOld;
 import org.lealone.test.UnitTestBase;
 
 public class HttpServerTest extends UnitTestBase {
@@ -43,7 +43,7 @@ public class HttpServerTest extends UnitTestBase {
         config.put("default_schema", "public");
         config.put("web_root",
                 "../lealone-vertx/src/main/resources/js,../lealone-vertx/src/test/resources");
-        VertxServer server = new VertxServer();
+        VertxServerOld server = new VertxServerOld();
         server.init(config);
         server.start();
     }

@@ -18,7 +18,7 @@
 package ${packageName}.test;
 
 import java.io.IOException;
-import org.lealone.server.template.TemplateCompiler;
+import org.lealone.plugins.service.template.TemplateCompiler;
 import ${packageName}.main.${appClassName};
 
 public class ${appClassName}TemplateCompilerTest {
