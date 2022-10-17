@@ -17,7 +17,6 @@
  */
 package org.lealone.plugins.test.vertx;
 
-import io.vertx.core.file.impl.FileResolver;
 import io.vertx.core.spi.resolver.ResolverProvider;
 
 public class VertxTestBase extends org.lealone.test.TestBase {
@@ -52,9 +51,9 @@ public class VertxTestBase extends org.lealone.test.TestBase {
     // }
 
     private static void setVertxProperties() {
-        System.setProperty(FileResolver.DISABLE_FILE_CACHING_PROP_NAME, "true");
-        System.setProperty(FileResolver.DISABLE_CP_RESOLVING_PROP_NAME, "true");
-        System.setProperty(FileResolver.CACHE_DIR_BASE_PROP_NAME, "./" + TEST_DIR + "/.vertx");
+        // System.setProperty(FileResolver.DISABLE_FILE_CACHING_PROP_NAME, "true");
+        // System.setProperty(FileResolver.DISABLE_CP_RESOLVING_PROP_NAME, "true");
+        // System.setProperty(FileResolver.CACHE_DIR_BASE_PROP_NAME, "./" + TEST_DIR + "/.vertx");
     }
 
 }

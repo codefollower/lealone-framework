@@ -17,7 +17,7 @@
  */
 package org.lealone.plugins.test.vertx.server;
 
-import org.lealone.test.orm.SqlScript;
+import org.lealone.plugins.test.orm.SqlScript;
 
 public class FrontendOrmTest extends HttpServerTest {
 

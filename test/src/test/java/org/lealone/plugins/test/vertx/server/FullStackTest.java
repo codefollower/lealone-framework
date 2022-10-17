@@ -17,8 +17,8 @@
  */
 package org.lealone.plugins.test.vertx.server;
 
-import org.lealone.test.orm.SqlScript;
-import org.lealone.test.service.generated.HelloWorldService;
+import org.lealone.plugins.test.orm.SqlScript;
+import org.lealone.plugins.test.service.generated.HelloWorldService;
 
 public class FullStackTest extends HttpServerTest {
 

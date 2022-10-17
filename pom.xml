@@ -26,13 +26,12 @@
     <version>5.0.0-SNAPSHOT</version>
 
     <modules>
-        <module>client</module>
-        <module>polyglot</module>
-        <module>storage</module>
-        <module>web</module>
-        <module>xsql</module>
         <module>bench</module>
-        <module>create-app</module>
+        <module>client</module>
+        <module>orm</module>
+        <module>service</module>
+        <module>storage</module>
+        <module>xsql</module>
         <module>test</module>
     </modules>
 
