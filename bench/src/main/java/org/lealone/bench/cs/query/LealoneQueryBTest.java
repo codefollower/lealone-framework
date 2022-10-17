@@ -8,7 +8,7 @@ package org.lealone.bench.cs.query;
 import java.sql.Connection;
 import java.sql.Statement;
 
-import org.lealone.xsql.postgresql.server.PgServer;
+import org.lealone.plugins.postgresql.server.PgServer;
 
 public class LealoneQueryBTest extends QueryBTest {
 

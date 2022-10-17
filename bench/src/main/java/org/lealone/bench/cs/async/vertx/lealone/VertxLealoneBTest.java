@@ -6,7 +6,7 @@
 package org.lealone.bench.cs.async.vertx.lealone;
 
 import org.lealone.bench.cs.async.vertx.VertxBTest;
-import org.lealone.xsql.postgresql.server.PgServer;
+import org.lealone.plugins.postgresql.server.PgServer;
 
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;

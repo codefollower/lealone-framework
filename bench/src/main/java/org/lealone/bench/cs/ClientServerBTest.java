@@ -14,7 +14,7 @@ import org.lealone.bench.BenchTest;
 import org.lealone.bench.DbType;
 import org.lealone.db.ConnectionSetting;
 import org.lealone.db.Constants;
-import org.lealone.xsql.postgresql.server.PgServer;
+import org.lealone.plugins.postgresql.server.PgServer;
 
 public abstract class ClientServerBTest extends BenchTest {
 

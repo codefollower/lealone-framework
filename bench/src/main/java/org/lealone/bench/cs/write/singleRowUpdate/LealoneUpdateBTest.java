@@ -8,7 +8,7 @@ package org.lealone.bench.cs.write.singleRowUpdate;
 import java.sql.Connection;
 import java.sql.Statement;
 
-import org.lealone.xsql.postgresql.server.PgServer;
+import org.lealone.plugins.postgresql.server.PgServer;
 
 public class LealoneUpdateBTest extends UpdateBTest {
 

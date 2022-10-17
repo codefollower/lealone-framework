@@ -7,7 +7,7 @@ package org.lealone.bench.cs.write.columnlock;
 
 import java.sql.Connection;
 
-import org.lealone.xsql.postgresql.server.PgServer;
+import org.lealone.plugins.postgresql.server.PgServer;
 
 public class PgLealoneColumnLockBTest extends ColumnLockBTest {
 
