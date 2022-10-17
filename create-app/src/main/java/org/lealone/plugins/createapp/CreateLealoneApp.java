@@ -349,7 +349,8 @@ public class CreateLealoneApp {
         toDir.mkdirs();
         writeFile("/test/AppTest.java.ftl", toDir, appClassName + "Test.java");
         writeFile("/test/SqlScriptTest.java.ftl", toDir, appClassName + "SqlScriptTest.java");
-        writeFile("/test/TemplateCompilerTest.java.ftl", toDir, appClassName + "TemplateCompilerTest.java");
+        writeFile("/test/TemplateCompilerTest.java.ftl", toDir,
+                appClassName + "TemplateCompilerTest.java");
     }
 
     private void writeWebFiles() throws Exception {
@@ -361,7 +362,7 @@ public class CreateLealoneApp {
 
         File webDir = new File(toDir, "web");
         webDir.mkdir();
-        writeFile("/web/RouterFactory.java.ftl", webDir, appClassName + "RouterFactory.java");
+        writeFile("/web/Router.java.ftl", webDir, appClassName + "Router.java");
 
         writeFile("/web/pom.xml", moduleDir);
 

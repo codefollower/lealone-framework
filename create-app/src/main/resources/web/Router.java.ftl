@@ -19,15 +19,14 @@ package ${packageName}.web;
 
 import java.util.Map;
 
-import org.lealone.server.http.HttpRouterFactory;
+import org.lealone.server.http.HttpServer;
+import org.lealone.server.vertx.VertxRouter;
 
-import io.vertx.core.Vertx;
-import io.vertx.ext.web.Router;
-
-public class ${appClassName}RouterFactory extends HttpRouterFactory {
+public class ${appClassName}Router extends VertxRouter {
 
     @Override
-    protected void initRouter(Map<String, String> config, Vertx vertx, Router router) {
+    public void init(HttpServer server, Map<String, String> config) {
+        super.init(server, config);
     }
 
 }

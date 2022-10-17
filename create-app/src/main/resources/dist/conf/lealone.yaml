@@ -57,12 +57,12 @@ protocol_server_engines:
         daemon: false,
         ssl: false
     }
-  - name: HTTP
+  - name: VERTX
     enabled: true
     parameters: {
         port: 9000,
         environment: prod,
         web_root: ../web,
-        router_factory: "${packageName}.web.${appClassName}RouterFactory",
+        router: "${packageName}.web.${appClassName}Router",
         jdbc_url: "jdbc:lealone:embed:${appName}"
     }
