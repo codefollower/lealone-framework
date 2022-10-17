@@ -2,15 +2,22 @@
 
 与 Lealone 集成的各类插件
 
+
+### [orm](https://github.com/lealone/Lealone-Plugins/tree/master/orm)
+
+超简洁的类型安全的 ORM 框架，[Lealone ORM 框架快速入门](https://github.com/lealone/Lealone-Docs/blob/master/%E5%BA%94%E7%94%A8%E6%96%87%E6%A1%A3/Lealone%20ORM%E6%A1%86%E6%9E%B6%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.md)
+
+
 ### [xsql](https://github.com/lealone/Lealone-Plugins/tree/master/xsql)
 
 使用 MySQL 或 PostgreSQL 的协议和 SQL 语法访问 Lealone 数据库
 
-### [polyglot](https://github.com/lealone/Lealone-Plugins/tree/master/polyglot)
+
+### [service](https://github.com/lealone/Lealone-Plugins/tree/master/service)
 
 使用 JavaScript 和 Python 语言在 Lealone 中开发微服务应用
 
-### [create-app](https://github.com/lealone/Lealone-Plugins/tree/master/create-app)
+### [create-app](https://github.com/lealone/Lealone-Plugins/tree/master/service/create-app)
 
 用于创建 Lealone 微服务应用的脚手架
 
