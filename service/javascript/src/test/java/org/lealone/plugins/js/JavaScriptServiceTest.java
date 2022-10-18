@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh
  */
-package org.lealone.polyglot.test;
+package org.lealone.plugins.js;
 
 import java.io.File;
 import java.io.IOException;

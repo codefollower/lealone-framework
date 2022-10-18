@@ -15,19 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.mysql.test;
+package org.lealone.plugins.mysql;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import org.lealone.main.Lealone;
 
-public class MySQLShowStatementTest {
+public class MySQLServerStart {
 
-    public static void main(String[] args) throws Exception {
-        Connection conn = MySQLJdbcTest.getMySQLConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SHOW VARIABLES LIKE 'lower_case_%'");
-        rs.next();
-        conn.close();
+    public static void main(String[] args) {
+        Lealone.main(args);
     }
 }

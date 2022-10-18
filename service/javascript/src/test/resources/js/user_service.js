@@ -1,7 +1,7 @@
 
 function crud(name) {
     // 使用 java 的类
-    var User = Java.type('org.lealone.polyglot.test.User');
+    var User = Java.type('org.lealone.plugins.js.User');
 
     // 创建 User 对象
     var user = new (User);

@@ -7,5 +7,5 @@ array[2] = 42;
 console.log(array[2]);
 array[2];
 
-var HelloPolyglot = Java.type('org.lealone.polyglot.test.HelloPolyglot');
+var HelloPolyglot = Java.type('org.lealone.plugins.js.HelloPolyglot');
 HelloPolyglot.test();

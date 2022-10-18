@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh
  */
-package org.lealone.plugins.postgresql.test;
+package org.lealone.plugins.postgresql;
 
 import java.io.IOException;
 import java.io.Reader;

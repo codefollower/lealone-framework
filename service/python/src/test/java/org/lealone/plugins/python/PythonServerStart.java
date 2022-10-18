@@ -3,13 +3,14 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh
  */
-package org.lealone.plugins.postgresql.test;
+package org.lealone.plugins.python;
 
 import org.lealone.main.Lealone;
 
-public class PgServerStart {
+public class PythonServerStart {
 
     public static void main(String[] args) {
+        args = new String[] { "-baseDir", "target/test-data" };
         Lealone.main(args);
     }
 }

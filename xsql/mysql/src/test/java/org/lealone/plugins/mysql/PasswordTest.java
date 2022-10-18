@@ -15,13 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.mysql.test;
+package org.lealone.plugins.mysql;
 
-import org.lealone.main.Lealone;
+import org.lealone.common.util.Utils;
+import org.lealone.plugins.mysql.server.util.RandomUtil;
+import org.lealone.plugins.mysql.server.util.SecurityUtil;
 
-public class MySQLServerStart {
+public class PasswordTest {
 
     public static void main(String[] args) {
-        Lealone.main(args);
+        String password = "PasswordTest";
+        byte[] seed = RandomUtil.randomBytes(20);
+        byte[] hash1 = SecurityUtil.scramble411(password.getBytes(), seed);
+
+        byte[] sha1Pass = SecurityUtil.sha1(password);
+        byte[] hash2 = SecurityUtil.scramble411Sha1Pass(sha1Pass, seed);
+
+        System.out.println(Utils.compareSecure(hash1, hash2));
     }
+
 }

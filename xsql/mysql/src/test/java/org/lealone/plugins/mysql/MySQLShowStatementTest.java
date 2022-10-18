@@ -15,14 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.polyglot.test;
+package org.lealone.plugins.mysql;
 
-import org.lealone.main.Lealone;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
-public class JavaScriptServerStart {
+public class MySQLShowStatementTest {
 
-    public static void main(String[] args) {
-        args = new String[] { "-baseDir", "target/test-data" };
-        Lealone.main(args);
+    public static void main(String[] args) throws Exception {
+        Connection conn = MySQLJdbcTest.getMySQLConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SHOW VARIABLES LIKE 'lower_case_%'");
+        rs.next();
+        conn.close();
     }
 }

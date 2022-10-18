@@ -1,4 +1,4 @@
-package org.lealone.polyglot.test;
+package org.lealone.plugins.js;
 
 import org.lealone.plugins.orm.Model;
 import org.lealone.plugins.orm.ModelProperty;

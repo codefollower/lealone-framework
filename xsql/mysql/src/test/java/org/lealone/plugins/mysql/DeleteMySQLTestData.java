@@ -3,14 +3,14 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh
  */
-package org.lealone.plugins.postgresql.test;
+package org.lealone.plugins.mysql;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.lealone.storage.fs.FileUtils;
 
-public class DeletePgTestData {
+public class DeleteMySQLTestData {
 
     public static void main(String[] args) throws IOException {
         String dir = "./target/data";
