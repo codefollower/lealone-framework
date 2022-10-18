@@ -57,7 +57,7 @@
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
-                            <outputFile>${project.build.directory}/create-lealone-app-${project.version}.jar</outputFile>
+                            <outputFile>../../target/create-lealone-app-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
