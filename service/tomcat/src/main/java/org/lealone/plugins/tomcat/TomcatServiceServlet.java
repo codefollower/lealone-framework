@@ -27,6 +27,21 @@ public class TomcatServiceServlet extends HttpServlet {
         this.serviceHandler = serviceHandler;
     }
 
+    public String executeService(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String url = request.getRequestURI();
+        String[] a = url.split("/");
+        if (a.length < 4) {
+            response.sendError(400, "service " + url + " not found");
+            return null;
+        }
+        String serviceName = a[2];
+        String methodName = a[3];
+
+        CaseInsensitiveMap<Object> methodArgs = getMethodArgs(request);
+        return serviceHandler.executeService(serviceName, methodName, methodArgs);
+    }
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

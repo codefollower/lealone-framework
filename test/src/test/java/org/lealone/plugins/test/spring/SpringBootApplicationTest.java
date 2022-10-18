@@ -17,6 +17,8 @@
  */
 package org.lealone.plugins.test.spring;
 
+import org.lealone.db.SysProperties;
+import org.lealone.plugins.spring.LealoneServiceController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class SpringBootApplicationTest {
+public class SpringBootApplicationTest extends LealoneServiceController {
 
-    // TODO 还有bug
-    // 这个类在lealone-plugins-test子模块中运行时没有执行到lealone-spring子模块中的代码，
-    // 只有放到lealone-spring子模块中跑时才可以，
-    // 错误加载到ServletWebServerFactoryConfiguration.tomcatServletWebServerFactory
     public static void main(String[] args) {
+        SysProperties.setBaseDir("target/test-data/test");
         SpringApplication.run(SpringBootApplicationTest.class, args);
     }
 

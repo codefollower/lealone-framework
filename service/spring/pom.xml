@@ -31,8 +31,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.lealone</groupId>
-            <artifactId>lealone-client</artifactId>
+            <groupId>org.lealone.plugins</groupId>
+            <artifactId>lealone-tomcat</artifactId>
             <version>${project.version}</version>
         </dependency>
 
