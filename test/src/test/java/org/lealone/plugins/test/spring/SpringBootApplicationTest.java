@@ -20,16 +20,17 @@ package org.lealone.plugins.test.spring;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import org.lealone.plugins.spring.LealoneServiceController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class SpringBootApplicationTest extends LealoneServiceController {
+@ComponentScan(basePackages = "org.lealone.plugins.spring")
+public class SpringBootApplicationTest {
 
     public static void main(String[] args) throws Exception {
         createService();
