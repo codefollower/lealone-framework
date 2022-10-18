@@ -17,7 +17,9 @@
  */
 package org.lealone.plugins.test.spring;
 
-import org.lealone.db.SysProperties;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 import org.lealone.plugins.spring.LealoneServiceController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,14 +31,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SpringBootApplicationTest extends LealoneServiceController {
 
-    public static void main(String[] args) {
-        SysProperties.setBaseDir("target/test-data/test");
+    public static void main(String[] args) throws Exception {
+        createService();
         SpringApplication.run(SpringBootApplicationTest.class, args);
+    }
+
+    public static void createService() throws Exception {
+        Connection conn = DriverManager.getConnection("jdbc:lealone:embed:lealone", "root", "");
+        String sql = "create service if not exists spring_service (test(name varchar) varchar)" //
+                + " implement by '" + SpringBootApplicationTest.class.getName() + "'";
+        conn.createStatement().executeUpdate(sql);
+        conn.close();
     }
 
     // 用这样的url打开: http://localhost:8080/hello?name=zhh
     @GetMapping("/hello")
     public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
+        return String.format("Hello %s!", name);
+    }
+
+    // 用这样的url打开: http://localhost:8080/service/spring_service/test?name=zhh
+    public String test(String name) {
         return String.format("Hello %s!", name);
     }
 }

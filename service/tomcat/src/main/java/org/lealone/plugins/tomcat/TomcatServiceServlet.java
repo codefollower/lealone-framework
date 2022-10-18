@@ -32,8 +32,7 @@ public class TomcatServiceServlet extends HttpServlet {
         String url = request.getRequestURI();
         String[] a = url.split("/");
         if (a.length < 4) {
-            response.sendError(400, "service " + url + " not found");
-            return null;
+            throw new RuntimeException("service " + url + " not found");
         }
         String serviceName = a[2];
         String methodName = a[3];

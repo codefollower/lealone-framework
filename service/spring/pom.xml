@@ -34,6 +34,12 @@
             <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-tomcat</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
