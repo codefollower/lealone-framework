@@ -34,7 +34,6 @@
             <groupId>org.lealone</groupId>
             <artifactId>lealone-client</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

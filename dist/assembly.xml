@@ -27,50 +27,30 @@
             <directory>dist/bin</directory>
             <outputDirectory>bin</outputDirectory>
         </fileSet>
-        <fileSet>
-            <directory>web/vertx/src/main/resources/js</directory>
-            <outputDirectory>js</outputDirectory>
-        </fileSet>
     </fileSets>
 
     <moduleSets>
+        <!-- client -->
         <moduleSet>
             <includes>
-                <include>org.lealone.plugins:lealone-vertx</include>
+                <include>org.lealone.plugins:lealone-sqlline</include>
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-vertx</outputDirectory>
+                <outputDirectory>plugins/lealone-sqlline</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
                         <useTransitiveDependencies>true</useTransitiveDependencies>
                         <excludes>
-                            <exclude>org.lealone:lealone-client</exclude>
-                            <exclude>org.lealone:lealone-db</exclude>
+                            <exclude>org.lealone:lealone-main</exclude>
                         </excludes>
                     </dependencySet>
                 </dependencySets>
             </binaries>
         </moduleSet>
-        <moduleSet>
-            <includes>
-                <include>org.lealone.plugins:lealone-spring</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-spring</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                        <excludes>
-                            <exclude>org.lealone:lealone-client</exclude>
-                        </excludes>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
+
+        <!-- storage -->
         <moduleSet>
             <includes>
                 <include>org.lealone.plugins:lealone-mvstore</include>
@@ -107,13 +87,15 @@
                 </dependencySets>
             </binaries>
         </moduleSet>
+
+        <!-- xsql -->
         <moduleSet>
             <includes>
-                <include>org.lealone.plugins:lealone-sqlline</include>
+                <include>org.lealone.plugins:lealone-mysql</include>
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-sqlline</outputDirectory>
+                <outputDirectory>plugins/lealone-mysql</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
@@ -125,6 +107,26 @@
                 </dependencySets>
             </binaries>
         </moduleSet>
+        <moduleSet>
+            <includes>
+                <include>org.lealone.plugins:lealone-postgresql</include>
+            </includes>
+            <binaries>
+                <unpack>false</unpack>
+                <outputDirectory>plugins/lealone-postgresql</outputDirectory>
+                <dependencySets>
+                    <dependencySet>
+                        <useTransitiveFiltering>true</useTransitiveFiltering>
+                        <useTransitiveDependencies>true</useTransitiveDependencies>
+                        <excludes>
+                            <exclude>org.lealone:lealone-main</exclude>
+                        </excludes>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+
+        <!-- xsql -->
         <moduleSet>
             <includes>
                 <include>org.lealone.plugins:lealone-javascript</include>
@@ -163,17 +165,17 @@
         </moduleSet>
         <moduleSet>
             <includes>
-                <include>org.lealone.plugins:lealone-mysql</include>
+                <include>org.lealone.plugins:lealone-spring</include>
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-mysql</outputDirectory>
+                <outputDirectory>plugins/lealone-spring</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
                         <useTransitiveDependencies>true</useTransitiveDependencies>
                         <excludes>
-                            <exclude>org.lealone:lealone-main</exclude>
+                            <exclude>org.lealone:lealone-client</exclude>
                         </excludes>
                     </dependencySet>
                 </dependencySets>
@@ -181,17 +183,37 @@
         </moduleSet>
         <moduleSet>
             <includes>
-                <include>org.lealone.plugins:lealone-postgresql</include>
+                <include>org.lealone.plugins:lealone-tomcat</include>
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-postgresql</outputDirectory>
+                <outputDirectory>plugins/lealone-tomcat</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
                         <useTransitiveDependencies>true</useTransitiveDependencies>
                         <excludes>
                             <exclude>org.lealone:lealone-main</exclude>
+                            <exclude>org.lealone.plugins:lealone-orm</exclude>
+                        </excludes>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+        <moduleSet>
+            <includes>
+                <include>org.lealone.plugins:lealone-vertx</include>
+            </includes>
+            <binaries>
+                <unpack>false</unpack>
+                <outputDirectory>plugins/lealone-vertx</outputDirectory>
+                <dependencySets>
+                    <dependencySet>
+                        <useTransitiveFiltering>true</useTransitiveFiltering>
+                        <useTransitiveDependencies>true</useTransitiveDependencies>
+                        <excludes>
+                            <exclude>org.lealone:lealone-main</exclude>
+                            <exclude>org.lealone.plugins:lealone-orm</exclude>
                         </excludes>
                     </dependencySet>
                 </dependencySets>
