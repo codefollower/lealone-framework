@@ -19,30 +19,30 @@ PostgreSQL JDBC Driver 支持 9.x 和 42.x 两个系列版本
 
 `mvn package -Dmaven.test.skip=true`
 
-生成的文件放在 `xsql\target` 目录
+生成的文件放在 `lealone-plugins\target` 目录
 
 
 ## 运行 Lealone 数据库
 
-进入 `xsql\target` 目录，运行: `java -jar lealone-5.0.0-SNAPSHOT.jar`
+进入 `lealone-plugins\target` 目录，运行: `java -jar lealone-xsql-5.0.0-SNAPSHOT.jar`
 
 ```java
-E:\lealone\lealone-xsql\lealone-xsql\target>java -jar lealone-5.0.0-SNAPSHOT.jar
+E:\lealone\lealone-plugins\target>java -jar lealone-xsql-5.0.0-SNAPSHOT.jar
 Lealone version: 5.0.0-SNAPSHOT
-Loading config from jar:file:/E:/lealone/lealone-xsql/lealone-xsql/target/lealone-5.0.0-SNAPSHOT.jar!/lealone.yaml
+Loading config from jar:file:/E:/lealone/lealone-plugins/target/lealone-xsql-5.0.0-SNAPSHOT.jar!/lealone.yaml
 Base dir: .\lealone_data
-Init storage engines: 3 ms
-Init transaction engines: 57 ms
-Init sql engines: 3 ms
-Init protocol server engines: 175 ms
+Init storage engines: 4 ms
+Init transaction engines: 27 ms
+Init sql engines: 1 ms
+Init protocol server engines: 184 ms
 Init lealone database: 0 ms
-Starting tcp server accepter
+Starting TcpServer accepter
 TcpServer started, host: 127.0.0.1, port: 9210
-Starting tcp server accepter
+Starting MySQLServer accepter
 MySQLServer started, host: 127.0.0.1, port: 9310
-Starting tcp server accepter
+Starting PgServer accepter
 PgServer started, host: 127.0.0.1, port: 9510
-Total time: 330 ms (Load config: 78 ms, Init: 245 ms, Start: 7 ms)
+Total time: 293 ms (Load config: 69 ms, Init: 220 ms, Start: 4 ms)
 Exit with Ctrl+C
 ```
 
@@ -53,7 +53,6 @@ Exit with Ctrl+C
 `mysql --no-beep -h 127.0.0.1 -P 9310 -u root`
 
 ```sql
-E:\lealone\lealone-xsql>mysql --no-beep -h 127.0.0.1 -P 9310 -u root
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 0
 Server version: 5.1.48-lealone-5.0.0-SNAPSHOT
@@ -93,7 +92,6 @@ mysql>
 提示口令时输入: test
 
 ```sql
-E:\lealone\lealone-xsql>psql -h 127.0.0.1 -p 9510 -U test -W -d test
 口令:
 psql (14.0, 服务器 8.2.23)
 输入 "help" 来获取帮助信息.
@@ -114,5 +112,5 @@ test=>
 
 ## 在 IDE 中运行
 
-代码导入 IDE 后，直接运行 [MySQLServerStart](https://github.com/lealone/Lealone-Plugins/blob/master/xsql/mysql/src/test/java/org/lealone/xsql/mysql/test/MySQLServerStart.java) 或 [PgServerStart](https://github.com/lealone/Lealone-Plugins/blob/master/xsql/postgresql/src/test/java/org/lealone/xsql/postgresql/test/PgServerStart.java) 
+代码导入 IDE 后，直接运行 [MySQLServerStart](https://github.com/lealone/Lealone-Plugins/blob/master/xsql/mysql/src/test/java/org/lealone/plugins/mysql/MySQLServerStart.java) 或 [PgServerStart](https://github.com/lealone/Lealone-Plugins/blob/master/xsql/postgresql/src/test/java/org/lealone/plugins/postgresql/PgServerStart.java) 
 
