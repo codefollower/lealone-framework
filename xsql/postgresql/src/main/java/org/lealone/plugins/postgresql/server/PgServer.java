@@ -19,7 +19,7 @@ public class PgServer extends AsyncServer<PgServerConnection> {
     private static final Logger logger = LoggerFactory.getLogger(PgServer.class);
 
     public static final String PG_VERSION = "8.2.23";
-    public static final String PG_CATALOG_FILE = "/org/lealone/xsql/postgresql/resources/pg_catalog.sql";
+    public static final String PG_CATALOG_FILE = "/org/lealone/plugins/postgresql/resources/pg_catalog.sql";
     public static final int DEFAULT_PORT = 9510;
 
     private final HashSet<Integer> typeSet = new HashSet<>();
