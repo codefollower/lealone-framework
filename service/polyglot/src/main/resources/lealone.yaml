@@ -3,7 +3,7 @@
 # Initial Developer: zhh
 
 protocol_server_engines:
-  - name: HTTP
+  - name: VERTX
     enabled: true
     parameters: {
         port: 9000,
