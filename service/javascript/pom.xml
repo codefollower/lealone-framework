@@ -21,8 +21,9 @@
         <dependency>
             <groupId>org.lealone</groupId>
             <artifactId>lealone-main</artifactId>
+            <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-orm</artifactId>
