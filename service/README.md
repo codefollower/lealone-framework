@@ -49,6 +49,10 @@
     </repositories>
 ```
 
+# [Lealone 微服务应用脚手架]
+
+用于创建 Lealone 微服务应用的脚手架，请阅读[文档](https://github.com/lealone/Lealone-Plugins/blob/master/service/create-app/README.md)
+
 
 # Lealone Polyglot
 
