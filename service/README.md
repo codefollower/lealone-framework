@@ -1,4 +1,56 @@
-# Lealone-Polyglot
+# Lealone 微服务框架
+
+## 在 pom.xml 中增加依赖
+
+```xml
+    <dependencies>
+        <!--引入 Lealone 微服务框架 -->
+        <dependency>
+            <groupId>org.lealone.plugins</groupId>
+            <artifactId>lealone-service</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 使用 Vertx 作为 HTTP Server -->
+        <dependency>
+            <groupId>org.lealone.plugins</groupId>
+            <artifactId>lealone-vertx</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 也可以使用 Tomcat 作为 HTTP Server -->
+        <dependency>
+            <groupId>org.lealone.plugins</groupId>
+            <artifactId>lealone-tomcat</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 使用 JavaScript 开发微服务应用-->
+        <dependency>
+            <groupId>org.lealone.plugins</groupId>
+            <artifactId>lealone-javascript</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 使用 Python 开发微服务应用-->
+        <dependency>
+            <groupId>org.lealone.plugins</groupId>
+            <artifactId>lealone-python</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <!-- 如果使用 SNAPSHOT 版本，需要加上这个 -->
+    <repositories>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+```
+
+
+# Lealone Polyglot
 
 使用 JavaScript 和 Python 语言在 Lealone 中开发微服务应用
 
@@ -16,16 +68,16 @@
 
 `mvn package -Dmaven.test.skip=true`
 
-生成的文件放在 `polyglot\target` 目录
+生成的文件放在 `lealone-plugins\target` 目录
 
 
 ## 运行 Lealone 数据库
 
-进入 `polyglot\target` 目录，运行: `java -jar lealone-5.0.0-SNAPSHOT.jar`
+进入 `lealone-plugins\target` 目录，运行: `java -jar lealone-polyglot-5.0.0-SNAPSHOT.jar`
 
 ```java
 Lealone version: 5.0.0-SNAPSHOT
-Loading config from jar:file:/home/test/lealone-polyglot/lealone-polyglot/target/lealone-5.0.0-SNAPSHOT.jar!/lealone.yaml
+Loading config from jar:file:/E:/lealone/lealone-plugins/target/lealone-polyglot-5.0.0-SNAPSHOT.jar!/lealone.yaml
 Base dir: .\lealone_data
 Init storage engines: 5 ms
 Init transaction engines: 62 ms
@@ -44,7 +96,7 @@ Exit with Ctrl+C
 
 ## 使用 JavaScript 开发微服务应用
 
-/home/test/hello_service.js
+E:/test/hello_service.js
 
 ```JavaScript
 function hello(name) {
@@ -54,7 +106,7 @@ function hello(name) {
 
 ## 使用 Python 开发微服务应用
 
-/home/test/hello_service.py
+E:/test/hello_service.py
 
 ```Python
 def hello(name):
@@ -64,9 +116,9 @@ def hello(name):
 
 ## 在 Lealone 数据库中创建服务
 
-打开一个新的命令行窗口，进入 `polyglot\target` 目录，
+打开一个新的命令行窗口，进入 `lealone-plugins\target` 目录，
 
-运行: `java -jar lealone-5.0.0-SNAPSHOT.jar -client`
+运行: `java -jar lealone-polyglot-5.0.0-SNAPSHOT.jar -client`
 
 执行以下 SQL 创建 js_hello_service
 
@@ -74,7 +126,7 @@ def hello(name):
 create service js_hello_service (
   hello(name varchar) varchar
 )
-language 'js' implement by '/home/test/hello_service.js';
+language 'js' implement by 'E:/test/hello_service.js';
 ```
 
 执行以下 SQL 创建 python_hello_service
@@ -83,7 +135,7 @@ language 'js' implement by '/home/test/hello_service.js';
 create service python_hello_service (
   hello(name varchar) varchar
 )
-language 'python' implement by '/home/test/hello_service.py';
+language 'python' implement by 'E:/test/hello_service.py';
 ```
 
 
