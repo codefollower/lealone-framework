@@ -8,11 +8,12 @@
 
 mvn package -Dmaven.test.skip=true
 
+生成的文件放在 `lealone-plugins\target` 目录
 
 
 ### 运行
 
-java -jar ./target/create-lealone-app-5.0.0.jar [选项]
+进入 `lealone-plugins\target` 目录，运行: java -jar create-lealone-app-5.0.0.jar [选项]
 
 支持以下选项：
 
@@ -43,7 +44,7 @@ java -jar ./target/create-lealone-app-5.0.0.jar [选项]
 
 ### 例如创建一个 hello 应用
 
-java -jar ./target/create-lealone-app-5.0.0.jar -groupId org.lealone.examples.hello -artifactId hello
+java -jar create-lealone-app-5.0.0.jar -groupId org.lealone.examples.hello -artifactId hello
 
 
 ### 构建 hello 应用
