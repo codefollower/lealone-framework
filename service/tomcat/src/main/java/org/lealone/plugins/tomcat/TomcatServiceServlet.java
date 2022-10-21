@@ -29,7 +29,8 @@ public class TomcatServiceServlet extends HttpServlet {
 
     public String executeService(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String url = request.getRequestURI();
+        // 不能用getRequestURI()，因为它包含Context路径
+        String url = request.getServletPath();
         String[] a = url.split("/");
         if (a.length < 4) {
             throw new RuntimeException("service " + url + " not found");
@@ -44,7 +45,7 @@ public class TomcatServiceServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = request.getRequestURI();
+        String url = request.getServletPath();
         String[] a = url.split("/");
         if (a.length < 4) {
             response.sendError(400, "service " + url + " not found");
