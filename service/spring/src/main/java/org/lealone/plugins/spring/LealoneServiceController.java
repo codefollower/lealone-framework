@@ -35,6 +35,7 @@ public class LealoneServiceController {
 
     @RequestMapping(path = "/service/**", method = { RequestMethod.POST, RequestMethod.GET })
     public String service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        return servlet.executeService(request, response);
+        // 禁用动态编译，spring boot 不支持java compiler api
+        return servlet.executeService(request, response, true);
     }
 }

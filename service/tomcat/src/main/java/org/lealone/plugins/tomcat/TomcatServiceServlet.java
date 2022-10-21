@@ -27,8 +27,8 @@ public class TomcatServiceServlet extends HttpServlet {
         this.serviceHandler = serviceHandler;
     }
 
-    public String executeService(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String executeService(HttpServletRequest request, HttpServletResponse response,
+            boolean disableDynamicCompile) throws IOException {
         // 不能用getRequestURI()，因为它包含Context路径
         String url = request.getServletPath();
         String[] a = url.split("/");
@@ -39,7 +39,7 @@ public class TomcatServiceServlet extends HttpServlet {
         String methodName = a[3];
 
         CaseInsensitiveMap<Object> methodArgs = getMethodArgs(request);
-        return serviceHandler.executeService(serviceName, methodName, methodArgs);
+        return serviceHandler.executeService(serviceName, methodName, methodArgs, disableDynamicCompile);
     }
 
     @Override

@@ -25,6 +25,11 @@ public class ServiceHandler {
     }
 
     public String executeService(String serviceName, String methodName, Map<String, Object> methodArgs) {
+        return executeService(serviceName, methodName, methodArgs, false);
+    }
+
+    public String executeService(String serviceName, String methodName, Map<String, Object> methodArgs,
+            boolean disableDynamicCompile) {
         String[] serviceNameArray = StringUtils.arraySplit(serviceName, '.');
         if (serviceNameArray.length == 1 && defaultDatabase != null && defaultSchema != null)
             serviceName = defaultDatabase + "." + defaultSchema + "." + serviceName;
@@ -37,7 +42,7 @@ public class ServiceHandler {
             if (serviceName.toUpperCase().contains("LEALONE_SYSTEM_SERVICE")) {
                 result = SystemService.execute(serviceName, methodName, methodArgs);
             } else {
-                result = Service.execute(serviceName, methodName, methodArgs);
+                result = Service.execute(serviceName, methodName, methodArgs, disableDynamicCompile);
             }
         } catch (Exception e) {
             result = "failed to execute service: " + serviceName + "." + methodName + ", cause: "
