@@ -10,6 +10,8 @@ import java.util.Map;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
+import org.lealone.db.Database;
+import org.lealone.db.LealoneDatabase;
 import org.lealone.net.WritableChannel;
 import org.lealone.server.AsyncServer;
 import org.lealone.server.Scheduler;
@@ -34,6 +36,18 @@ public class PgServer extends AsyncServer<PgServerConnection> {
     public void init(Map<String, String> config) {
         super.init(config);
         trace = Boolean.parseBoolean(config.get("trace"));
+
+        // 创建默认的 postgres 数据库
+        String sql = "CREATE DATABASE IF NOT EXISTS postgres" //
+                + " PARAMETERS(DEFAULT_SQL_ENGINE='" + PgServerEngine.NAME + "')";
+        LealoneDatabase.getInstance().getSystemSession().prepareStatementLocal(sql).executeUpdate();
+
+        // 创建默认的 postgres 用户
+        sql = "CREATE USER IF NOT EXISTS postgres PASSWORD 'postgres' ADMIN";
+        Database db = LealoneDatabase.getInstance().findDatabase("postgres");
+        if (!db.isInitialized())
+            db.init();
+        db.getSystemSession().prepareStatementLocal(sql).executeUpdate();
     }
 
     @Override

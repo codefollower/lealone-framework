@@ -120,12 +120,10 @@ public class PgServerConnection extends AsyncConnection {
         info.put("USER", userName);
         info.put("PASSWORD", password);
         info.put("DEFAULT_SQL_ENGINE", PgServerEngine.NAME);
-        String url = Constants.URL_PREFIX + Constants.URL_EMBED + databaseName;
+        String url = Constants.URL_PREFIX + Constants.URL_TCP + server.getHost() + ":" + server.getPort()
+                + "/" + databaseName;
         ConnectionInfo ci = new ConnectionInfo(url, info);
-        // if (server.getIfExists()) {
-        // ci.setProperty("IFEXISTS", "TRUE");
-        // }
-        //
+        ci.setRemote(false);
         return new JdbcConnection(ci);
     }
 
@@ -145,7 +143,8 @@ public class PgServerConnection extends AsyncConnection {
                 out.flush();
             } else {
                 server.trace("StartupMessage");
-                server.trace(" version " + version + " (" + (version >> 16) + "." + (version & 0xff) + ")");
+                server.trace(
+                        " version " + version + " (" + (version >> 16) + "." + (version & 0xff) + ")");
                 while (true) {
                     String param = readString();
                     if (param.length() == 0) {
@@ -181,7 +180,7 @@ public class PgServerConnection extends AsyncConnection {
                 initDb();
                 sendAuthenticationOk();
             } catch (Exception e) {
-                e.printStackTrace();
+                sendErrorResponse(e);
                 stop = true;
             }
             break;
@@ -459,7 +458,8 @@ public class PgServerConnection extends AsyncConnection {
         return clientEncoding;
     }
 
-    private void setParameter(PreparedStatement prep, int i, byte[] d2, int[] formatCodes) throws SQLException {
+    private void setParameter(PreparedStatement prep, int i, byte[] d2, int[] formatCodes)
+            throws SQLException {
         boolean text = (i >= formatCodes.length) || (formatCodes[i] == 0);
         String s;
         try {

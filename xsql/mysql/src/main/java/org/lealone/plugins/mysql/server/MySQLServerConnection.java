@@ -127,9 +127,11 @@ public class MySQLServerConnection extends AsyncConnection {
         info.put("USER", authPacket.user);
         info.put("PASSWORD", StringUtils.convertBytesToHex(getPassword(authPacket)));
         info.put("PASSWORD_HASH", "true");
-        String url = Constants.URL_PREFIX + Constants.URL_EMBED + dbName;
+        String url = Constants.URL_PREFIX + Constants.URL_TCP + server.getHost() + ":" + server.getPort()
+                + "/" + dbName;
         ConnectionInfo ci = new ConnectionInfo(url, info);
         ci.setSalt(seed);
+        ci.setRemote(false);
         return (ServerSession) ci.createSession();
     }
 
