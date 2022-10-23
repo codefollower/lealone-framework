@@ -21,13 +21,13 @@
     <parent>
         <groupId>org.lealone.plugins</groupId>
         <artifactId>client-parent</artifactId>
-        <version>5.0.0-SNAPSHOT</version>
+        <version>5.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>lealone-sqlline</artifactId>
     <packaging>jar</packaging>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.0</version>
 
     <dependencies>
         <dependency>
