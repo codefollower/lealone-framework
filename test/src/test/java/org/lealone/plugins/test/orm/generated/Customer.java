@@ -1,7 +1,6 @@
 package org.lealone.plugins.test.orm.generated;
 
 import java.util.List;
-
 import org.lealone.plugins.orm.Model;
 import org.lealone.plugins.orm.ModelProperty;
 import org.lealone.plugins.orm.ModelTable;

@@ -1,12 +1,9 @@
 package org.lealone.plugins.test.service.generated;
 
+import java.sql.*;
 import java.sql.Array;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import org.lealone.client.ClientServiceProxy;
 import org.lealone.plugins.test.orm.generated.User;
-import org.lealone.plugins.test.service.impl.UserServiceImpl;
 
 /**
  * Service interface for 'user_service'.
@@ -34,7 +31,7 @@ public interface UserService {
             url = ClientServiceProxy.getUrl();
 
         if (ClientServiceProxy.isEmbedded(url))
-            return new UserServiceImpl();
+            return new org.lealone.plugins.test.service.impl.UserServiceImpl();
         else
             return new ServiceProxy(url);
     }

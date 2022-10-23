@@ -6,6 +6,7 @@
 package org.lealone.plugins.test.service;
 
 import org.junit.Test;
+import org.lealone.plugins.test.orm.SqlScript;
 import org.lealone.plugins.test.orm.generated.User;
 import org.lealone.plugins.test.service.impl.DynamicExecutorServiceImpl;
 import org.lealone.test.sql.SqlTestBase;
@@ -13,6 +14,7 @@ import org.lealone.test.sql.SqlTestBase;
 public class DynamicExecutorServiceTest extends SqlTestBase {
     @Test
     public void testService() throws Exception {
+        SqlScript.createUserTable(this);
         executeUpdate("drop service if exists dynamic_executor_service");
         sql = "create service if not exists dynamic_executor_service (" //
                 + " add(user user) long," // 第一个user是参数名，第二个user是参数类型
