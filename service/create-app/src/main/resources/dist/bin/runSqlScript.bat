@@ -17,6 +17,6 @@
 @REM  Initial Developer: zhh
 
 @echo off
-java -cp ../lib/${artifactId}-1.0.0.jar^
+java -cp ../lib/${artifactId}-${version}.jar^
      ${packageName}.main.${appClassName}SqlScript^
      -tableDir ../sql -serviceDir ../sql -srcDir ../src

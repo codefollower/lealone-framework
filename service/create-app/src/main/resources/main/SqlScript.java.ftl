@@ -36,10 +36,10 @@ public class ${appClassName}SqlScript {
     private void run(String[] args) throws Exception {
         parseArgs(args);
 
-        // 创建${appClassName}数据库
+        // 创建${dbName}数据库
         String jdbcUrl = "jdbc:lealone:tcp://localhost/lealone?user=root&password=";
-        // runSql(jdbcUrl, "drop database if exists ${appName}");
-        runSql(jdbcUrl, "create database if not exists ${appName}");
+        // runSql(jdbcUrl, "drop database if exists ${dbName}");
+        runSql(jdbcUrl, "create database if not exists ${dbName}");
 
         // 执行建表脚本，同时自动生成对应的模型类的代码
         runScript(getSqlFile(tableDir, "tables.sql"));
@@ -92,7 +92,7 @@ public class ${appClassName}SqlScript {
     }
 
     private void runScript(String scriptFile) throws Exception {
-        String jdbcUrl = "jdbc:lealone:tcp://localhost/${appName}?user=root&password=";
+        String jdbcUrl = "jdbc:lealone:tcp://localhost/${dbName}?user=root&password=";
         String srcDir = this.srcDir;
         if (srcDir == null) {
             int pos = scriptFile.lastIndexOf("target");

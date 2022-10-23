@@ -50,6 +50,7 @@ public class CreateLealoneApp {
     private String artifactId;
     private String version = "1.0.0";
     private String packageName;
+    private String dbName;
 
     private String encoding = "UTF-8";
 
@@ -87,6 +88,10 @@ public class CreateLealoneApp {
         return packageName;
     }
 
+    public String getDbName() {
+        return dbName;
+    }
+
     private void parseArgs(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i] == null) {
@@ -120,6 +125,9 @@ public class CreateLealoneApp {
                     break;
                 case "-appClassName":
                     appClassName = args[++i];
+                    break;
+                case "-dbName":
+                    dbName = args[++i];
                     break;
                 case "-groupId":
                     groupId = args[++i];
@@ -166,6 +174,9 @@ public class CreateLealoneApp {
         if (pomName == null)
             pomName = appName + " project";
 
+        if (dbName == null)
+            dbName = artifactId.replace('-', '_');
+
         if (appClassName == null)
             appClassName = toClassName(appName);
         parentDir = new File(appBaseDir, appName);
@@ -189,6 +200,7 @@ public class CreateLealoneApp {
         println("-version <版本号>", "pom.xml 的项目初始版本号 (默认是1.0.0)");
 
         println("-packageName <包名>", "项目代码的包名 (如果不指定，默认取 -groupId 的值)");
+        println("-dbName <名称>", "数据库名称 (如果不指定，默认取 -artifactId 的值)");
 
         println("-encoding <编码>", "指定生成的文件采用的编码 (默认是 UTF-8)");
     }
@@ -394,46 +406,21 @@ public class CreateLealoneApp {
     }
 
     public static String toClassName(String str) {
-        return toCamelFrom("_" + str);
-    }
-
-    public static String toCamelFrom(String str) {
+        str = toCamelFrom(str, "-");
         if (str.indexOf('_') >= 0) {
             str = toCamelFrom(str, "_");
         }
-        if (str.indexOf('-') >= 0) {
-            str = toCamelFrom(str, "-");
-        }
-        return str.toString();
+        return str;
     }
 
     private static String toCamelFrom(String str, String regex) {
         String[] vals = str.split(regex);
-        if (vals.length == 1) {
-            return isUpperCase(str) ? str.toLowerCase() : str;
-        }
-
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < vals.length; i++) {
-            String lower = vals[i].toLowerCase();
-            if (i > 0) {
-                char c = Character.toUpperCase(lower.charAt(0));
-                result.append(c);
-                result.append(lower.substring(1));
-            } else {
-                result.append(lower);
-            }
+            char c = Character.toUpperCase(vals[i].charAt(0));
+            result.append(c);
+            result.append(vals[i].substring(1));
         }
-
         return result.toString();
-    }
-
-    private static boolean isUpperCase(String underscore) {
-        for (int i = 0; i < underscore.length(); i++) {
-            if (Character.isLowerCase(underscore.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 }
