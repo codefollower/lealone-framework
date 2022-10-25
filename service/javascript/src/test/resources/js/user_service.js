@@ -2,6 +2,9 @@
 function crud(name) {
     // 使用 java 的类
     var User = Java.type('org.lealone.plugins.js.User');
+    
+    // delete 记录
+    User.dao.where().name.eq(name).delete();
 
     // 创建 User 对象
     var user = new (User);
@@ -10,7 +13,7 @@ function crud(name) {
     user.name.set(name).phone.set(456).insert(); 
 
     // 查找记录
-    var user = User.dao.where().name.eq(name).findOne();
+    user = User.dao.where().name.eq(name).findOne();
 
     return user;
 }

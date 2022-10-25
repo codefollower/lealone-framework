@@ -28,7 +28,7 @@ public class User extends Model<User> {
     }
 
     private User(ModelTable t, short modelType) {
-        super(t == null ? new ModelTable("lealone", "PUBLIC", "USER") : t, modelType);
+        super(t == null ? new ModelTable("LEALONE", "PUBLIC", "USER") : t, modelType);
         name = new PString<>("NAME", this);
         notes = new PString<>("NOTES", this);
         phone = new PInteger<>("PHONE", this);
@@ -43,6 +43,10 @@ public class User extends Model<User> {
     }
 
     public static User decode(String str) {
-        return new User().decode0(str);
+        return decode(str, null);
+    }
+
+    public static User decode(String str, CaseFormat format) {
+        return new User().decode0(str, format);
     }
 }
