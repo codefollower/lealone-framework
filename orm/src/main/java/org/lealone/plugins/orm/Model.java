@@ -63,6 +63,12 @@ public abstract class Model<T extends Model<T>> {
     public static final short ROOT_DAO = 1;
     public static final short CHILD_DAO = 2;
 
+    public enum CaseFormat {
+        CAMEL,
+        LOWER_UNDERSCORE,
+        UPPER_UNDERSCORE
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(Model.class);
 
     private static final ConcurrentSkipListMap<Long, ServerSession> currentSessions = new ConcurrentSkipListMap<>();
@@ -591,10 +597,26 @@ public abstract class Model<T extends Model<T>> {
         return ModelProperty.areEqual(p1.get(), p2.get());
     }
 
+    private CaseFormat getCaseFormat() {
+        String cf = modelTable.getTable().getParameter("caseFormat");
+        CaseFormat format;
+        if (cf == null)
+            format = CaseFormat.UPPER_UNDERSCORE;
+        else
+            format = CaseFormat.valueOf(cf.toUpperCase());
+        return format;
+    }
+
     public Map<String, Object> toMap() {
+        return toMap(null);
+    }
+
+    public Map<String, Object> toMap(CaseFormat format) {
+        if (format == null)
+            format = getCaseFormat();
         Map<String, Object> map = new LinkedHashMap<>();
         for (ModelProperty<?> p : modelProperties) {
-            p.serialize(map);
+            p.serialize(map, format);
         }
         if (modelMap != null) {
             for (Entry<Class, ArrayList<Model<?>>> e : modelMap.entrySet()) {
@@ -606,13 +628,23 @@ public abstract class Model<T extends Model<T>> {
     }
 
     public String encode() {
-        return new JsonObject(toMap()).encode();
+        return encode(null);
+    }
+
+    public String encode(CaseFormat format) {
+        return new JsonObject(toMap(format)).encode();
     }
 
     protected T decode0(String str) {
+        return decode0(str, null);
+    }
+
+    protected T decode0(String str, CaseFormat format) {
+        if (format == null)
+            format = getCaseFormat();
         Map<String, Object> map = new JsonObject(str).getMap();
         for (ModelProperty<?> p : modelProperties) {
-            Object v = map.get(p.getName());
+            Object v = map.get(p.getName(format));
             if (v != null) {
                 // 先反序列化再set，这样Model的子类对象就可以在后续调用insert之类的方法
                 p.deserializeAndSet(v);

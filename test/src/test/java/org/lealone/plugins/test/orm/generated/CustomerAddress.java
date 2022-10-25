@@ -65,6 +65,10 @@ public class CustomerAddress extends Model<CustomerAddress> {
     }
 
     public static CustomerAddress decode(String str) {
-        return new CustomerAddress().decode0(str);
+        return decode(str, null);
+    }
+
+    public static CustomerAddress decode(String str, CaseFormat format) {
+        return new CustomerAddress().decode0(str, format);
     }
 }

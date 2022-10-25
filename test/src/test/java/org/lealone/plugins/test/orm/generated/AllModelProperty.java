@@ -89,6 +89,10 @@ public class AllModelProperty extends Model<AllModelProperty> {
     }
 
     public static AllModelProperty decode(String str) {
-        return new AllModelProperty().decode0(str);
+        return decode(str, null);
+    }
+
+    public static AllModelProperty decode(String str, CaseFormat format) {
+        return new AllModelProperty().decode0(str, format);
     }
 }

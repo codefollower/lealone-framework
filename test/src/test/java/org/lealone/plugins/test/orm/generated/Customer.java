@@ -102,6 +102,10 @@ public class Customer extends Model<Customer> {
     }
 
     public static Customer decode(String str) {
-        return new Customer().decode0(str);
+        return decode(str, null);
+    }
+
+    public static Customer decode(String str, CaseFormat format) {
+        return new Customer().decode0(str, format);
     }
 }

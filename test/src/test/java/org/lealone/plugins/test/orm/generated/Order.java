@@ -101,6 +101,10 @@ public class Order extends Model<Order> {
     }
 
     public static Order decode(String str) {
-        return new Order().decode0(str);
+        return decode(str, null);
+    }
+
+    public static Order decode(String str, CaseFormat format) {
+        return new Order().decode0(str, format);
     }
 }

@@ -10,7 +10,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lealone.common.util.CamelCaseHelper;
 import org.lealone.db.value.Value;
+import org.lealone.plugins.orm.Model.CaseFormat;
 
 /**
  * A property used in type query.
@@ -41,6 +43,19 @@ public abstract class ModelProperty<M extends Model<M>> {
      */
     public String getName() {
         return name;
+    }
+
+    public String getName(CaseFormat format) {
+        String n = name;
+        switch (format) {
+        case CAMEL:
+            n = CamelCaseHelper.toCamelFromUnderscore(n);
+            break;
+        case LOWER_UNDERSCORE:
+            n = n.toLowerCase();
+            break;
+        }
+        return n;
     }
 
     protected String getFullName() {
@@ -119,6 +134,10 @@ public abstract class ModelProperty<M extends Model<M>> {
     }
 
     protected void serialize(Map<String, Object> map) {
+        this.serialize(map, CaseFormat.UPPER_UNDERSCORE);
+    }
+
+    protected void serialize(Map<String, Object> map, CaseFormat format) {
     }
 
     protected void deserialize(Object v) {

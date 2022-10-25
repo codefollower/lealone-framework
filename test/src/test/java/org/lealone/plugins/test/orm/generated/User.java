@@ -43,6 +43,10 @@ public class User extends Model<User> {
     }
 
     public static User decode(String str) {
-        return new User().decode0(str);
+        return decode(str, null);
+    }
+
+    public static User decode(String str, CaseFormat format) {
+        return new User().decode0(str, format);
     }
 }

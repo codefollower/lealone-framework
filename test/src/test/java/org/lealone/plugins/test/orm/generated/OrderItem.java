@@ -92,6 +92,10 @@ public class OrderItem extends Model<OrderItem> {
     }
 
     public static OrderItem decode(String str) {
-        return new OrderItem().decode0(str);
+        return decode(str, null);
+    }
+
+    public static OrderItem decode(String str, CaseFormat format) {
+        return new OrderItem().decode0(str, format);
     }
 }

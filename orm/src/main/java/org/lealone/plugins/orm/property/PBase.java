@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.lealone.db.value.Value;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.Model.CaseFormat;
 import org.lealone.plugins.orm.ModelProperty;
 
 public abstract class PBase<M extends Model<M>, T> extends ModelProperty<M> {
@@ -51,9 +52,10 @@ public abstract class PBase<M extends Model<M>, T> extends ModelProperty<M> {
     }
 
     @Override
-    protected final void serialize(Map<String, Object> map) {
-        if (value != null)
-            map.put(getName(), encodeValue());
+    protected final void serialize(Map<String, Object> map, CaseFormat format) {
+        if (value != null) {
+            map.put(getName(format), encodeValue());
+        }
     }
 
     @Override

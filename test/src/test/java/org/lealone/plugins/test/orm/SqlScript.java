@@ -118,6 +118,17 @@ public class SqlScript implements MainTest {
         );
     }
 
+    public static void createJsonTestTable(SqlExecutor executor) {
+        System.out.println("create table: json_test_table");
+
+        executor.execute("drop table if exists json_test_table");
+        executor.execute(
+                "create table if not exists json_test_table(property_name1 int, property_name2 long)" //
+                        + " parameters(caseFormat='CAMEL')" //
+                        + " package '" + MODEL_PACKAGE_NAME + "'" //
+                        + " generate code '" + GENERATED_CODE_PATH + "'");
+    }
+
     // 21种模型属性类型，目前不支持GEOMETRY类型
     // INT
     // BOOLEAN

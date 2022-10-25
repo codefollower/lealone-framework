@@ -40,6 +40,10 @@ public class Product extends Model<Product> {
     }
 
     public static Product decode(String str) {
-        return new Product().decode0(str);
+        return decode(str, null);
+    }
+
+    public static Product decode(String str, CaseFormat format) {
+        return new Product().decode0(str, format);
     }
 }

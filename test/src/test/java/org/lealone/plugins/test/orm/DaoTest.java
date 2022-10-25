@@ -8,7 +8,6 @@ package org.lealone.plugins.test.orm;
 import java.util.concurrent.CountDownLatch;
 
 import org.junit.Test;
-import org.lealone.plugins.orm.json.JsonObject;
 import org.lealone.plugins.test.orm.generated.User;;
 
 public class DaoTest extends OrmTestBase {
@@ -18,22 +17,6 @@ public class DaoTest extends OrmTestBase {
         // SqlScript.createUserTable(this);
         testMultiThreads();
         crud();
-        json();
-    }
-
-    void json() {
-        // dao对象序列化后包含modelType字段，并且是ROOT_DAO
-        JsonObject json = new JsonObject(User.dao.encode());
-        assertTrue(json.getInteger("modelType") == User.ROOT_DAO);
-
-        // 反序列化
-        String str = json.encode();
-        User u = User.decode(str);
-        assertTrue(u.isDao());
-
-        // 普通User对象序列化后也包含modelType字段，但为REGULAR_MODEL
-        json = new JsonObject(new User().encode());
-        assertTrue(json.getInteger("modelType") == User.REGULAR_MODEL);
     }
 
     // 测试多个线程同时使用User.dao是否产生混乱
