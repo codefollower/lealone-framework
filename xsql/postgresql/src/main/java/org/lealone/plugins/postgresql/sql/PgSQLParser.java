@@ -904,7 +904,7 @@ public class PgSQLParser implements SQLParser {
         if (readIf("DATABASES")) {
             buff.append("DATABASE_NAME FROM INFORMATION_SCHEMA.DATABASES");
         } else if (readIf("SCHEMAS")) {
-            buff.append("SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA");
+            buff.append("SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMAS");
         } else if (readIf("CLIENT_ENCODING")) {
             // for PostgreSQL compatibility
             buff.append("'UNICODE' AS CLIENT_ENCODING FROM DUAL");
