@@ -124,7 +124,7 @@ public class SqlScript implements MainTest {
         executor.execute("drop table if exists json_test_table");
         executor.execute(
                 "create table if not exists json_test_table(property_name1 int, property_name2 long)" //
-                        + " parameters(caseFormat='CAMEL')" //
+                        + " parameters(case_format='CAMEL')" //
                         + " package '" + MODEL_PACKAGE_NAME + "'" //
                         + " generate code '" + GENERATED_CODE_PATH + "'");
     }

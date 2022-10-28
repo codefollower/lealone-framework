@@ -29,6 +29,7 @@ import org.lealone.db.result.Result;
 import org.lealone.db.session.ServerSession;
 import org.lealone.db.table.Column;
 import org.lealone.db.table.Table;
+import org.lealone.db.table.TableSetting;
 import org.lealone.db.value.DataType;
 import org.lealone.db.value.ReadonlyArray;
 import org.lealone.db.value.Value;
@@ -598,7 +599,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     private CaseFormat getCaseFormat() {
-        String cf = modelTable.getTable().getParameter("caseFormat");
+        String cf = modelTable.getTable().getParameter(TableSetting.CASE_FORMAT.name());
         CaseFormat format;
         if (cf == null)
             format = CaseFormat.UPPER_UNDERSCORE;
