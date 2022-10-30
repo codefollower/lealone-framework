@@ -7,7 +7,7 @@ package org.lealone.plugins.test.orm;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lealone.plugins.orm.Model.CaseFormat;
+import org.lealone.plugins.orm.format.JsonFormat;
 import org.lealone.plugins.orm.json.JsonObject;
 import org.lealone.plugins.test.orm.generated.JsonTestTable;
 import org.lealone.plugins.test.orm.generated.User;
@@ -26,7 +26,7 @@ public class OrmJsonTest extends OrmTestBase {
     @Test
     public void run() {
         testModelType();
-        testCaseFormat();
+        testJsonFormat();
     }
 
     void testModelType() {
@@ -44,7 +44,7 @@ public class OrmJsonTest extends OrmTestBase {
         assertTrue(json.getInteger("modelType") == User.REGULAR_MODEL);
     }
 
-    void testCaseFormat() {
+    void testJsonFormat() {
         User user = new User().id.set(1006).name.set("rob6").phones.set(new Object[] { 1, 2, 3 });
         String json = user.encode();
         JsonObject jsonObject = new JsonObject(json);
@@ -52,20 +52,25 @@ public class OrmJsonTest extends OrmTestBase {
         User u = User.decode(json);
         assertEquals(u.name.get(), user.name.get());
 
-        json = user.encode(CaseFormat.CAMEL);
+        JsonFormat jsonFormat = JsonFormat.FRONTEND_FORMAT;
+        json = user.encode(jsonFormat);
         jsonObject = new JsonObject(json);
-        assertEquals(jsonObject.getString(User.dao.name.getName(CaseFormat.CAMEL)), user.name.get());
+        String name = jsonFormat.getNameCaseFormat().convert(User.dao.name.getName());
+        assertEquals(jsonObject.getString(name), user.name.get());
 
-        JsonTestTable t1 = new JsonTestTable().propertyName1.set(1).propertyName2.set(3);
+        JsonTestTable t1 = new JsonTestTable().propertyName1.set(1).propertyName2.set(3).b.set(true);
         json = t1.encode();
         jsonObject = new JsonObject(json);
-        assertEquals(jsonObject.getInteger(JsonTestTable.dao.propertyName1.getName(CaseFormat.CAMEL)),
-                t1.propertyName1.get());
+        name = JsonFormat.LOWER_UNDERSCORE_FORMAT.getNameCaseFormat()
+                .convert(JsonTestTable.dao.propertyName1.getName());
+        assertEquals(jsonObject.getInteger(name), t1.propertyName1.get());
         JsonTestTable t2 = JsonTestTable.decode(json);
         assertEquals(t1.propertyName2.get(), t2.propertyName2.get());
 
-        json = t1.encode(CaseFormat.LOWER_UNDERSCORE);
-        t2 = JsonTestTable.decode(json, CaseFormat.LOWER_UNDERSCORE);
+        jsonFormat = JsonFormat.FRONTEND_FORMAT;
+        json = t1.encode(jsonFormat);
+        t2 = JsonTestTable.decode(json, jsonFormat);
         assertEquals(t1.propertyName2.get(), t2.propertyName2.get());
+        assertTrue(t2.b.get());
     }
 }

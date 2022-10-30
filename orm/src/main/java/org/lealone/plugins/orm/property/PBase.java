@@ -9,8 +9,10 @@ import java.util.Map;
 
 import org.lealone.db.value.Value;
 import org.lealone.plugins.orm.Model;
-import org.lealone.plugins.orm.Model.CaseFormat;
 import org.lealone.plugins.orm.ModelProperty;
+import org.lealone.plugins.orm.format.TypeFormat;
+import org.lealone.plugins.orm.format.JsonFormat;
+import org.lealone.plugins.orm.format.PropertyFormat;
 
 public abstract class PBase<M extends Model<M>, T> extends ModelProperty<M> {
 
@@ -46,27 +48,22 @@ public abstract class PBase<M extends Model<M>, T> extends ModelProperty<M> {
         return value;
     }
 
-    // 把value编码为json
-    protected Object encodeValue() {
-        return value;
-    }
+    protected abstract TypeFormat<T> getValueFormat(JsonFormat format);
 
     @Override
-    protected final void serialize(Map<String, Object> map, CaseFormat format) {
+    protected final void encode(Map<String, Object> map, JsonFormat format) {
+        PropertyFormat pFormat = format.getPropertyFormat();
+        if (pFormat != null && (pFormat.encode(map, name, value)))
+            return;
+
         if (value != null) {
-            map.put(getName(format), encodeValue());
+            map.put(format.getNameCaseFormat().convert(name), getValueFormat(format).encode(value));
         }
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected void deserialize(Object v) {
-        value = (T) v;
-    }
-
-    @Override
-    protected void deserializeAndSet(Object v) {
-        deserialize(v);
+    protected void decodeAndSet(Object v, JsonFormat format) {
+        value = getValueFormat(format).decode(v);
         expr().set(name, createValue(value));
     }
 }

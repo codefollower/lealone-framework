@@ -3,6 +3,8 @@ package org.lealone.plugins.test.orm.generated;
 import org.lealone.plugins.orm.Model;
 import org.lealone.plugins.orm.ModelProperty;
 import org.lealone.plugins.orm.ModelTable;
+import org.lealone.plugins.orm.format.JsonFormat;
+import org.lealone.plugins.orm.property.PBoolean;
 import org.lealone.plugins.orm.property.PInteger;
 import org.lealone.plugins.orm.property.PLong;
 
@@ -17,6 +19,7 @@ public class JsonTestTable extends Model<JsonTestTable> {
 
     public final PInteger<JsonTestTable> propertyName1;
     public final PLong<JsonTestTable> propertyName2;
+    public final PBoolean<JsonTestTable> b;
 
     public JsonTestTable() {
         this(null, REGULAR_MODEL);
@@ -26,7 +29,8 @@ public class JsonTestTable extends Model<JsonTestTable> {
         super(t == null ? new ModelTable("TEST", "PUBLIC", "JSON_TEST_TABLE") : t, modelType);
         propertyName1 = new PInteger<>("PROPERTY_NAME1", this);
         propertyName2 = new PLong<>("PROPERTY_NAME2", this);
-        super.setModelProperties(new ModelProperty[] { propertyName1, propertyName2 });
+        b = new PBoolean<>("B", this);
+        super.setModelProperties(new ModelProperty[] { propertyName1, propertyName2, b });
     }
 
     @Override
@@ -38,7 +42,7 @@ public class JsonTestTable extends Model<JsonTestTable> {
         return decode(str, null);
     }
 
-    public static JsonTestTable decode(String str, CaseFormat format) {
+    public static JsonTestTable decode(String str, JsonFormat format) {
         return new JsonTestTable().decode0(str, format);
     }
 }

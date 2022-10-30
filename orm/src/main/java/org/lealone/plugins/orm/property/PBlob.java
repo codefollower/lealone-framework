@@ -9,11 +9,11 @@ import java.sql.Blob;
 import java.sql.SQLException;
 
 import org.lealone.common.exceptions.DbException;
-import org.lealone.db.value.ReadonlyBlob;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueBytes;
 import org.lealone.plugins.orm.Model;
-import org.lealone.plugins.orm.json.Json;
+import org.lealone.plugins.orm.format.BlobFormat;
+import org.lealone.plugins.orm.format.JsonFormat;
 
 public class PBlob<M extends Model<M>> extends PBase<M, Blob> {
 
@@ -21,7 +21,7 @@ public class PBlob<M extends Model<M>> extends PBase<M, Blob> {
         super(name, model);
     }
 
-    private byte[] getBytes() {
+    public static byte[] getBytes(Blob value) {
         try {
             return value.getBytes(1, (int) value.length());
         } catch (SQLException e) {
@@ -30,27 +30,17 @@ public class PBlob<M extends Model<M>> extends PBase<M, Blob> {
     }
 
     @Override
-    protected Value createValue(Blob value) {
-        return ValueBytes.getNoCopy(getBytes());
+    protected BlobFormat getValueFormat(JsonFormat format) {
+        return format.getBlobFormat();
     }
 
     @Override
-    protected Object encodeValue() {
-        return Json.BASE64_ENCODER.encodeToString(getBytes());
+    protected Value createValue(Blob value) {
+        return ValueBytes.getNoCopy(getBytes(value));
     }
 
     @Override
     protected void deserialize(Value v) {
         value = v.getBlob();
-    }
-
-    @Override
-    protected void deserialize(Object v) {
-        byte[] bytes;
-        if (v instanceof byte[])
-            bytes = (byte[]) v;
-        else
-            bytes = Json.BASE64_DECODER.decode(v.toString());
-        value = new ReadonlyBlob(ValueBytes.get(bytes));
     }
 }

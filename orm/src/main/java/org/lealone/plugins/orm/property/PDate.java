@@ -10,6 +10,8 @@ import java.sql.Date;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueDate;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.format.DateFormat;
+import org.lealone.plugins.orm.format.JsonFormat;
 
 /**
  * Java sql date property. 
@@ -18,6 +20,11 @@ public class PDate<M extends Model<M>> extends PBaseDate<M, Date> {
 
     public PDate(String name, M model) {
         super(name, model);
+    }
+
+    @Override
+    protected DateFormat getValueFormat(JsonFormat format) {
+        return format.getDateFormat();
     }
 
     public M set(String value) {
@@ -30,17 +37,7 @@ public class PDate<M extends Model<M>> extends PBaseDate<M, Date> {
     }
 
     @Override
-    protected Object encodeValue() {
-        return value.getTime();
-    }
-
-    @Override
     protected void deserialize(Value v) {
         value = v.getDate();
-    }
-
-    @Override
-    protected void deserialize(Object v) {
-        value = new Date(((Number) v).longValue());
     }
 }

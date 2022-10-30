@@ -8,6 +8,8 @@ package org.lealone.plugins.orm.property;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueBoolean;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.format.BooleanFormat;
+import org.lealone.plugins.orm.format.JsonFormat;
 
 /**
  * Boolean property.
@@ -19,23 +21,18 @@ public class PBoolean<M extends Model<M>> extends PBaseValueEqual<M, Boolean> {
     }
 
     @Override
+    protected BooleanFormat getValueFormat(JsonFormat format) {
+        return format.getBooleanFormat();
+    }
+
+    @Override
     protected Value createValue(Boolean value) {
         return ValueBoolean.get(value);
     }
 
     @Override
-    protected Object encodeValue() {
-        return value ? 1 : 0;
-    }
-
-    @Override
     protected void deserialize(Value v) {
         value = v.getBoolean();
-    }
-
-    @Override
-    protected void deserialize(Object v) {
-        value = ((Number) v).byteValue() != 0;
     }
 
     /**

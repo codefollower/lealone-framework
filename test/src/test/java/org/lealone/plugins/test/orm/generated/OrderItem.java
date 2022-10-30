@@ -3,6 +3,7 @@ package org.lealone.plugins.test.orm.generated;
 import org.lealone.plugins.orm.Model;
 import org.lealone.plugins.orm.ModelProperty;
 import org.lealone.plugins.orm.ModelTable;
+import org.lealone.plugins.orm.format.JsonFormat;
 import org.lealone.plugins.orm.property.PInteger;
 import org.lealone.plugins.orm.property.PLong;
 
@@ -95,7 +96,7 @@ public class OrderItem extends Model<OrderItem> {
         return decode(str, null);
     }
 
-    public static OrderItem decode(String str, CaseFormat format) {
+    public static OrderItem decode(String str, JsonFormat format) {
         return new OrderItem().decode0(str, format);
     }
 }

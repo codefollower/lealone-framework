@@ -10,6 +10,8 @@ import java.util.UUID;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueUuid;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.format.JsonFormat;
+import org.lealone.plugins.orm.format.UuidFormat;
 
 /**
  * UUID property.
@@ -21,22 +23,17 @@ public class PUuid<M extends Model<M>> extends PBaseValueEqual<M, UUID> {
     }
 
     @Override
+    protected UuidFormat getValueFormat(JsonFormat format) {
+        return format.getUuidFormat();
+    }
+
+    @Override
     protected Value createValue(UUID value) {
         return ValueUuid.get(value.getMostSignificantBits(), value.getLeastSignificantBits());
     }
 
     @Override
-    protected Object encodeValue() {
-        return value.toString();
-    }
-
-    @Override
     protected void deserialize(Value v) {
         value = (UUID) ValueUuid.get(v.getBytesNoCopy()).getObject();
-    }
-
-    @Override
-    protected void deserialize(Object v) {
-        value = UUID.fromString(v.toString());
     }
 }

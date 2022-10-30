@@ -3,6 +3,7 @@ package org.lealone.plugins.js;
 import org.lealone.plugins.orm.Model;
 import org.lealone.plugins.orm.ModelProperty;
 import org.lealone.plugins.orm.ModelTable;
+import org.lealone.plugins.orm.format.JsonFormat;
 import org.lealone.plugins.orm.property.PArray;
 import org.lealone.plugins.orm.property.PInteger;
 import org.lealone.plugins.orm.property.PLong;
@@ -46,7 +47,7 @@ public class User extends Model<User> {
         return decode(str, null);
     }
 
-    public static User decode(String str, CaseFormat format) {
+    public static User decode(String str, JsonFormat format) {
         return new User().decode0(str, format);
     }
 }

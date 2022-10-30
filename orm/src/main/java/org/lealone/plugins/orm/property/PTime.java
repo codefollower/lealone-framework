@@ -10,6 +10,8 @@ import java.sql.Time;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueTime;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.format.JsonFormat;
+import org.lealone.plugins.orm.format.TimeFormat;
 
 /**
  * Time property.
@@ -21,22 +23,17 @@ public class PTime<M extends Model<M>> extends PBaseNumber<M, Time> {
     }
 
     @Override
+    protected TimeFormat getValueFormat(JsonFormat format) {
+        return format.getTimeFormat();
+    }
+
+    @Override
     protected Value createValue(Time value) {
         return ValueTime.get(value);
     }
 
     @Override
-    protected Object encodeValue() {
-        return value.getTime();
-    }
-
-    @Override
     protected void deserialize(Value v) {
         value = v.getTime();
-    }
-
-    @Override
-    protected void deserialize(Object v) {
-        value = new Time(((Number) v).longValue());
     }
 }

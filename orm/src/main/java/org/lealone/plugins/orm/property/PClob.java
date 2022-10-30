@@ -9,10 +9,11 @@ import java.sql.Clob;
 import java.sql.SQLException;
 
 import org.lealone.common.exceptions.DbException;
-import org.lealone.db.value.ReadonlyClob;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueString;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.format.ClobFormat;
+import org.lealone.plugins.orm.format.JsonFormat;
 
 public class PClob<M extends Model<M>> extends PBase<M, Clob> {
 
@@ -20,27 +21,26 @@ public class PClob<M extends Model<M>> extends PBase<M, Clob> {
         super(name, model);
     }
 
-    @Override
-    protected Value createValue(Clob value) {
-        return ValueString.get(encodeValue().toString());
-    }
-
-    @Override
-    protected Object encodeValue() {
+    public static String toString(Clob v) {
         try {
-            return value.getSubString(1, (int) value.length());
+            return v.getSubString(1, (int) v.length());
         } catch (SQLException e) {
             throw DbException.convert(e);
         }
     }
 
     @Override
-    protected void deserialize(Value v) {
-        value = v.getClob();
+    protected ClobFormat getValueFormat(JsonFormat format) {
+        return format.getClobFormat();
     }
 
     @Override
-    protected void deserialize(Object v) {
-        value = new ReadonlyClob(v.toString());
+    protected Value createValue(Clob value) {
+        return ValueString.get(toString(value).toString());
+    }
+
+    @Override
+    protected void deserialize(Value v) {
+        value = v.getClob();
     }
 }

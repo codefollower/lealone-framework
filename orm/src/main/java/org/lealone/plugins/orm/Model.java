@@ -22,6 +22,7 @@ import org.lealone.common.exceptions.DbException;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.common.util.CaseInsensitiveMap;
+import org.lealone.common.util.Utils;
 import org.lealone.db.constraint.ConstraintReferential;
 import org.lealone.db.index.Index;
 import org.lealone.db.index.IndexColumn;
@@ -36,6 +37,8 @@ import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueInt;
 import org.lealone.db.value.ValueLong;
 import org.lealone.db.value.ValueNull;
+import org.lealone.plugins.orm.format.JsonFormat;
+import org.lealone.plugins.orm.format.NameCaseFormat;
 import org.lealone.plugins.orm.json.JsonObject;
 import org.lealone.plugins.orm.property.PBase;
 import org.lealone.plugins.orm.property.PLong;
@@ -64,16 +67,12 @@ public abstract class Model<T extends Model<T>> {
     public static final short ROOT_DAO = 1;
     public static final short CHILD_DAO = 2;
 
-    public enum CaseFormat {
-        CAMEL,
-        LOWER_UNDERSCORE,
-        UPPER_UNDERSCORE
-    }
-
     private static final Logger logger = LoggerFactory.getLogger(Model.class);
 
-    private static final ConcurrentSkipListMap<Long, ServerSession> currentSessions = new ConcurrentSkipListMap<>();
-    private static final ConcurrentSkipListMap<Integer, List<ServerSession>> sessionMap = new ConcurrentSkipListMap<>();
+    private static final ConcurrentSkipListMap<Long, ServerSession> currentSessions //
+            = new ConcurrentSkipListMap<>();
+    private static final ConcurrentSkipListMap<Integer, List<ServerSession>> sessionMap //
+            = new ConcurrentSkipListMap<>();
 
     private static class Stack<E> {
 
@@ -598,33 +597,43 @@ public abstract class Model<T extends Model<T>> {
         return ModelProperty.areEqual(p1.get(), p2.get());
     }
 
-    private CaseFormat getCaseFormat() {
-        String cf = modelTable.getTable().getParameter(TableSetting.CASE_FORMAT.name());
-        CaseFormat format;
-        if (cf == null)
-            format = CaseFormat.UPPER_UNDERSCORE;
-        else
-            format = CaseFormat.valueOf(cf.toUpperCase());
-        return format;
+    private JsonFormat jsonFormat;
+
+    protected JsonFormat getJsonFormat() {
+        if (jsonFormat == null) {
+            String jfName = modelTable.getTable().getParameter(TableSetting.JSON_FORMAT.name());
+            if (jfName == null)
+                jfName = System.getProperty("lealone.orm.json.format", "FRONTEND_FORMAT");
+            if (jfName.equalsIgnoreCase("DEFAULT_FORMAT"))
+                jsonFormat = JsonFormat.DEFAULT_FORMAT;
+            else if (jfName.equalsIgnoreCase("LOWER_UNDERSCORE_FORMAT"))
+                jsonFormat = JsonFormat.LOWER_UNDERSCORE_FORMAT;
+            else if (jfName.equalsIgnoreCase("FRONTEND_FORMAT"))
+                jsonFormat = JsonFormat.DEFAULT_FORMAT;
+            else
+                jsonFormat = Utils.newInstance(jfName);
+        }
+        return jsonFormat;
     }
 
     public Map<String, Object> toMap() {
         return toMap(null);
     }
 
-    public Map<String, Object> toMap(CaseFormat format) {
+    public Map<String, Object> toMap(JsonFormat format) {
         if (format == null)
-            format = getCaseFormat();
+            format = getJsonFormat();
         Map<String, Object> map = new LinkedHashMap<>();
         for (ModelProperty<?> p : modelProperties) {
-            p.serialize(map, format);
+            p.encode(map, format);
         }
         if (modelMap != null) {
             for (Entry<Class, ArrayList<Model<?>>> e : modelMap.entrySet()) {
                 map.put(e.getKey().getSimpleName() + "List", e.getValue());
             }
         }
-        map.put("modelType", modelType);
+        if (format.includesInternalFields())
+            map.put("modelType", modelType);
         return map;
     }
 
@@ -632,7 +641,7 @@ public abstract class Model<T extends Model<T>> {
         return encode(null);
     }
 
-    public String encode(CaseFormat format) {
+    public String encode(JsonFormat format) {
         return new JsonObject(toMap(format)).encode();
     }
 
@@ -640,22 +649,25 @@ public abstract class Model<T extends Model<T>> {
         return decode0(str, null);
     }
 
-    protected T decode0(String str, CaseFormat format) {
+    protected T decode0(String str, JsonFormat format) {
         if (format == null)
-            format = getCaseFormat();
+            format = getJsonFormat();
         Map<String, Object> map = new JsonObject(str).getMap();
+        NameCaseFormat ncf = format.getNameCaseFormat();
         for (ModelProperty<?> p : modelProperties) {
-            Object v = map.get(p.getName(format));
+            Object v = map.get(ncf.convert(p.getName()));
             if (v != null) {
-                // 先反序列化再set，这样Model的子类对象就可以在后续调用insert之类的方法
-                p.deserializeAndSet(v);
+                // 先解码再set，这样Model的子类对象就可以在后续调用insert之类的方法
+                p.decodeAndSet(v, format);
             }
         }
-        Object v = map.get("modelType");
-        if (v == null) {
-            modelType = REGULAR_MODEL;
-        } else {
-            modelType = ((Number) v).shortValue();
+        if (format.includesInternalFields()) {
+            Object v = map.get("modelType");
+            if (v == null) {
+                modelType = REGULAR_MODEL;
+            } else {
+                modelType = ((Number) v).shortValue();
+            }
         }
         return (T) this;
     }

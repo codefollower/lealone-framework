@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueTimestamp;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.format.JsonFormat;
+import org.lealone.plugins.orm.format.TimestampFormat;
 
 /**
  * Property for java sql Timestamp.
@@ -21,22 +23,17 @@ public class PTimestamp<M extends Model<M>> extends PBaseDate<M, Timestamp> {
     }
 
     @Override
+    protected TimestampFormat getValueFormat(JsonFormat format) {
+        return format.getTimestampFormat();
+    }
+
+    @Override
     protected Value createValue(Timestamp value) {
         return ValueTimestamp.get(value);
     }
 
     @Override
-    protected Object encodeValue() {
-        return value.getTime();
-    }
-
-    @Override
     protected void deserialize(Value v) {
         value = v.getTimestamp();
-    }
-
-    @Override
-    protected void deserialize(Object v) {
-        value = new Timestamp(((Number) v).longValue());
     }
 }

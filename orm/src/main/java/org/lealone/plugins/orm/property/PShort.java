@@ -8,6 +8,8 @@ package org.lealone.plugins.orm.property;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueShort;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.format.JsonFormat;
+import org.lealone.plugins.orm.format.ShortFormat;
 
 /**
  * Short property.
@@ -19,6 +21,11 @@ public class PShort<M extends Model<M>> extends PBaseNumber<M, Short> {
     }
 
     @Override
+    protected ShortFormat getValueFormat(JsonFormat format) {
+        return format.getShortFormat();
+    }
+
+    @Override
     protected Value createValue(Short value) {
         return ValueShort.get(value);
     }
@@ -26,10 +33,5 @@ public class PShort<M extends Model<M>> extends PBaseNumber<M, Short> {
     @Override
     protected void deserialize(Value v) {
         value = v.getShort();
-    }
-
-    @Override
-    protected void deserialize(Object v) {
-        value = ((Number) v).shortValue();
     }
 }

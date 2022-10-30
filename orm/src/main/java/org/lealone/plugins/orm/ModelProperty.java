@@ -10,9 +10,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lealone.common.util.CamelCaseHelper;
 import org.lealone.db.value.Value;
-import org.lealone.plugins.orm.Model.CaseFormat;
+import org.lealone.plugins.orm.format.JsonFormat;
 
 /**
  * A property used in type query.
@@ -45,24 +44,15 @@ public abstract class ModelProperty<M extends Model<M>> {
         return name;
     }
 
-    public String getName(CaseFormat format) {
-        String n = name;
-        switch (format) {
-        case CAMEL:
-            n = CamelCaseHelper.toCamelFromUnderscore(n);
-            break;
-        case LOWER_UNDERSCORE:
-            n = n.toLowerCase();
-            break;
-        }
-        return n;
-    }
-
     protected String getFullName() {
         if (fullName == null) {
             fullName = getSchemaName() + "." + getTableName() + "." + name;
         }
         return fullName;
+    }
+
+    protected JsonFormat getJsonFormat() {
+        return model.getJsonFormat();
     }
 
     protected String getDatabaseName() {
@@ -133,18 +123,9 @@ public abstract class ModelProperty<M extends Model<M>> {
         return expr().eq(name, p);
     }
 
-    protected void serialize(Map<String, Object> map) {
-        this.serialize(map, CaseFormat.UPPER_UNDERSCORE);
-    }
+    protected abstract void encode(Map<String, Object> map, JsonFormat format);
 
-    protected void serialize(Map<String, Object> map, CaseFormat format) {
-    }
-
-    protected void deserialize(Object v) {
-    }
-
-    protected void deserializeAndSet(Object v) {
-    }
+    protected abstract void decodeAndSet(Object v, JsonFormat format);
 
     // map存放的是查询结果集某一条记录各个字段的值
     protected void deserialize(HashMap<String, Value> map) {

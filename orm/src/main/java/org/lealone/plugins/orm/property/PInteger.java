@@ -8,6 +8,8 @@ package org.lealone.plugins.orm.property;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueInt;
 import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.format.IntegerFormat;
+import org.lealone.plugins.orm.format.JsonFormat;
 
 /**
  * Integer property. 
@@ -19,13 +21,13 @@ public class PInteger<M extends Model<M>> extends PBaseNumber<M, Integer> {
     }
 
     @Override
-    protected Value createValue(Integer value) {
-        return ValueInt.get(value);
+    protected IntegerFormat getValueFormat(JsonFormat format) {
+        return format.getIntegerFormat();
     }
 
     @Override
-    protected void deserialize(Object v) {
-        value = ((Number) v).intValue();
+    protected Value createValue(Integer value) {
+        return ValueInt.get(value);
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.lealone.plugins.test.orm.generated;
 import org.lealone.plugins.orm.Model;
 import org.lealone.plugins.orm.ModelProperty;
 import org.lealone.plugins.orm.ModelTable;
+import org.lealone.plugins.orm.format.JsonFormat;
 import org.lealone.plugins.orm.property.PArray;
 import org.lealone.plugins.orm.property.PBigDecimal;
 import org.lealone.plugins.orm.property.PBlob;
@@ -92,7 +93,7 @@ public class AllModelProperty extends Model<AllModelProperty> {
         return decode(str, null);
     }
 
-    public static AllModelProperty decode(String str, CaseFormat format) {
+    public static AllModelProperty decode(String str, JsonFormat format) {
         return new AllModelProperty().decode0(str, format);
     }
 }
