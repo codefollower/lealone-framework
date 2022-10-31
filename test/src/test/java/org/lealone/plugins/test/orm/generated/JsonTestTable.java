@@ -30,6 +30,7 @@ public class JsonTestTable extends Model<JsonTestTable> {
         propertyName1 = new PInteger<>("PROPERTY_NAME1", this);
         propertyName2 = new PLong<>("PROPERTY_NAME2", this);
         b = new PBoolean<>("B", this);
+        super.setJsonFormat("lower_underscore_format");
         super.setModelProperties(new ModelProperty[] { propertyName1, propertyName2, b });
     }
 

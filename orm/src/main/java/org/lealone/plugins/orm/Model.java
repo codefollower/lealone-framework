@@ -30,7 +30,6 @@ import org.lealone.db.result.Result;
 import org.lealone.db.session.ServerSession;
 import org.lealone.db.table.Column;
 import org.lealone.db.table.Table;
-import org.lealone.db.table.TableSetting;
 import org.lealone.db.value.DataType;
 import org.lealone.db.value.ReadonlyArray;
 import org.lealone.db.value.Value;
@@ -598,10 +597,15 @@ public abstract class Model<T extends Model<T>> {
     }
 
     private JsonFormat jsonFormat;
+    private String jsonFormatName;
+
+    protected void setJsonFormat(String jfName) {
+        jsonFormatName = jfName;
+    }
 
     protected JsonFormat getJsonFormat() {
         if (jsonFormat == null) {
-            String jfName = modelTable.getTable().getParameter(TableSetting.JSON_FORMAT.name());
+            String jfName = jsonFormatName;
             if (jfName == null)
                 jfName = System.getProperty("lealone.orm.json.format", "FRONTEND_FORMAT");
             if (jfName.equalsIgnoreCase("DEFAULT_FORMAT"))
