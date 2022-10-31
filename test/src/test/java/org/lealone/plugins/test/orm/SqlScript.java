@@ -5,6 +5,7 @@
  */
 package org.lealone.plugins.test.orm;
 
+import org.lealone.db.service.ServiceSetting;
 import org.lealone.plugins.test.service.ExecuteServiceTest;
 import org.lealone.plugins.test.service.impl.AllTypeServiceImpl;
 import org.lealone.plugins.test.service.impl.HelloWorldServiceImpl;
@@ -228,6 +229,7 @@ public class SqlScript implements MainTest {
                 + "             say_goodbye_to(name varchar) varchar" //
                 + "         ) package '" + SERVICE_PACKAGE_NAME + "'" //
                 + "           implement by '" + HelloWorldServiceImpl.class.getName() + "'" //
-                + "           generate code '" + GENERATED_CODE_PATH + "'");
+                + "           generate code '" + GENERATED_CODE_PATH + "'" //
+                + "           parameters(" + ServiceSetting.CREATE_METHOD_NAME + "='_create')");
     }
 }

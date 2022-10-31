@@ -21,11 +21,11 @@ public interface HelloWorldService {
 
     String sayGoodbyeTo(String name);
 
-    static HelloWorldService create() {
-        return create(null);
+    static HelloWorldService _create() {
+        return _create(null);
     }
 
-    static HelloWorldService create(String url) {
+    static HelloWorldService _create(String url) {
         if (url == null)
             url = ClientServiceProxy.getUrl();
 

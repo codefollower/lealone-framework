@@ -59,7 +59,7 @@ public class FullStackTest extends HttpServerTest {
     }
 
     private static void callService(String url) {
-        HelloWorldService helloWorldService = HelloWorldService.create(url);
+        HelloWorldService helloWorldService = HelloWorldService._create(url);
         helloWorldService.sayHello();
         String r = helloWorldService.sayGoodbyeTo("zhh");
         System.out.println(r);
