@@ -37,11 +37,6 @@
         </dependency>
         <dependency>
             <groupId>org.lealone.plugins</groupId>
-            <artifactId>lealone-spring</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-mvstore</artifactId>
             <version>${project.version}</version>
         </dependency>
