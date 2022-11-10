@@ -1,3 +1,8 @@
+/*
+ * Copyright Lealone Database Group.
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh
+ */
 package org.lealone.plugins.test.service.impl;
 
 import java.util.ArrayList;
@@ -42,6 +47,7 @@ public class CollectionTypeServiceImpl implements CollectionTypeService {
         return null;
     }
 
+    // http://localhost:9000/service/collection_type_service/m6
     @Override
     public Map<Integer, String> m6() {
         HashMap<Integer, String> map = new HashMap<>();
@@ -50,9 +56,14 @@ public class CollectionTypeServiceImpl implements CollectionTypeService {
         return map;
     }
 
+    // http://localhost:9000/service/collection_type_service/m7?p1=1&p1=2&p2=a&p2=b
     @Override
     public Map<Integer, String> m7(List<Integer> p1, Set<String> p2, Map<Integer, String> p3,
             Integer p4) {
-        return null;
+        System.out.println("p1: " + p1);
+        System.out.println("p2: " + p2);
+        System.out.println("p3: " + p3);
+        System.out.println("p4: " + p4);
+        return m6();
     }
 }

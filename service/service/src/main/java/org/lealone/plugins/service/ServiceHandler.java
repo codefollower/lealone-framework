@@ -5,12 +5,16 @@
  */
 package org.lealone.plugins.service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.common.util.StringUtils;
 import org.lealone.db.service.Service;
+import org.lealone.plugins.orm.Model;
+import org.lealone.plugins.orm.json.Json;
 
 public class ServiceHandler {
 
@@ -36,7 +40,7 @@ public class ServiceHandler {
         else if (serviceNameArray.length == 2 && defaultDatabase != null)
             serviceName = defaultDatabase + "." + serviceName;
 
-        String result = null;
+        Object result = null;
         try {
             logger.info("execute service: {}.{}", serviceName, methodName);
             if (serviceName.toUpperCase().contains("LEALONE_SYSTEM_SERVICE")) {
@@ -55,6 +59,11 @@ public class ServiceHandler {
         // 如果为null就返回"null"字符串
         if (result == null)
             result = "null";
-        return result;
+
+        if (result instanceof List || result instanceof Set || result instanceof Map
+                || result instanceof Model) {
+            return Json.encode(result);
+        }
+        return result.toString();
     }
 }

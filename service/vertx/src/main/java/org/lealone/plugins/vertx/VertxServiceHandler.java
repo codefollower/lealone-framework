@@ -72,7 +72,7 @@ public class VertxServiceHandler extends ServiceHandler implements Handler<SockJ
         else if (serviceNameArray.length == 3 && defaultDatabase != null)
             serviceName = defaultDatabase + "." + serviceName;
         JsonArray ja = new JsonArray();
-        String result = null;
+        Object result = null;
         switch (type) {
         case 1:
             try {
@@ -95,7 +95,7 @@ public class VertxServiceHandler extends ServiceHandler implements Handler<SockJ
             logger.error(result);
         }
         ja.add(oldServiceName); // 前端传来的方法名不一定是下划线风格的，所以用最初的
-        ja.add(result);
+        ja.add(result.toString());
         return ja.toString();
     }
 }

@@ -69,8 +69,8 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
         });
 
         sockJSSocket.handler(buffer -> {
-            Buffer ret = ServiceHandlerOld.handle(sockJSSocket, buffer.getString(0, buffer.length()), defaultDatabase,
-                    defaultSchema);
+            Buffer ret = ServiceHandlerOld.handle(sockJSSocket, buffer.getString(0, buffer.length()),
+                    defaultDatabase, defaultSchema);
             sockJSSocket.end(ret);
         });
     }
@@ -79,7 +79,8 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
         return handle(lock, command, null, null);
     }
 
-    public static Buffer handle(Object lock, String command, String defaultDatabase, String defaultSchema) {
+    public static Buffer handle(Object lock, String command, String defaultDatabase,
+            String defaultSchema) {
         String a[] = command.split(";");
         int type = Integer.parseInt(a[0]);
         if (type < 500) {
@@ -96,7 +97,7 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
         else if (serviceNameArray.length == 2 && defaultDatabase != null)
             serviceName = defaultDatabase + "." + serviceName;
 
-        String result = null;
+        Object result = null;
         try {
             logger.info("execute service: " + serviceName);
             result = Service.execute(serviceName, methodName, methodArgs);
@@ -104,10 +105,11 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
             result = "failed to execute service: " + serviceName + ", cause: " + e.getMessage();
             logger.error(result, e);
         }
-        return Buffer.buffer(result);
+        return Buffer.buffer(result.toString());
     }
 
-    private static Buffer executeService(String a[], int type, String defaultDatabase, String defaultSchema) {
+    private static Buffer executeService(String a[], int type, String defaultDatabase,
+            String defaultSchema) {
         String serviceName = CamelCaseHelper.toUnderscoreFromCamel(a[1]);
         String[] serviceNameArray = StringUtils.arraySplit(serviceName, '.');
         if (serviceNameArray.length == 2 && defaultDatabase != null && defaultSchema != null)
@@ -119,7 +121,7 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
             json = a[2];
         }
         JsonArray ja = new JsonArray();
-        String result = null;
+        Object result = null;
         switch (type) {
         case 1:
             try {
@@ -138,7 +140,7 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
             logger.error(result);
         }
         ja.add(a[1]); // 前端传来的方法名不一定是下划线风格的，所以用最初的
-        ja.add(result);
+        ja.add(result.toString());
         return Buffer.buffer(ja.toString());
     }
 
@@ -172,7 +174,8 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
             switch (type) {
             case 500: {
                 ps.executeUpdate();
-                long rowId = ((ServerSession) ((JdbcConnection) conn).getSession()).getLastIdentity().getLong();
+                long rowId = ((ServerSession) ((JdbcConnection) conn).getSession()).getLastIdentity()
+                        .getLong();
                 ja.add(rowId);
                 break;
             }

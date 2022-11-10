@@ -14,110 +14,86 @@ import org.lealone.plugins.test.service.impl.HelloWorldServiceImpl;
  */
 public class HelloWorldServiceExecutor implements ServiceExecutor {
 
-    private final HelloWorldServiceImpl s = new HelloWorldServiceImpl();
+    private final HelloWorldServiceImpl si = new HelloWorldServiceImpl();
 
     @Override
     public Value executeService(String methodName, Value[] methodArgs) {
         switch (methodName) {
         case "SAY_HELLO":
-            this.s.sayHello();
+            si.sayHello();
             return ValueNull.INSTANCE;
         case "GET_DATE":
-            Date result2 = this.s.getDate();
+            Date result2 = si.getDate();
             if (result2 == null)
                 return ValueNull.INSTANCE;
             return ValueDate.get(result2);
         case "GET_INT":
-            Integer result3 = this.s.getInt();
+            Integer result3 = si.getInt();
             if (result3 == null)
                 return ValueNull.INSTANCE;
             return ValueInt.get(result3);
         case "GET_TWO":
             String p_name_4 = methodArgs[0].getString();
             Integer p_age_4 = methodArgs[1].getInt();
-            Integer result4 = this.s.getTwo(p_name_4, p_age_4);
+            Integer result4 = si.getTwo(p_name_4, p_age_4);
             if (result4 == null)
                 return ValueNull.INSTANCE;
             return ValueInt.get(result4);
         case "SAY_GOODBYE_TO":
             String p_name_5 = methodArgs[0].getString();
-            String result5 = this.s.sayGoodbyeTo(p_name_5);
+            String result5 = si.sayGoodbyeTo(p_name_5);
             if (result5 == null)
                 return ValueNull.INSTANCE;
             return ValueString.get(result5);
         default:
-            throw new RuntimeException("no method: " + methodName);
+            throw noMethodException(methodName);
         }
     }
 
     @Override
-    public String executeService(String methodName, Map<String, Object> methodArgs) {
+    public Object executeService(String methodName, Map<String, Object> methodArgs) {
         switch (methodName) {
         case "SAY_HELLO":
-            this.s.sayHello();
+            si.sayHello();
             return NO_RETURN_VALUE;
         case "GET_DATE":
-            Date result2 = this.s.getDate();
-            if (result2 == null)
-                return null;
-            return result2.toString();
+            return si.getDate();
         case "GET_INT":
-            Integer result3 = this.s.getInt();
-            if (result3 == null)
-                return null;
-            return result3.toString();
+            return si.getInt();
         case "GET_TWO":
-            String p_name_4 = ServiceExecutor.toString("NAME", methodArgs);
-            Integer p_age_4 = Integer.valueOf(ServiceExecutor.toString("AGE", methodArgs));
-            Integer result4 = this.s.getTwo(p_name_4, p_age_4);
-            if (result4 == null)
-                return null;
-            return result4.toString();
+            String p_name_4 = toString("NAME", methodArgs);
+            Integer p_age_4 = toInt("AGE", methodArgs);
+            return si.getTwo(p_name_4, p_age_4);
         case "SAY_GOODBYE_TO":
-            String p_name_5 = ServiceExecutor.toString("NAME", methodArgs);
-            String result5 = this.s.sayGoodbyeTo(p_name_5);
-            if (result5 == null)
-                return null;
-            return result5;
+            String p_name_5 = toString("NAME", methodArgs);
+            return si.sayGoodbyeTo(p_name_5);
         default:
-            throw new RuntimeException("no method: " + methodName);
+            throw noMethodException(methodName);
         }
     }
 
     @Override
-    public String executeService(String methodName, String json) {
+    public Object executeService(String methodName, String json) {
         JsonArray ja = null;
         switch (methodName) {
         case "SAY_HELLO":
-            this.s.sayHello();
+            si.sayHello();
             return NO_RETURN_VALUE;
         case "GET_DATE":
-            Date result2 = this.s.getDate();
-            if (result2 == null)
-                return null;
-            return result2.toString();
+            return si.getDate();
         case "GET_INT":
-            Integer result3 = this.s.getInt();
-            if (result3 == null)
-                return null;
-            return result3.toString();
+            return si.getInt();
         case "GET_TWO":
             ja = new JsonArray(json);
             String p_name_4 = ja.getString(0);
             Integer p_age_4 = Integer.valueOf(ja.getValue(1).toString());
-            Integer result4 = this.s.getTwo(p_name_4, p_age_4);
-            if (result4 == null)
-                return null;
-            return result4.toString();
+            return si.getTwo(p_name_4, p_age_4);
         case "SAY_GOODBYE_TO":
             ja = new JsonArray(json);
             String p_name_5 = ja.getString(0);
-            String result5 = this.s.sayGoodbyeTo(p_name_5);
-            if (result5 == null)
-                return null;
-            return result5;
+            return si.sayGoodbyeTo(p_name_5);
         default:
-            throw new RuntimeException("no method: " + methodName);
+            throw noMethodException(methodName);
         }
     }
 }
