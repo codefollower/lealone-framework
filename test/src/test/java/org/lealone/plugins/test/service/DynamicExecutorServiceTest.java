@@ -23,7 +23,7 @@ public class DynamicExecutorServiceTest extends SqlTestBase {
                 + " implement by '" + DynamicExecutorServiceImpl.class.getName() + "'";
         executeUpdate(sql);
 
-        sql = " EXECUTE SERVICE dynamic_executor_service delete('dynamic')";
+        sql = "EXECUTE SERVICE dynamic_executor_service delete('dynamic')";
         executeQuery(sql);
 
         User user = new User().name.set("dynamic").phone.set(123);

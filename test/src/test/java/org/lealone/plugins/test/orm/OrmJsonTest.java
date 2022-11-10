@@ -5,9 +5,14 @@
  */
 package org.lealone.plugins.test.orm;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.lealone.plugins.orm.format.JsonFormat;
+import org.lealone.plugins.orm.json.JsonArray;
 import org.lealone.plugins.orm.json.JsonObject;
 import org.lealone.plugins.test.orm.generated.JsonTestTable;
 import org.lealone.plugins.test.orm.generated.User;
@@ -27,6 +32,7 @@ public class OrmJsonTest extends OrmTestBase {
     public void run() {
         testModelType();
         testJsonFormat();
+        testCollectionType();
     }
 
     void testModelType() {
@@ -72,5 +78,32 @@ public class OrmJsonTest extends OrmTestBase {
         t2 = JsonTestTable.decode(json, jsonFormat);
         assertEquals(t1.propertyName2.get(), t2.propertyName2.get());
         assertTrue(t2.b.get());
+    }
+
+    void testCollectionType() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(100);
+        list.add(200);
+        HashSet<String> set = new HashSet<>();
+        set.add("abc");
+        set.add("def");
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(10, "a");
+        map.put(20, "b");
+
+        ArrayList<Object> list2 = new ArrayList<>();
+        list2.add(list);
+        list2.add(set);
+        list2.add(map);
+
+        JsonArray ja = new JsonArray(list2);
+        String json = ja.encode();
+        System.out.println(json);
+
+        ja = new JsonArray(json);
+        assertTrue(list.equals(ja.getList(0)));
+        assertTrue(set.equals(ja.getSet(1)));
+        assertTrue(map.equals(ja.getMap(2, Integer.class)));
+        System.out.println(ja);
     }
 }

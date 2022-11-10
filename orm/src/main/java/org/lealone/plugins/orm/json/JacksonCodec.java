@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.lealone.plugins.orm.Model;
 
@@ -72,14 +73,20 @@ public class JacksonCodec {
         }
         if (json instanceof Map) {
             generator.writeStartObject();
-            for (Map.Entry<String, ?> e : ((Map<String, ?>) json).entrySet()) {
-                generator.writeFieldName(e.getKey());
+            for (Map.Entry<?, ?> e : ((Map<?, ?>) json).entrySet()) {
+                generator.writeFieldName(e.getKey().toString());
                 encodeJson(e.getValue(), generator);
             }
             generator.writeEndObject();
         } else if (json instanceof List) {
             generator.writeStartArray();
             for (Object item : (List<?>) json) {
+                encodeJson(item, generator);
+            }
+            generator.writeEndArray();
+        } else if (json instanceof Set) {
+            generator.writeStartArray();
+            for (Object item : (Set<?>) json) {
                 encodeJson(item, generator);
             }
             generator.writeEndArray();

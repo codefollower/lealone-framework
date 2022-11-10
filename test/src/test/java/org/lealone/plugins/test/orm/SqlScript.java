@@ -8,6 +8,7 @@ package org.lealone.plugins.test.orm;
 import org.lealone.db.service.ServiceSetting;
 import org.lealone.plugins.test.service.ExecuteServiceTest;
 import org.lealone.plugins.test.service.impl.AllTypeServiceImpl;
+import org.lealone.plugins.test.service.impl.CollectionTypeServiceImpl;
 import org.lealone.plugins.test.service.impl.HelloWorldServiceImpl;
 import org.lealone.plugins.test.service.impl.UserServiceImpl;
 import org.lealone.test.TestBase.MainTest;
@@ -231,5 +232,22 @@ public class SqlScript implements MainTest {
                 + "           implement by '" + HelloWorldServiceImpl.class.getName() + "'" //
                 + "           generate code '" + GENERATED_CODE_PATH + "'" //
                 + "           parameters(" + ServiceSetting.CREATE_METHOD_NAME + "='_create')");
+    }
+
+    public static void createCollectionTypeService(SqlExecutor executor) {
+        System.out.println("create service: collection_type_service");
+        executor.execute("drop service if exists collection_type_service");
+        executor.execute("create service collection_type_service (" //
+                + "             m1() list," //
+                + "             m2() list<int>," //
+                + "             m3() set," //
+                + "             m4() set<varchar>," //
+                + "             m5() map," //
+                + "             m6() map<int, varchar>," //
+                + "             m7(p1 list<int>, p2 set<varchar>, p3 map<int, varchar>, p4 int)"
+                + "                  map<int, varchar>" //
+                + "         ) package '" + SERVICE_PACKAGE_NAME + "'" //
+                + "           implement by '" + CollectionTypeServiceImpl.class.getName() + "'" //
+                + " generate code '" + GENERATED_CODE_PATH + "'");
     }
 }

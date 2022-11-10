@@ -17,17 +17,28 @@
  */
 package org.lealone.plugins.test.vertx.net;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.lealone.common.exceptions.ConfigException;
 import org.lealone.main.config.Config;
-import org.lealone.plugins.test.PluginServerStart;
 import org.lealone.plugins.test.PluginTestBase;
+import org.lealone.test.start.NodeBase;
+import org.lealone.test.start.TcpServerStart;
 
 import io.vertx.core.spi.resolver.ResolverProvider;
 
-public class VertxNetServerStart extends PluginServerStart {
+public class VertxNetServerStart extends TcpServerStart {
 
     public static void main(String[] args) {
-        start(VertxNetServerStart.class);
+        CountDownLatch latch = new CountDownLatch(1);
+        new Thread(() -> {
+            NodeBase.run(VertxNetServerStart.class, new String[0], latch);
+        }).start();
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

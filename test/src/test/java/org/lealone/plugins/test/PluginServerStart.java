@@ -17,21 +17,11 @@
  */
 package org.lealone.plugins.test;
 
-import org.lealone.test.start.NodeBase;
+import org.lealone.main.Lealone;
 
-public class PluginServerStart extends NodeBase {
-
-    // YamlConfigLoader的子类必须有一个无参数的构造函数
-    public PluginServerStart() {
-        nodeBaseDirPrefix = "plugins";
-    }
+public class PluginServerStart {
 
     public static void main(String[] args) {
-        NodeBase.run(PluginServerStart.class, args);
-    }
-
-    public static void start(Class<? extends PluginServerStart> clz) {
-        // DeletePluginsTestData.main(new String[0]);
-        NodeBase.run(clz, null);
+        Lealone.main(args);
     }
 }

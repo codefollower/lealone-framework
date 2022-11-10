@@ -58,4 +58,11 @@ protocol_server_engines:
         ssl: false,
         session_timeout: -1
     }
- 
+  - name: VERTX
+    enabled: true
+    parameters: {
+        port: 9000,
+        environment: prod,
+        web_root: ./web,
+        jdbc_url: "jdbc:lealone:embed:lealone"
+    }
