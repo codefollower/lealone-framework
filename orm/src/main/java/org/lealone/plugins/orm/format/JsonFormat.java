@@ -54,4 +54,10 @@ public interface JsonFormat {
     public TimestampFormat getTimestampFormat();
 
     public UuidFormat getUuidFormat();
+
+    public <E> ListFormat<E> getListFormat();
+
+    public <E> SetFormat<E> getSetFormat();
+
+    public <K, V> MapFormat<K, V> getMapFormat();
 }

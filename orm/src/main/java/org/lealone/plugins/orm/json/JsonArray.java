@@ -14,19 +14,15 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import org.lealone.common.exceptions.DbException;
 import org.lealone.db.service.JsonArrayGetter;
-import org.lealone.db.value.DataType;
 import org.lealone.db.value.ReadonlyArray;
 import org.lealone.db.value.Value;
-import org.lealone.db.value.ValueString;
 
 /**
  * A representation of a <a href="http://json.org/">JSON</a> array in Java.
@@ -413,22 +409,7 @@ public class JsonArray extends Json implements Iterable<Object> {
 
     public <K, V> Map<K, V> getMap(int pos, Class<?> keyClass) {
         Object v = list.get(pos);
-        if (v == null)
-            return null;
-        else {
-            Map<K, V> map = (Map<K, V>) v;
-            if (keyClass == null || keyClass == String.class)
-                return map;
-            else {
-                int type = DataType.getTypeFromClass(keyClass);
-                Map<K, V> newMap = new LinkedHashMap<>(map.size());
-                for (Entry<K, V> e : map.entrySet()) {
-                    ValueString key = ValueString.get(e.getKey().toString());
-                    newMap.put((K) key.convertTo(type).getObject(), e.getValue());
-                }
-                return newMap;
-            }
-        }
+        return convertToMap(v, keyClass);
     }
 
     /**

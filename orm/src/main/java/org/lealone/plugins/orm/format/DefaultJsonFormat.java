@@ -45,6 +45,12 @@ public class DefaultJsonFormat implements JsonFormat {
 
     public static final NameCaseFormat NAME_CASE_FORMAT = new NameCaseFormat();
 
+    public static final ListFormat<?> LIST_FORMAT = new ListFormat<>();
+
+    public static final SetFormat<?> SET_FORMAT = new SetFormat<>();
+
+    public static final MapFormat<?, ?> MAP_FORMAT = new MapFormat<>();
+
     @Override
     public boolean includesInternalFields() {
         return true;
@@ -148,5 +154,23 @@ public class DefaultJsonFormat implements JsonFormat {
     @Override
     public UuidFormat getUuidFormat() {
         return UUID_FORMAT;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E> ListFormat<E> getListFormat() {
+        return (ListFormat<E>) LIST_FORMAT;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E> SetFormat<E> getSetFormat() {
+        return (SetFormat<E>) SET_FORMAT;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <K, V> MapFormat<K, V> getMapFormat() {
+        return (MapFormat<K, V>) MAP_FORMAT;
     }
 }

@@ -15,11 +15,16 @@ import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import org.lealone.db.value.DataType;
+import org.lealone.db.value.ValueString;
 
 /**
  * @author <a href="http://tfox.org">Tim Fox</a>
@@ -249,5 +254,25 @@ public abstract class Json {
     static <T> Stream<T> asStream(Iterator<T> sourceIterator) {
         Iterable<T> iterable = () -> sourceIterator;
         return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> convertToMap(Object v, Class<?> keyClass) {
+        if (v == null)
+            return null;
+        else {
+            Map<K, V> map = (Map<K, V>) v;
+            if (keyClass == null || keyClass == String.class || keyClass == Object.class)
+                return map;
+            else {
+                int type = DataType.getTypeFromClass(keyClass);
+                Map<K, V> newMap = new LinkedHashMap<>(map.size());
+                for (Entry<K, V> e : map.entrySet()) {
+                    ValueString key = ValueString.get(e.getKey().toString());
+                    newMap.put((K) key.convertTo(type).getObject(), e.getValue());
+                }
+                return newMap;
+            }
+        }
     }
 }

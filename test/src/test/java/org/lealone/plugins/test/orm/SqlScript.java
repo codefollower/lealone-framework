@@ -188,6 +188,23 @@ public class SqlScript implements MainTest {
         System.out.println("create table: all_model_property");
     }
 
+    public static void createCollectionPropertyTable(SqlExecutor executor) {
+
+        executor.execute("drop table if exists collection_property");
+        executor.execute("CREATE TABLE if not exists collection_property (" //
+                + " f1  list," //
+                + " f2  list<int>," //
+                + " f3  set," //
+                + " f4  set<varchar>," //
+                + " f5  map," //
+                + " f6  map<int, varchar>" //
+                + ")" //
+                + " PACKAGE '" + MODEL_PACKAGE_NAME + "'" //
+                + " GENERATE CODE '" + GENERATED_CODE_PATH + "'");
+
+        System.out.println("create table: collection_property");
+    }
+
     public static void createAllTypeService(SqlExecutor executor) {
         System.out.println("create service: all_type_service");
         executor.execute("drop service if exists all_type_service");
