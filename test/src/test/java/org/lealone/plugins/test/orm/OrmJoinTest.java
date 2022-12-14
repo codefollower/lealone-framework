@@ -112,5 +112,18 @@ public class OrmJoinTest extends OrmTestBase {
         System.out.println();
         System.out.println("count = " + count(sql));
         explain(sql);
+
+        // 测试inner、left、right join
+        customer = new Customer().id.set(900).name.set("c900").phone.set(900);
+        customer.insert();
+
+        customerList = c.join(o).on().id.eq(o.customerId).where().id.eq(900).findList();
+        assertEquals(0, customerList.size());
+
+        customerList = c.leftJoin(o).on().id.eq(o.customerId).where().id.eq(900).findList();
+        assertEquals(1, customerList.size());
+
+        customerList = c.rightJoin(o).on().id.eq(o.customerId).where().id.eq(900).findList();
+        assertEquals(0, customerList.size());
     }
 }

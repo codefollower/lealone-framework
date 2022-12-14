@@ -85,6 +85,10 @@ public abstract class Model<T extends Model<T>> {
             return list.pollFirst();
         }
 
+        public E popLast() {
+            return list.pollLast();
+        }
+
         public E peek() {
             return list.peekFirst();
         }
@@ -97,9 +101,9 @@ public abstract class Model<T extends Model<T>> {
             return list.size();
         }
 
-        public E first() {
-            return list.peekLast();
-        }
+        // public E first() {
+        // return list.peekLast();
+        // }
     }
 
     private static class NVPair {
@@ -395,12 +399,22 @@ public abstract class Model<T extends Model<T>> {
 
     private void joinTableFilter() {
         if (tableFilterStack != null) {
-            TableFilter first = tableFilterStack.first();
-            while (tableFilterStack.size() > 1) {
-                ExpressionBuilder<T> on = getStack().pop();
-                TableFilter joined = getTableFilterStack().pop();
-                first.addJoin(joined, false, on.getExpression());
+            ModelTableFilter top = (ModelTableFilter) getTableFilterStack().popLast();
+            ExpressionBuilder<T> topOn = getStack().popLast();
+            while (tableFilterStack.size() > 0) {
+                ExpressionBuilder<T> on = getStack().popLast();
+                ModelTableFilter join = (ModelTableFilter) getTableFilterStack().popLast();
+                if (join.isLeftJoin) {
+                    top.addJoin(join, true, on.getExpression());
+                } else if (join.isRightJoin) {
+                    join.addJoin(top, true, on.getExpression());
+                    top = join;
+                } else {
+                    top.addJoin(join, false, on.getExpression());
+                }
             }
+            tableFilterStack.push(top);
+            getStack().push(topOn);
         }
     }
 
@@ -561,8 +575,8 @@ public abstract class Model<T extends Model<T>> {
         for (Model<?> m : set) {
             m = m.newInstance(m.modelTable, REGULAR_MODEL);
             m._rowid_.deserialize(map);
-            if (m._rowid_.get() == 0) {
-                DbException.throwInternalError();
+            if (m._rowid_.get() == 0) { // left join 右边的表可能没有记录
+                // DbException.throwInternalError();
             }
             Model<?> old = putIfAbsent(topMap, m);
             if (old == null) {
@@ -962,7 +976,30 @@ public abstract class Model<T extends Model<T>> {
     }
 
     private TableFilter createTableFilter() {
-        return new TableFilter(modelTable.getSession(), modelTable.getTable(), null, true, null);
+        return new ModelTableFilter(modelTable.getSession(), modelTable.getTable(), null, true, null);
+    }
+
+    private TableFilter createTableFilter(boolean isLeftJoin, boolean isRightJoin) {
+        return new ModelTableFilter(modelTable.getSession(), modelTable.getTable(), null, true, null,
+                isLeftJoin, isRightJoin);
+    }
+
+    private static class ModelTableFilter extends TableFilter {
+
+        private boolean isLeftJoin;
+        private boolean isRightJoin;
+
+        public ModelTableFilter(ServerSession session, Table table, String alias, boolean rightsChecked,
+                Select select) {
+            super(session, table, alias, rightsChecked, select);
+        }
+
+        public ModelTableFilter(ServerSession session, Table table, String alias, boolean rightsChecked,
+                Select select, boolean isLeftJoin, boolean isRightJoin) {
+            super(session, table, alias, rightsChecked, select);
+            this.isLeftJoin = isLeftJoin;
+            this.isRightJoin = isRightJoin;
+        }
     }
 
     private Stack<TableFilter> getTableFilterStack() {
@@ -1040,6 +1077,26 @@ public abstract class Model<T extends Model<T>> {
             return m2.join(m);
         }
         getTableFilterStack().push(m.createTableFilter());
+        m.tableFilterStack = getTableFilterStack();
+        return root;
+    }
+
+    public T leftJoin(Model<?> m) {
+        Model<T> m2 = maybeCopy();
+        if (m2 != this) {
+            return m2.leftJoin(m);
+        }
+        getTableFilterStack().push(m.createTableFilter(true, false));
+        m.tableFilterStack = getTableFilterStack();
+        return root;
+    }
+
+    public T rightJoin(Model<?> m) {
+        Model<T> m2 = maybeCopy();
+        if (m2 != this) {
+            return m2.rightJoin(m);
+        }
+        getTableFilterStack().push(m.createTableFilter(false, true));
         m.tableFilterStack = getTableFilterStack();
         return root;
     }
