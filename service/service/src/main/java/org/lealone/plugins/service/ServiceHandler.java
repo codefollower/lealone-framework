@@ -12,7 +12,10 @@ import java.util.Set;
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
 import org.lealone.common.util.StringUtils;
+import org.lealone.db.ConnectionInfo;
+import org.lealone.db.Constants;
 import org.lealone.db.service.Service;
+import org.lealone.db.session.ServerSession;
 import org.lealone.plugins.orm.Model;
 import org.lealone.plugins.orm.json.Json;
 
@@ -22,10 +25,21 @@ public class ServiceHandler {
 
     protected final String defaultDatabase;
     protected final String defaultSchema;
+    protected final ServerSession session;
 
     public ServiceHandler(Map<String, String> config) {
         defaultDatabase = config.get("default_database");
         defaultSchema = config.get("default_schema");
+
+        String url = config.get("jdbc_url");
+        if (url == null)
+            url = Constants.URL_PREFIX + Constants.URL_EMBED + defaultDatabase + ";password=;user=root";
+        ConnectionInfo ci = new ConnectionInfo(url);
+        session = (ServerSession) ci.createSession();
+    }
+
+    public ServerSession getSession() {
+        return session;
     }
 
     public String executeService(String serviceName, String methodName, Map<String, Object> methodArgs) {
@@ -46,7 +60,8 @@ public class ServiceHandler {
             if (serviceName.toUpperCase().contains("LEALONE_SYSTEM_SERVICE")) {
                 result = SystemService.execute(serviceName, methodName, methodArgs);
             } else {
-                result = Service.execute(serviceName, methodName, methodArgs, disableDynamicCompile);
+                result = Service.execute(session, serviceName, methodName, methodArgs,
+                        disableDynamicCompile);
             }
         } catch (Exception e) {
             result = "failed to execute service: " + serviceName + "." + methodName + ", cause: "

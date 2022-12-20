@@ -44,7 +44,7 @@ import io.vertx.ext.web.handler.sockjs.SockJSSocket;
 public class ServiceHandlerOld implements Handler<SockJSSocket> {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceHandlerOld.class);
-    private static final ConcurrentSkipListMap<Integer, Connection> currentConnections = new ConcurrentSkipListMap<>();
+    private static final Map<Integer, Connection> currentConnections = new ConcurrentSkipListMap<>();
 
     private static void removeConnection(Integer key) {
         currentConnections.remove(key);
@@ -100,7 +100,7 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
         Object result = null;
         try {
             logger.info("execute service: " + serviceName);
-            result = Service.execute(serviceName, methodName, methodArgs);
+            result = Service.execute(null, serviceName, methodName, methodArgs);
         } catch (Exception e) {
             result = "failed to execute service: " + serviceName + ", cause: " + e.getMessage();
             logger.error(result, e);
@@ -126,7 +126,7 @@ public class ServiceHandlerOld implements Handler<SockJSSocket> {
         case 1:
             try {
                 logger.info("execute service: " + serviceName);
-                result = Service.execute(serviceName, json);
+                result = Service.execute(null, serviceName, json);
                 ja.add(2);
             } catch (Exception e) {
                 ja.add(3);

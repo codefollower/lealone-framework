@@ -80,7 +80,7 @@ public class VertxServiceHandler extends ServiceHandler implements Handler<SockJ
                 if (serviceName.toUpperCase().contains("LEALONE_SYSTEM_SERVICE")) {
                     result = SystemService.execute(serviceName, json);
                 } else {
-                    result = Service.execute(serviceName, json);
+                    result = Service.execute(getSession(), serviceName, json);
                 }
                 ja.add(2);
             } catch (Exception e) {
