@@ -13,10 +13,9 @@ public class MemoryStorageTest extends TestBase {
     @Test
     public void run() throws Exception {
         TestBase test = new TestBase();
-        test.setStorageEngineName(org.lealone.plugins.memory.MemoryStorageEngine.NAME);
         test.setInMemory(true);
         test.setEmbedded(true);
         test.printURL();
-        CRUDExample.crud(test.getConnection());
+        CRUDExample.crud(test.getConnection(), org.lealone.plugins.memory.MemoryStorageEngine.NAME);
     }
 }

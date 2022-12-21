@@ -17,12 +17,18 @@
  */
 package org.lealone.plugins.test.mvstore;
 
+import org.junit.Test;
 import org.lealone.plugins.mvstore.MVStorageEngine;
-import org.lealone.plugins.test.StorageTestBase;
+import org.lealone.test.TestBase;
+import org.lealone.test.misc.CRUDExample;
 
-public class MVStoreTest extends StorageTestBase {
-
-    public MVStoreTest() {
-        super(MVStorageEngine.NAME);
+public class MVStoreTest extends TestBase {
+    @Test
+    public void run() throws Exception {
+        TestBase test = new TestBase();
+        test.setInMemory(true);
+        test.setEmbedded(true);
+        test.printURL();
+        CRUDExample.crud(test.getConnection(), MVStorageEngine.NAME);
     }
 }
