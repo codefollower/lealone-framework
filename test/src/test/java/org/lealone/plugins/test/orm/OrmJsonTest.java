@@ -26,6 +26,7 @@ public class OrmJsonTest extends OrmTestBase {
         setInMemory(true);
         SqlScript.createUserTable(this);
         SqlScript.createJsonTestTable(this);
+        System.setProperty("lealone.orm.json.format", "DEFAULT_FORMAT");
     }
 
     @Test

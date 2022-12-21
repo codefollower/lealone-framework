@@ -627,7 +627,7 @@ public abstract class Model<T extends Model<T>> {
             else if (jfName.equalsIgnoreCase("LOWER_UNDERSCORE_FORMAT"))
                 jsonFormat = JsonFormat.LOWER_UNDERSCORE_FORMAT;
             else if (jfName.equalsIgnoreCase("FRONTEND_FORMAT"))
-                jsonFormat = JsonFormat.DEFAULT_FORMAT;
+                jsonFormat = JsonFormat.FRONTEND_FORMAT;
             else
                 jsonFormat = Utils.newInstance(jfName);
         }
