@@ -64,5 +64,5 @@ protocol_server_engines:
         port: 9000,
         environment: prod,
         web_root: ./web,
-        jdbc_url: "jdbc:lealone:embed:lealone"
+        jdbc_url: "jdbc:lealone:embed:test"
     }
