@@ -18,10 +18,10 @@ import org.lealone.plugins.postgresql.server.PgServer;
 public class PgJdbcTest {
 
     public static Connection getConnection() throws Exception {
-        String url = "jdbc:postgresql://localhost:" + PgServer.DEFAULT_PORT + "/test";
+        String url = "jdbc:postgresql://localhost:" + PgServer.DEFAULT_PORT + "/postgres";
         Properties info = new Properties();
-        info.put("user", "test");
-        info.put("password", "test");
+        info.put("user", "postgres");
+        info.put("password", "postgres");
         return DriverManager.getConnection(url, info);
     }
 
