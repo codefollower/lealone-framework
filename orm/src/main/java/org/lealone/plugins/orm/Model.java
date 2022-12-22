@@ -239,6 +239,10 @@ public abstract class Model<T extends Model<T>> {
     }
 
     protected <M> List<M> getModelList(Class c) {
+        // 右表可能为null
+        if (modelMap == null) {
+            return null;
+        }
         ArrayList<Model<?>> oldList = modelMap.get(c);
         if (oldList == null) {
             return null;
