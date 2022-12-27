@@ -13,7 +13,7 @@ mvn package -Dmaven.test.skip=true
 
 ### 运行
 
-进入 `lealone-plugins\target` 目录，运行: java -jar create-lealone-app-5.0.0.jar [选项]
+进入 `lealone-plugins\target` 目录，运行: java -jar create-lealone-app-5.1.0.jar [选项]
 
 支持以下选项：
 
@@ -41,10 +41,12 @@ mvn package -Dmaven.test.skip=true
         -encoding <编码>
                 指定生成的文件采用的编码 (默认是 UTF-8)
 
+        -singleModule <true|false>
+                是否是单模块项目 (默认是 true)
 
 ### 例如创建一个 hello 应用
 
-java -jar create-lealone-app-5.0.0.jar -groupId org.lealone.examples.hello -artifactId hello
+java -jar create-lealone-app-5.1.0.jar -groupId org.lealone.examples.hello -artifactId hello
 
 
 ### 构建 hello 应用

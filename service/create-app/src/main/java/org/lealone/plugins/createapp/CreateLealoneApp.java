@@ -209,7 +209,7 @@ public class CreateLealoneApp {
 
         println("-encoding <编码>", "指定生成的文件采用的编码 (默认是 UTF-8)");
 
-        println("-singleModule <true/false>", "是否是单模块项目 (默认是 true)");
+        println("-singleModule <true|false>", "是否是单模块项目 (默认是 true)");
     }
 
     private static void println(String s1, String s2) {
