@@ -15,20 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lealone.plugins.createapp;
+package ${packageName}.web;
 
-public class CreateLealoneAppTest {
+import java.util.Map;
 
-    public static void main(String[] args) throws Exception {
-        String str = "" //
-                + "-appBaseDir ./target " //
-                + "-appName hello " //
-                + "-groupId org.lealone.examples.hello " //
-                + "-artifactId hello " //
-                + "-version 1.0.1 " //
-        // + "-singleModule false " //
-        ;
-        CreateLealoneApp.main(str.split(" "));
+import org.lealone.plugins.service.http.HttpServer;
+import org.lealone.plugins.vertx.VertxRouter;
+
+public class ${appClassName}Router extends VertxRouter {
+
+    @Override
+    public void init(HttpServer server, Map<String, String> config) {
+        super.init(server, config);
     }
 
 }

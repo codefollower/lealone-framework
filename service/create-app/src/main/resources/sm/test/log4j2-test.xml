@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -14,21 +15,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package org.lealone.plugins.createapp;
-
-public class CreateLealoneAppTest {
-
-    public static void main(String[] args) throws Exception {
-        String str = "" //
-                + "-appBaseDir ./target " //
-                + "-appName hello " //
-                + "-groupId org.lealone.examples.hello " //
-                + "-artifactId hello " //
-                + "-version 1.0.1 " //
-        // + "-singleModule false " //
-        ;
-        CreateLealoneApp.main(str.split(" "));
-    }
-
-}
+-->
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%-4level %date{HH:mm:ss.SSS} %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>
