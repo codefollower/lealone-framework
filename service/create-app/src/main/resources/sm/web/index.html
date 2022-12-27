@@ -1,11 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>${appName}</title>
+    <meta charset="utf-8">
+    <title>${appName}</title>
+    <script src="axios.min-0.21.1.js"></script>
+    <script src="lealone-rpc-5.0.0.js"></script>
+    <script src="vue.min-2.3.3.js"></script>
 </head>
 
-<body>
-  看到我了吗？哈哈哈……
+<body lang="en">
+    <h1>hello service test</h1>
+    <p><a href="/service/hello_service/say_hello?name=zhh">click me</a></p>
+ 
+    <h1>rpc client test</h1>
+
+    <div id="test">
+        say hello: <input v-model="name">
+        <button v-on:click="sayHello">submit</button>
+        <p>{{ message }}</p>
+    </div>
+
+    <script> 
+    new Vue({
+        el: '#test',
+        data: {
+            name: "zhh",
+            message: ""
+        },
+        methods: {
+            sayHello: function() {
+                //获得一个服务代理
+                var s = lealone.getService("hello_service");
+                //调用服务
+                s.sayHello(this.name, message => {
+                    this.message = message;
+                });
+            }
+        }
+    })
+    </script>
 </body>
 </html>

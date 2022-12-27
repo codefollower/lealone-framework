@@ -19,8 +19,11 @@ package org.lealone.plugins.createapp;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Locale;
 
@@ -485,6 +488,9 @@ public class CreateLealoneApp {
         webDir.mkdir();
 
         writeFile("/sm/web/index.html", webDir);
+        copyFile("/sm/web/axios.min-0.21.1.js", webDir);
+        copyFile("/sm/web/vue.min-2.3.3.js", webDir);
+        copyFile("/sm/web/lealone-rpc-5.0.0.js", webDir);
     }
 
     private Configuration freeMarkerConfiguration;
@@ -494,6 +500,19 @@ public class CreateLealoneApp {
         freeMarkerConfiguration.setDefaultEncoding(encoding);
         freeMarkerConfiguration.setLocale(Locale.ENGLISH);
         freeMarkerConfiguration.setTemplateLoader(new ClassTemplateLoader(this.getClass(), "/"));
+    }
+
+    private void copyFile(String srcFile, File toDir) throws Exception {
+        srcFile = srcMainResources + srcFile;
+        String fileName = new File(srcFile).getName();
+        try (InputStream in = new FileInputStream(srcFile);
+                OutputStream out = new FileOutputStream(new File(toDir, fileName))) {
+            int n = 0;
+            byte[] buffer = new byte[4096];
+            while (-1 != (n = in.read(buffer))) {
+                out.write(buffer, 0, n);
+            }
+        }
     }
 
     private void writeFile(String srcFile, File toDir) throws Exception {
