@@ -94,6 +94,9 @@ public class VertxServiceHandler extends ServiceHandler implements Handler<SockJ
             result = "unknown request type: " + type + ", serviceName: " + serviceName;
             logger.error(result);
         }
+        // 如果为null就返回"null"字符串
+        if (result == null)
+            result = "null";
         ja.add(oldServiceName); // 前端传来的方法名不一定是下划线风格的，所以用最初的
         ja.add(result.toString());
         return ja.toString();
