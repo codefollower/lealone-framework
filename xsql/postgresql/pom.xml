@@ -9,13 +9,13 @@
     <parent>
         <groupId>org.lealone.plugins</groupId>
         <artifactId>xsql-parent</artifactId>
-        <version>5.1.0</version>
+        <version>5.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>lealone-postgresql</artifactId>
     <packaging>jar</packaging>
-    <version>5.1.0</version>
+    <version>5.1.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
