@@ -8,35 +8,35 @@
         <dependency>
             <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-service</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>5.1.1-SNAPSHOT</version>
         </dependency>
 
         <!-- 使用 Vertx 作为 HTTP Server -->
         <dependency>
             <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-vertx</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>5.1.1-SNAPSHOT</version>
         </dependency>
 
         <!-- 也可以使用 Tomcat 作为 HTTP Server -->
         <dependency>
             <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-tomcat</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>5.1.1-SNAPSHOT</version>
         </dependency>
 
         <!-- 使用 JavaScript 开发微服务应用-->
         <dependency>
             <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-javascript</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>5.1.1-SNAPSHOT</version>
         </dependency>
 
         <!-- 使用 Python 开发微服务应用-->
         <dependency>
             <groupId>org.lealone.plugins</groupId>
             <artifactId>lealone-python</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>5.1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -77,11 +77,11 @@
 
 ## 运行 Lealone 数据库
 
-进入 `lealone-plugins\target` 目录，运行: `java -jar lealone-polyglot-5.0.0-SNAPSHOT.jar`
+进入 `lealone-plugins\target` 目录，运行: `java -jar lealone-polyglot-5.1.1-SNAPSHOT.jar`
 
 ```java
-Lealone version: 5.0.0-SNAPSHOT
-Loading config from jar:file:/E:/lealone/lealone-plugins/target/lealone-polyglot-5.0.0-SNAPSHOT.jar!/lealone.yaml
+Lealone version: 5.1.1-SNAPSHOT
+Loading config from jar:file:/E:/lealone/lealone-plugins/target/lealone-polyglot-5.1.1-SNAPSHOT.jar!/lealone.yaml
 Base dir: .\lealone_data
 Init storage engines: 5 ms
 Init transaction engines: 62 ms
@@ -122,7 +122,7 @@ def hello(name):
 
 打开一个新的命令行窗口，进入 `lealone-plugins\target` 目录，
 
-运行: `java -jar lealone-polyglot-5.0.0-SNAPSHOT.jar -client`
+运行: `java -jar lealone-polyglot-5.1.1-SNAPSHOT.jar -client`
 
 执行以下 SQL 创建 js_hello_service
 
