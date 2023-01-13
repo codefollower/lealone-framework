@@ -57,13 +57,7 @@ call mvn eclipse:eclipse -DdownloadSources=true
 goto end
 
 :p
-REM call mvn package assembly:assembly -Dmaven.test.skip=true
-
-call mvn package -Dmaven.test.skip=true
-java -cp target/${artifactId}-all-${version}.jar^
-     org.lealone.plugins.service.template.TemplateCompiler^
-     -webRoot web -targetDir target
-call mvn assembly:assembly -Dmaven.test.skip=true
+call mvn package assembly:assembly -Dmaven.test.skip=true
 goto end
 
 :pc

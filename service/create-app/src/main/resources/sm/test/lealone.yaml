@@ -26,5 +26,5 @@ protocol_server_engines:
         environment: dev,
         web_root: ./web,
         router: "${packageName}.web.${appClassName}Router",
-        jdbc_url: "jdbc:lealone:embed:${dbName}?user=root"
+        jdbc_url: "jdbc:lealone:embed:${dbName}?user=root&password="
     }

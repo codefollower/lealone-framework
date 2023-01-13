@@ -457,8 +457,8 @@ public class CreateLealoneApp {
         toDir.mkdirs();
         writeFile("/sm/test/AppTest.java.ftl", toDir, appClassName + "Test.java");
         writeFile("/sm/test/SqlScriptTest.java.ftl", toDir, appClassName + "SqlScriptTest.java");
-        writeFile("/sm/test/TemplateCompilerTest.java.ftl", toDir,
-                appClassName + "TemplateCompilerTest.java");
+        // writeFile("/sm/test/TemplateCompilerTest.java.ftl", toDir,
+        // appClassName + "TemplateCompilerTest.java");
     }
 
     private void writeWebFiles() throws Exception {

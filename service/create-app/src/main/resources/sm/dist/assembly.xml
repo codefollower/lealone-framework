@@ -38,7 +38,7 @@
 			<outputDirectory>sql</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>./target/web</directory>
+			<directory>./web</directory>
 			<outputDirectory>web</outputDirectory>
 		</fileSet>
     </fileSets>
