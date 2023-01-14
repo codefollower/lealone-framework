@@ -49,6 +49,7 @@
             <groupId>org.lealone</groupId>
             <artifactId>lealone-test</artifactId>
             <version>${project.version}</version>
+            <classifier>tests</classifier>
         </dependency>
     </dependencies>
 </project>
