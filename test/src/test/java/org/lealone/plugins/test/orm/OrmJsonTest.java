@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.lealone.plugins.orm.format.JsonFormat;
@@ -19,6 +20,8 @@ import org.lealone.plugins.test.orm.generated.User;
 
 public class OrmJsonTest extends OrmTestBase {
 
+    private String oldJsonFormat;
+
     @Before
     @Override
     public void setUpBefore() {
@@ -26,7 +29,16 @@ public class OrmJsonTest extends OrmTestBase {
         setInMemory(true);
         SqlScript.createUserTable(this);
         SqlScript.createJsonTestTable(this);
+        oldJsonFormat = System.getProperty("lealone.orm.json.format");
         System.setProperty("lealone.orm.json.format", "DEFAULT_FORMAT");
+    }
+
+    @After
+    public void setUpAfter() {
+        if (oldJsonFormat != null)
+            System.setProperty("lealone.orm.json.format", oldJsonFormat);
+        else
+            System.setProperty("lealone.orm.json.format", "FRONTEND_FORMAT");
     }
 
     @Test
