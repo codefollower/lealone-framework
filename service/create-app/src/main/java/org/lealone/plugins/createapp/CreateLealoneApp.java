@@ -503,9 +503,11 @@ public class CreateLealoneApp {
     }
 
     private void copyFile(String srcFile, File toDir) throws Exception {
+        String s = srcFile;
         srcFile = srcMainResources + srcFile;
         String fileName = new File(srcFile).getName();
-        try (InputStream in = new FileInputStream(srcFile);
+        try (InputStream in = new File(srcFile).exists() ? new FileInputStream(srcFile)
+                : getClass().getResourceAsStream(s);
                 OutputStream out = new FileOutputStream(new File(toDir, fileName))) {
             int n = 0;
             byte[] buffer = new byte[4096];
