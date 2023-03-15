@@ -9,13 +9,13 @@
     <parent>
         <groupId>org.lealone.plugins</groupId>
         <artifactId>service-parent</artifactId>
-        <version>5.1.1</version>
+        <version>5.1.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>lealone-python</artifactId>
     <packaging>jar</packaging>
-    <version>5.1.1</version>
+    <version>5.1.2</version>
 
     <dependencies>
         <dependency>
