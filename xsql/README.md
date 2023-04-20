@@ -24,12 +24,12 @@ PostgreSQL JDBC Driver 支持 9.x 和 42.x 两个系列版本
 
 ## 运行 Lealone 数据库
 
-进入 `lealone-plugins\target` 目录，运行: `java -jar lealone-xsql-5.1.2.jar`
+进入 `lealone-plugins\target` 目录，运行: `java -jar lealone-xsql-5.2.0.jar`
 
 ```java
-E:\lealone\lealone-plugins\target>java -jar lealone-xsql-5.1.2.jar
-Lealone version: 5.1.2
-Loading config from jar:file:/E:/lealone/lealone-plugins/target/lealone-xsql-5.1.2.jar!/lealone.yaml
+E:\lealone\lealone-plugins\target>java -jar lealone-xsql-5.2.0.jar
+Lealone version: 5.2.0
+Loading config from jar:file:/E:/lealone/lealone-plugins/target/lealone-xsql-5.2.0.jar!/lealone.yaml
 Base dir: .\lealone_data
 Init storage engines: 4 ms
 Init transaction engines: 27 ms
@@ -55,7 +55,7 @@ Exit with Ctrl+C
 ```sql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 0
-Server version: 5.1.48-lealone-5.1.2
+Server version: 5.1.48-lealone-5.2.0
 
 Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
 
