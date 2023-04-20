@@ -17,8 +17,6 @@
  */
 package org.lealone.plugins.mvstore;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-
 import org.h2.mvstore.MVStore;
 import org.lealone.storage.StorageBuilder;
 
@@ -78,11 +76,5 @@ public class MVStorageBuilder extends StorageBuilder {
     public StorageBuilder pageSplitSize(int pageSplitSize) {
         builder.pageSplitSize(pageSplitSize);
         return super.pageSplitSize(pageSplitSize);
-    }
-
-    @Override
-    public StorageBuilder backgroundExceptionHandler(UncaughtExceptionHandler exceptionHandler) {
-        builder.backgroundExceptionHandler(exceptionHandler);
-        return super.backgroundExceptionHandler(exceptionHandler);
     }
 }
