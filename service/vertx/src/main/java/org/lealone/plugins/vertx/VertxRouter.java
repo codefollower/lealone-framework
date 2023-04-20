@@ -92,8 +92,8 @@ public class VertxRouter implements HttpRouter {
     }
 
     protected void setCorsHandler(Map<String, String> config, Vertx vertx, Router router) {
-        router.route().handler(
-                CorsHandler.create("*").allowedMethod(HttpMethod.GET).allowedMethod(HttpMethod.POST));
+        router.route().handler(CorsHandler.create().addRelativeOrigin(".*").allowedMethod(HttpMethod.GET)
+                .allowedMethod(HttpMethod.POST));
     }
 
     protected String getServicePath(Map<String, String> config) {
