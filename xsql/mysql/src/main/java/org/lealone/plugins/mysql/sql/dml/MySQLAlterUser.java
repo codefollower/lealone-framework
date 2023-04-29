@@ -13,7 +13,6 @@ import org.lealone.db.lock.DbObjectLock;
 import org.lealone.db.session.ServerSession;
 import org.lealone.sql.SQLStatement;
 import org.lealone.sql.ddl.AuthStatement;
-import org.lealone.sql.ddl.DefinitionStatement;
 import org.lealone.sql.expression.Expression;
 
 /**
@@ -25,7 +24,7 @@ import org.lealone.sql.expression.Expression;
  * @author H2 Group
  * @author zhh
  */
-public class MySQLAlterUser extends DefinitionStatement implements AuthStatement {
+public class MySQLAlterUser extends AuthStatement {
 
     private int type;
     private User user;

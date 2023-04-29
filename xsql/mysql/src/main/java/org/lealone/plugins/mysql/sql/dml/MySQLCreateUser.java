@@ -16,7 +16,6 @@ import org.lealone.plugins.mysql.db.MySQLUser;
 import org.lealone.plugins.mysql.server.util.SecurityUtil;
 import org.lealone.sql.SQLStatement;
 import org.lealone.sql.ddl.AuthStatement;
-import org.lealone.sql.ddl.DefinitionStatement;
 import org.lealone.sql.expression.Expression;
 
 /**
@@ -26,7 +25,7 @@ import org.lealone.sql.expression.Expression;
  * @author H2 Group
  * @author zhh
  */
-public class MySQLCreateUser extends DefinitionStatement implements AuthStatement {
+public class MySQLCreateUser extends AuthStatement {
 
     private String userName;
     private boolean admin;
