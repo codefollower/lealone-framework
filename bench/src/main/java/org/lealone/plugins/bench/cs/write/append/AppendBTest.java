@@ -12,11 +12,9 @@ import org.lealone.plugins.bench.cs.write.ClientServerWriteBTest;
 
 public abstract class AppendBTest extends ClientServerWriteBTest {
 
-    private String[] sqls;
-
     public AppendBTest() {
         threadCount = 20;
-        rowCount = loop * sqlCountPerLoop * threadCount;
+        rowCount = innerLoop * sqlCountPerInnerLoop * threadCount;
         sqls = new String[rowCount];
     }
 
@@ -43,7 +41,7 @@ public abstract class AppendBTest extends ClientServerWriteBTest {
 
         UpdateThread(int id, Connection conn) {
             super(id, conn);
-            start = loop * sqlCountPerLoop * id;
+            start = innerLoop * sqlCountPerInnerLoop * id;
         }
 
         @Override

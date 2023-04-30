@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.lealone.db.LealoneDatabase;
 import org.lealone.db.SysProperties;
-import org.lealone.plugins.bench.embed.TestBase;
+import org.lealone.test.TestBase;
 import org.lealone.transaction.aote.log.LogSyncService;
 
 //以单元测试的方式运行会比通过main方法运行得出稍微慢一些的测试结果，
@@ -30,8 +30,8 @@ import org.lealone.transaction.aote.log.LogSyncService;
 //-XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xmx800M
 public abstract class BenchTest {
 
-    public static final String BENCH_TEST_BASE_DIR = "." + File.separatorChar + "target" + File.separatorChar
-            + "bench-test-data";
+    public static final String BENCH_TEST_BASE_DIR = "." + File.separatorChar + "target"
+            + File.separatorChar + "bench-test-data";
 
     public static Connection getConnection(int port, String user, String password) throws Exception {
         String url = "jdbc:postgresql://localhost:" + port + "/test";
@@ -210,8 +210,8 @@ public abstract class BenchTest {
     }
 
     protected void printRunResult(int loop, long totalTime, long avgTime, String str) {
-        printResult(loop, ", row count: " + rowCount + ", thread count: " + threadCount + str + ", total time: "
-                + totalTime + " ms, avg time: " + avgTime + " ms");
+        printResult(loop, ", row count: " + rowCount + ", thread count: " + threadCount + str
+                + ", total time: " + totalTime + " ms, avg time: " + avgTime + " ms");
     }
 
     protected void resetFields() {

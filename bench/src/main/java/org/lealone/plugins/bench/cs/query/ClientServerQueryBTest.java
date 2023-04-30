@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh
  */
-package org.lealone.plugins.bench.cs.write;
+package org.lealone.plugins.bench.cs.query;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,13 +14,13 @@ import java.util.concurrent.TimeUnit;
 import org.lealone.client.jdbc.JdbcStatement;
 import org.lealone.plugins.bench.cs.ClientServerBTest;
 
-public abstract class ClientServerWriteBTest extends ClientServerBTest {
+public abstract class ClientServerQueryBTest extends ClientServerBTest {
 
     @Override
     protected void run(int threadCount, Connection[] conns, boolean warmUp) throws Exception {
-        UpdateThreadBase[] threads = new UpdateThreadBase[threadCount];
+        QueryThreadBase[] threads = new QueryThreadBase[threadCount];
         for (int i = 0; i < threadCount; i++) {
-            threads[i] = createUpdateThread(i, conns[i]);
+            threads[i] = createQueryThread(i, conns[i]);
         }
         long totalTime = 0;
         for (int i = 0; i < threadCount; i++) {
@@ -37,9 +37,9 @@ public abstract class ClientServerWriteBTest extends ClientServerBTest {
                         + " ms" + (warmUp ? " (***WarmUp***)" : ""));
     }
 
-    protected abstract UpdateThreadBase createUpdateThread(int id, Connection conn);
+    protected abstract QueryThreadBase createQueryThread(int id, Connection conn);
 
-    protected abstract class UpdateThreadBase extends Thread {
+    protected abstract class QueryThreadBase extends Thread {
 
         protected Connection conn;
         protected Statement stmt;
@@ -47,7 +47,7 @@ public abstract class ClientServerWriteBTest extends ClientServerBTest {
         protected long startTime;
         protected long endTime;
 
-        public UpdateThreadBase(int id, Connection conn) {
+        public QueryThreadBase(int id, Connection conn) {
             super(getBTestName() + "Thread-" + id);
             this.conn = conn;
             try {
@@ -68,9 +68,9 @@ public abstract class ClientServerWriteBTest extends ClientServerBTest {
             try {
                 startTime = System.nanoTime();
                 if (async)
-                    executeUpdateAsync(stmt);
+                    executeQueryAsync(stmt);
                 else
-                    executeUpdate(stmt);
+                    executeQuery(stmt);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -85,14 +85,14 @@ public abstract class ClientServerWriteBTest extends ClientServerBTest {
             return endTime - startTime;
         }
 
-        protected void executeUpdateAsync(Statement statement) throws Exception {
+        protected void executeQueryAsync(Statement statement) throws Exception {
             JdbcStatement stmt = (JdbcStatement) statement;
             for (int j = 0; j < innerLoop; j++) {
                 CountDownLatch latch = new CountDownLatch(sqlCountPerInnerLoop);
                 long t1 = System.nanoTime();
 
                 for (int i = 0; i < sqlCountPerInnerLoop; i++) {
-                    stmt.executeUpdateAsync(nextSql()).onComplete(ar -> {
+                    stmt.executeQueryAsync(nextSql()).onComplete(ar -> {
                         latch.countDown();
                     });
                 }
@@ -105,12 +105,12 @@ public abstract class ClientServerWriteBTest extends ClientServerBTest {
             }
         }
 
-        protected void executeUpdate(Statement statement) throws Exception {
+        protected void executeQuery(Statement statement) throws Exception {
             for (int j = 0; j < innerLoop; j++) {
                 long t1 = System.nanoTime();
 
                 for (int i = 0; i < sqlCountPerInnerLoop; i++)
-                    statement.executeUpdate(nextSql());
+                    statement.executeQuery(nextSql());
 
                 long t2 = System.nanoTime();
                 if (printInnerLoopResult)

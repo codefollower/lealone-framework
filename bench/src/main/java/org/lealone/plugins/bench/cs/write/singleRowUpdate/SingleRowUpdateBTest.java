@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh
  */
-package org.lealone.plugins.bench.cs.write.multiRowsUpdate;
+package org.lealone.plugins.bench.cs.write.singleRowUpdate;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,9 +11,11 @@ import java.sql.Statement;
 
 import org.lealone.plugins.bench.cs.write.ClientServerWriteBTest;
 
-public abstract class MultiRowsUpdateBTest extends ClientServerWriteBTest {
+//-XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xmx800M
+public abstract class SingleRowUpdateBTest extends ClientServerWriteBTest {
 
-    protected MultiRowsUpdateBTest() {
+    protected SingleRowUpdateBTest() {
+        threadCount = 1;
         rowCount = threadCount;
         sqls = new String[rowCount];
     }
@@ -22,11 +24,11 @@ public abstract class MultiRowsUpdateBTest extends ClientServerWriteBTest {
     protected void init() throws Exception {
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
-        statement.executeUpdate("drop table if exists MultiRowsUpdateBTest");
-        String sql = "create table if not exists MultiRowsUpdateBTest(pk int primary key, f1 int)";
+        statement.executeUpdate("drop table if exists SingleRowUpdateBTest");
+        String sql = "create table if not exists SingleRowUpdateBTest(pk int primary key, f1 int)";
         statement.executeUpdate(sql);
 
-        sql = "insert into MultiRowsUpdateBTest values(?,1)";
+        sql = "insert into SingleRowUpdateBTest values(?,1)";
         PreparedStatement ps = conn.prepareStatement(sql);
 
         for (int row = 1; row <= rowCount; row++) {
@@ -38,7 +40,7 @@ public abstract class MultiRowsUpdateBTest extends ClientServerWriteBTest {
             }
         }
         for (int i = 1; i <= rowCount; i++) {
-            sqls[i - 1] = "update MultiRowsUpdateBTest set f1=10 where pk=" + i;
+            sqls[i - 1] = "update SingleRowUpdateBTest set f1=10 where pk=" + i;
         }
         close(statement, ps, conn);
     }

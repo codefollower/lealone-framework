@@ -8,12 +8,12 @@ package org.lealone.plugins.bench.embed.transaction;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.lealone.plugins.bench.embed.AMTransactionEngineUtil;
 import org.lealone.storage.aose.AOStorage;
 import org.lealone.storage.aose.AOStorageBuilder;
 import org.lealone.storage.page.DefaultPageOperationHandler;
 import org.lealone.storage.page.PageOperation;
 import org.lealone.storage.page.PageOperationHandlerFactory;
+import org.lealone.test.aote.TransactionEngineTest;
 import org.lealone.transaction.Transaction;
 import org.lealone.transaction.TransactionEngine;
 import org.lealone.transaction.TransactionMap;
@@ -56,7 +56,7 @@ public class LealoneTransactionBTest extends TransactionBTest {
         storage = builder.openStorage();
 
         initTransactionEngineConfig(config);
-        te = AMTransactionEngineUtil.getTransactionEngine(config);
+        te = TransactionEngineTest.getTransactionEngine(config);
 
         singleThreadSerialWrite();
     }

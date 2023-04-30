@@ -12,12 +12,9 @@ import org.lealone.plugins.bench.cs.write.ClientServerWriteBTest;
 
 public abstract class ColumnLockBTest extends ClientServerWriteBTest {
 
-    private int columnCount = threadCount;
-    private String[] sqls = new String[columnCount];
-    private String[] sqlsWarmUp = new String[columnCount];
-
     @Override
     protected void init() throws Exception {
+        int columnCount = threadCount;
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
         statement.executeUpdate("drop table if exists ColumnLockPerfTest");
@@ -45,12 +42,6 @@ public abstract class ColumnLockBTest extends ClientServerWriteBTest {
                     .append(" where pk=5");
             sqls[i - 1] = buff.toString();
         }
-        for (int i = 1; i <= columnCount; i++) {
-            buff = new StringBuilder();
-            buff.append("update ColumnLockPerfTest set f").append(i).append(" = ").append(i * 100)
-                    .append(" where pk=5");
-            sqlsWarmUp[i - 1] = buff.toString();
-        }
         close(statement, conn);
     }
 
@@ -61,18 +52,10 @@ public abstract class ColumnLockBTest extends ClientServerWriteBTest {
 
     private class UpdateThread extends UpdateThreadBase {
         String sql;
-        String sqlWarmUp;
 
         UpdateThread(int id, Connection conn) {
             super(id, conn);
             this.sql = sqls[id];
-            this.sqlWarmUp = sqlsWarmUp[id];
-        }
-
-        @Override
-        public void warmUp() throws Exception {
-            for (int i = 0; i < sqlCountPerLoop * 2; i++)
-                stmt.executeUpdate(sqlWarmUp);
         }
 
         @Override

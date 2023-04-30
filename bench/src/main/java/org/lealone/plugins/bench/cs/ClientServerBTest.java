@@ -18,15 +18,71 @@ import org.lealone.plugins.postgresql.server.PgServer;
 
 public abstract class ClientServerBTest extends BenchTest {
 
-    private DbType dbType;
-    boolean disableLealoneQueryCache = true;
+    protected DbType dbType;
+    protected boolean disableLealoneQueryCache = true;
+
+    protected int outerLoop = 15;
+    protected int innerLoop = 100;
+    protected int sqlCountPerInnerLoop = 500;
+    protected boolean printInnerLoopResult;
+    protected boolean async;
+    protected String[] sqls;
+
+    public void start() {
+        String name = getBTestName();
+        DbType dbType;
+        if (name.startsWith("AsyncLealone")) {
+            dbType = DbType.Lealone;
+            async = true;
+        } else if (name.startsWith("Lealone")) {
+            dbType = DbType.Lealone;
+            async = false;
+        } else if (name.startsWith("PgLealone")) {
+            dbType = DbType.Lealone;
+        } else if (name.startsWith("H2")) {
+            dbType = DbType.H2;
+        } else if (name.startsWith("MySQL")) {
+            dbType = DbType.MySQL;
+        } else if (name.startsWith("Pg")) {
+            dbType = DbType.PostgreSQL;
+        } else {
+            throw new RuntimeException("Unsupported BTestName: " + name);
+        }
+        run(dbType);
+    }
+
+    @Override
+    public void run() throws Exception {
+        init();
+        run(threadCount);
+    }
+
+    @Override
+    protected void run(int threadCount) throws Exception {
+        Connection[] conns = new Connection[threadCount];
+        for (int i = 0; i < threadCount; i++) {
+            Connection conn = getConnection();
+            conns[i] = conn;
+        }
+        for (int i = 0; i < 2; i++) {
+            run(threadCount, conns, true);
+        }
+
+        for (int i = 0; i < outerLoop; i++) {
+            run(threadCount, conns, false);
+        }
+
+        for (int i = 0; i < threadCount; i++) {
+            close(conns[i]);
+        }
+    }
+
+    protected void run(int threadCount, Connection[] conns, boolean warmUp) throws Exception {
+    }
 
     public void run(DbType dbType) {
         this.dbType = dbType;
         try {
-            if (dbType == DbType.Lealone && disableLealoneQueryCache) {
-                disableLealoneQueryCache();
-            }
             run();
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,8 +97,13 @@ public abstract class ClientServerBTest extends BenchTest {
             return getMySQLConnection();
         case PostgreSQL:
             return getPgConnection();
-        case Lealone:
-            return getLealoneConnection();
+        case Lealone: {
+            Connection conn = getLealoneConnection();
+            if (disableLealoneQueryCache) {
+                disableLealoneQueryCache(conn);
+            }
+            return conn;
+        }
         default:
             throw new RuntimeException();
         }
@@ -60,21 +121,6 @@ public abstract class ClientServerBTest extends BenchTest {
                 e.printStackTrace();
             }
         }
-    }
-
-    protected static void initData(Statement statement) throws Exception {
-        statement.executeUpdate("drop table if exists test");
-        statement.executeUpdate("create table if not exists test(name varchar, f1 int,f2 int)");
-
-        statement.getConnection().setAutoCommit(false);
-        statement.executeUpdate("insert into test values('abc1',1,2)");
-        statement.executeUpdate("insert into test values('abc2',2,2)");
-        statement.executeUpdate("insert into test values('abc3',3,2)");
-        statement.executeUpdate("insert into test values('abc1',1,2)");
-        statement.executeUpdate("insert into test values('abc2',2,2)");
-        statement.executeUpdate("insert into test values('abc3',3,2)");
-        statement.getConnection().commit();
-        statement.getConnection().setAutoCommit(true);
     }
 
     public static Connection getMySQLConnection() throws Exception {
@@ -139,13 +185,11 @@ public abstract class ClientServerBTest extends BenchTest {
         return getConnection(url, "test", "test");
     }
 
-    public static void disableLealoneQueryCache() {
+    public static void disableLealoneQueryCache(Connection conn) {
         try {
-            Connection conn = getLealoneConnection();
             Statement statement = conn.createStatement();
             statement.executeUpdate("set QUERY_CACHE_SIZE 0");
             statement.close();
-            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

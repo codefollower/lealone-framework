@@ -15,15 +15,22 @@ import java.util.Vector;
 
 import org.lealone.common.logging.Logger;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unused", "resource" })
 public class jTPCCTData {
     protected int numWarehouses = 0;
 
-    public final static int TT_NEW_ORDER = 0, TT_PAYMENT = 1, TT_ORDER_STATUS = 2, TT_STOCK_LEVEL = 3, TT_DELIVERY = 4,
-            TT_DELIVERY_BG = 5, TT_NONE = 6, TT_DONE = 7;
+    public final static int TT_NEW_ORDER = 0, TT_PAYMENT = 1, TT_ORDER_STATUS = 2, TT_STOCK_LEVEL = 3,
+            TT_DELIVERY = 4, TT_DELIVERY_BG = 5, TT_NONE = 6, TT_DONE = 7;
 
-    public final static String transTypeNames[] = { "NEW_ORDER", "PAYMENT", "ORDER_STATUS", "STOCK_LEVEL", "DELIVERY",
-            "DELIVERY_BG", "NONE", "DONE" };
+    public final static String transTypeNames[] = {
+            "NEW_ORDER",
+            "PAYMENT",
+            "ORDER_STATUS",
+            "STOCK_LEVEL",
+            "DELIVERY",
+            "DELIVERY_BG",
+            "NONE",
+            "DONE" };
 
     public int sched_code;
     public long sched_fuzz;
@@ -223,22 +230,26 @@ public class jTPCCTData {
             throw new Exception("Unknown transType " + transType);
 
         synchronized (traceLock) {
-            fmt.format("==== %s %s ==== Terminal %d,%d =================================================",
+            fmt.format(
+                    "==== %s %s ==== Terminal %d,%d =================================================",
                     transTypeNames[transType], (transEnd == 0) ? "INPUT" : "OUTPUT", terminalWarehouse,
                     terminalDistrict);
             sb.setLength(79);
             log.trace(sb.toString());
             sb.setLength(0);
 
-            fmt.format("---- Due:   %s", (transDue == 0) ? "N/A" : new java.sql.Timestamp(transDue).toString());
+            fmt.format("---- Due:   %s",
+                    (transDue == 0) ? "N/A" : new java.sql.Timestamp(transDue).toString());
             log.trace(sb.toString());
             sb.setLength(0);
 
-            fmt.format("---- Start: %s", (transStart == 0) ? "N/A" : new java.sql.Timestamp(transStart).toString());
+            fmt.format("---- Start: %s",
+                    (transStart == 0) ? "N/A" : new java.sql.Timestamp(transStart).toString());
             log.trace(sb.toString());
             sb.setLength(0);
 
-            fmt.format("---- End:   %s", (transEnd == 0) ? "N/A" : new java.sql.Timestamp(transEnd).toString());
+            fmt.format("---- End:   %s",
+                    (transEnd == 0) ? "N/A" : new java.sql.Timestamp(transEnd).toString());
             log.trace(sb.toString());
             sb.setLength(0);
 
@@ -293,9 +304,10 @@ public class jTPCCTData {
     public String resultLine(long sessionStart) {
         String line;
 
-        resultFmt.format("%d,%d,%d,%s,%d,%d,%d\n", transEnd - sessionStart, transEnd - transDue, transEnd - transStart,
-                transTypeNames[transType], (transRbk) ? 1 : 0,
-                (transType == TT_DELIVERY_BG) ? getSkippedDeliveries() : 0, (transError == null) ? 0 : 1);
+        resultFmt.format("%d,%d,%d,%s,%d,%d,%d\n", transEnd - sessionStart, transEnd - transDue,
+                transEnd - transStart, transTypeNames[transType], (transRbk) ? 1 : 0,
+                (transType == TT_DELIVERY_BG) ? getSkippedDeliveries() : 0,
+                (transError == null) ? 0 : 1);
         line = resultSB.toString();
         resultSB.setLength(0);
         return line;
@@ -418,8 +430,8 @@ public class jTPCCTData {
             rs = stmt.executeQuery();
             if (!rs.next()) {
                 rs.close();
-                throw new SQLException(
-                        "District for" + " W_ID=" + newOrder.w_id + " D_ID=" + newOrder.d_id + " not found");
+                throw new SQLException("District for" + " W_ID=" + newOrder.w_id + " D_ID="
+                        + newOrder.d_id + " not found");
             }
             newOrder.d_tax = rs.getDouble("d_tax");
             newOrder.o_id = rs.getInt("d_next_o_id");
@@ -434,8 +446,8 @@ public class jTPCCTData {
             rs = stmt.executeQuery();
             if (!rs.next()) {
                 rs.close();
-                throw new SQLException("Warehouse or Customer for" + " W_ID=" + newOrder.w_id + " D_ID=" + newOrder.d_id
-                        + " C_ID=" + newOrder.c_id + " not found");
+                throw new SQLException("Warehouse or Customer for" + " W_ID=" + newOrder.w_id + " D_ID="
+                        + newOrder.d_id + " C_ID=" + newOrder.c_id + " not found");
             }
             newOrder.w_tax = rs.getDouble("w_tax");
             newOrder.c_last = rs.getString("c_last");
@@ -524,8 +536,8 @@ public class jTPCCTData {
                 stmt.setInt(2, newOrder.ol_i_id[seq]);
                 rs = stmt.executeQuery();
                 if (!rs.next()) {
-                    throw new Exception("STOCK with" + " S_W_ID=" + newOrder.ol_supply_w_id[seq] + " S_I_ID="
-                            + newOrder.ol_i_id[seq] + " not fount");
+                    throw new Exception("STOCK with" + " S_W_ID=" + newOrder.ol_supply_w_id[seq]
+                            + " S_I_ID=" + newOrder.ol_i_id[seq] + " not fount");
                 }
                 newOrder.s_quantity[seq] = rs.getInt("s_quantity");
                 // Leave the ResultSet open ... we need it for the s_dist_NN.
@@ -833,16 +845,19 @@ public class jTPCCTData {
 
         if (transEnd == 0) {
             // NEW_ORDER INPUT screen
-            fmt[1].format("Warehouse: %6d  District: %2d                       Date:", newOrder.w_id, newOrder.d_id);
-            fmt[2].format("Customer:    %4d  Name:                    Credit:      %%Disc:", newOrder.c_id);
+            fmt[1].format("Warehouse: %6d  District: %2d                       Date:", newOrder.w_id,
+                    newOrder.d_id);
+            fmt[2].format("Customer:    %4d  Name:                    Credit:      %%Disc:",
+                    newOrder.c_id);
             fmt[3].format("Order Number:            Number of Lines:           W_tax:         D_tax:");
 
-            fmt[5].format("Supp_W   Item_Id  Item Name                  Qty  Stock  B/G  Price    Amount");
+            fmt[5].format(
+                    "Supp_W   Item_Id  Item Name                  Qty  Stock  B/G  Price    Amount");
 
             for (int i = 0; i < 15; i++) {
                 if (newOrder.ol_i_id[i] != 0)
-                    fmt[6 + i].format("%6d   %6d                              %2d", newOrder.ol_supply_w_id[i],
-                            newOrder.ol_i_id[i], newOrder.ol_quantity[i]);
+                    fmt[6 + i].format("%6d   %6d                              %2d",
+                            newOrder.ol_supply_w_id[i], newOrder.ol_i_id[i], newOrder.ol_quantity[i]);
                 else
                     fmt[6 + i].format("______   ______                              __");
             }
@@ -850,14 +865,15 @@ public class jTPCCTData {
             fmt[21].format("Execution Status:                                             Total:  $");
         } else {
             // NEW_ORDER OUTPUT screen
-            fmt[1].format("Warehouse: %6d  District: %2d                       Date: %19.19s", newOrder.w_id,
-                    newOrder.d_id, newOrder.o_entry_d);
-            fmt[2].format("Customer:    %4d  Name: %-16.16s   Credit: %2.2s   %%Disc: %5.2f", newOrder.c_id,
-                    newOrder.c_last, newOrder.c_credit, newOrder.c_discount * 100.0);
-            fmt[3].format("Order Number:  %8d  Number of Lines: %2d        W_tax: %5.2f   D_tax: %5.2f", newOrder.o_id,
-                    newOrder.o_ol_cnt, newOrder.w_tax * 100.0, newOrder.d_tax * 100.0);
+            fmt[1].format("Warehouse: %6d  District: %2d                       Date: %19.19s",
+                    newOrder.w_id, newOrder.d_id, newOrder.o_entry_d);
+            fmt[2].format("Customer:    %4d  Name: %-16.16s   Credit: %2.2s   %%Disc: %5.2f",
+                    newOrder.c_id, newOrder.c_last, newOrder.c_credit, newOrder.c_discount * 100.0);
+            fmt[3].format("Order Number:  %8d  Number of Lines: %2d        W_tax: %5.2f   D_tax: %5.2f",
+                    newOrder.o_id, newOrder.o_ol_cnt, newOrder.w_tax * 100.0, newOrder.d_tax * 100.0);
 
-            fmt[5].format("Supp_W   Item_Id  Item Name                  Qty  Stock  B/G  Price    Amount");
+            fmt[5].format(
+                    "Supp_W   Item_Id  Item Name                  Qty  Stock  B/G  Price    Amount");
 
             for (int i = 0; i < 15; i++) {
                 if (newOrder.ol_i_id[i] != 0)
@@ -867,8 +883,8 @@ public class jTPCCTData {
                             newOrder.i_price[i], newOrder.ol_amount[i]);
             }
 
-            fmt[21].format("Execution Status: %-24.24s                    Total:  $%8.2f", newOrder.execution_status,
-                    newOrder.total_amount);
+            fmt[21].format("Execution Status: %-24.24s                    Total:  $%8.2f",
+                    newOrder.execution_status, newOrder.total_amount);
         }
     }
 
@@ -964,7 +980,8 @@ public class jTPCCTData {
             rs = stmt.executeQuery();
             if (!rs.next()) {
                 rs.close();
-                throw new Exception("District for" + " W_ID=" + payment.w_id + " D_ID=" + payment.d_id + " not found");
+                throw new Exception("District for" + " W_ID=" + payment.w_id + " D_ID=" + payment.d_id
+                        + " not found");
             }
             payment.d_name = rs.getString("d_name");
             payment.d_street_1 = rs.getString("d_street_1");
@@ -1008,8 +1025,8 @@ public class jTPCCTData {
                 rs.close();
 
                 if (c_id_list.size() == 0) {
-                    throw new Exception("Customer(s) for" + " C_W_ID=" + payment.c_w_id + " C_D_ID=" + payment.c_d_id
-                            + " C_LAST=" + payment.c_last + " not found");
+                    throw new Exception("Customer(s) for" + " C_W_ID=" + payment.c_w_id + " C_D_ID="
+                            + payment.c_d_id + " C_LAST=" + payment.c_last + " not found");
                 }
 
                 payment.c_id = c_id_list.get((c_id_list.size() + 1) / 2 - 1);
@@ -1022,8 +1039,8 @@ public class jTPCCTData {
             stmt.setInt(3, payment.c_id);
             rs = stmt.executeQuery();
             if (!rs.next()) {
-                throw new Exception("Customer for" + " C_W_ID=" + payment.c_w_id + " C_D_ID=" + payment.c_d_id
-                        + " C_ID=" + payment.c_id + " not found");
+                throw new Exception("Customer for" + " C_W_ID=" + payment.c_w_id + " C_D_ID="
+                        + payment.c_d_id + " C_ID=" + payment.c_id + " not found");
             }
             payment.c_first = rs.getString("c_first");
             payment.c_middle = rs.getString("c_middle");
@@ -1074,8 +1091,9 @@ public class jTPCCTData {
 
                 StringBuffer sbData = new StringBuffer();
                 Formatter fmtData = new Formatter(sbData);
-                fmtData.format("C_ID=%d C_D_ID=%d C_W_ID=%d " + "D_ID=%d W_ID=%d H_AMOUNT=%.2f   ", payment.c_id,
-                        payment.c_d_id, payment.c_w_id, payment.d_id, payment.w_id, payment.h_amount);
+                fmtData.format("C_ID=%d C_D_ID=%d C_W_ID=%d " + "D_ID=%d W_ID=%d H_AMOUNT=%.2f   ",
+                        payment.c_id, payment.c_d_id, payment.c_w_id, payment.d_id, payment.w_id,
+                        payment.h_amount);
                 sbData.append(payment.c_data);
                 if (sbData.length() > 500)
                     sbData.setLength(500);
@@ -1304,11 +1322,12 @@ public class jTPCCTData {
         if (transEnd == 0) {
             // PAYMENT INPUT screen
             fmt[1].format("Date: ");
-            fmt[3].format("Warehouse: %6d                         District: %2d", payment.w_id, payment.d_id);
+            fmt[3].format("Warehouse: %6d                         District: %2d", payment.w_id,
+                    payment.d_id);
 
             if (payment.c_last == null) {
-                fmt[8].format("Customer: %4d  Cust-Warehouse: %6d  Cust-District: %2d", payment.c_id, payment.c_w_id,
-                        payment.c_d_id);
+                fmt[8].format("Customer: %4d  Cust-Warehouse: %6d  Cust-District: %2d", payment.c_id,
+                        payment.c_w_id, payment.c_d_id);
                 fmt[9].format("Name:                       ________________       Since:");
             } else {
                 fmt[8].format("Customer: ____  Cust-Warehouse: %6d  Cust-District: %2d", payment.c_w_id,
@@ -1325,27 +1344,33 @@ public class jTPCCTData {
         } else {
             // PAYMENT OUTPUT screen
             fmt[1].format("Date: %-19.19s", payment.h_date);
-            fmt[3].format("Warehouse: %6d                         District: %2d", payment.w_id, payment.d_id);
-            fmt[4].format("%-20.20s                      %-20.20s", payment.w_street_1, payment.d_street_1);
-            fmt[5].format("%-20.20s                      %-20.20s", payment.w_street_2, payment.d_street_2);
+            fmt[3].format("Warehouse: %6d                         District: %2d", payment.w_id,
+                    payment.d_id);
+            fmt[4].format("%-20.20s                      %-20.20s", payment.w_street_1,
+                    payment.d_street_1);
+            fmt[5].format("%-20.20s                      %-20.20s", payment.w_street_2,
+                    payment.d_street_2);
             fmt[6].format("%-20.20s %2.2s %5.5s-%4.4s        %-20.20s %2.2s %5.5s-%4.4s", payment.w_city,
-                    payment.w_state, payment.w_zip.substring(0, 5), payment.w_zip.substring(5, 9), payment.d_city,
-                    payment.d_state, payment.d_zip.substring(0, 5), payment.d_zip.substring(5, 9));
+                    payment.w_state, payment.w_zip.substring(0, 5), payment.w_zip.substring(5, 9),
+                    payment.d_city, payment.d_state, payment.d_zip.substring(0, 5),
+                    payment.d_zip.substring(5, 9));
 
-            fmt[8].format("Customer: %4d  Cust-Warehouse: %6d  Cust-District: %2d", payment.c_id, payment.c_w_id,
-                    payment.c_d_id);
-            fmt[9].format("Name:   %-16.16s %2.2s %-16.16s       Since:  %-10.10s", payment.c_first, payment.c_middle,
-                    payment.c_last, payment.c_since);
-            fmt[10].format("        %-20.20s                       Credit: %2s", payment.c_street_1, payment.c_credit);
+            fmt[8].format("Customer: %4d  Cust-Warehouse: %6d  Cust-District: %2d", payment.c_id,
+                    payment.c_w_id, payment.c_d_id);
+            fmt[9].format("Name:   %-16.16s %2.2s %-16.16s       Since:  %-10.10s", payment.c_first,
+                    payment.c_middle, payment.c_last, payment.c_since);
+            fmt[10].format("        %-20.20s                       Credit: %2s", payment.c_street_1,
+                    payment.c_credit);
             fmt[11].format("        %-20.20s                       %%Disc:  %5.2f", payment.c_street_2,
                     payment.c_discount * 100.0);
-            fmt[12].format("        %-20.20s %2.2s %5.5s-%4.4s         Phone:  %6.6s-%3.3s-%3.3s-%4.4s", payment.c_city,
-                    payment.c_state, payment.c_zip.substring(0, 5), payment.c_zip.substring(5, 9),
-                    payment.c_phone.substring(0, 6), payment.c_phone.substring(6, 9), payment.c_phone.substring(9, 12),
+            fmt[12].format("        %-20.20s %2.2s %5.5s-%4.4s         Phone:  %6.6s-%3.3s-%3.3s-%4.4s",
+                    payment.c_city, payment.c_state, payment.c_zip.substring(0, 5),
+                    payment.c_zip.substring(5, 9), payment.c_phone.substring(0, 6),
+                    payment.c_phone.substring(6, 9), payment.c_phone.substring(9, 12),
                     payment.c_phone.substring(12, 16));
 
-            fmt[14].format("Amount Paid:          $%7.2f        New Cust-Balance: $%14.2f", payment.h_amount,
-                    payment.c_balance);
+            fmt[14].format("Amount Paid:          $%7.2f        New Cust-Balance: $%14.2f",
+                    payment.h_amount, payment.c_balance);
             fmt[15].format("Credit Limit:   $%13.2f", payment.c_credit_lim);
             if (payment.c_data.length() >= 200) {
                 fmt[17].format("Cust-Data: %-50.50s", payment.c_data.substring(0, 50));
@@ -1462,8 +1487,8 @@ public class jTPCCTData {
             stmt.setInt(3, orderStatus.c_id);
             rs = stmt.executeQuery();
             if (!rs.next()) {
-                throw new Exception("Customer for" + " C_W_ID=" + orderStatus.w_id + " C_D_ID=" + orderStatus.d_id
-                        + " C_ID=" + orderStatus.c_id + " not found");
+                throw new Exception("Customer for" + " C_W_ID=" + orderStatus.w_id + " C_D_ID="
+                        + orderStatus.d_id + " C_ID=" + orderStatus.c_id + " not found");
             }
             orderStatus.c_first = rs.getString("c_first");
             orderStatus.c_middle = rs.getString("c_middle");
@@ -1482,8 +1507,8 @@ public class jTPCCTData {
             stmt.setInt(6, orderStatus.c_id);
             rs = stmt.executeQuery();
             if (!rs.next()) {
-                throw new Exception("Last Order for" + " W_ID=" + orderStatus.w_id + " D_ID=" + orderStatus.d_id
-                        + " C_ID=" + orderStatus.c_id + " not found");
+                throw new Exception("Last Order for" + " W_ID=" + orderStatus.w_id + " D_ID="
+                        + orderStatus.d_id + " C_ID=" + orderStatus.c_id + " not found");
             }
             orderStatus.o_id = rs.getInt("o_id");
             orderStatus.o_entry_d = rs.getTimestamp("o_entry_d").toString();
@@ -1700,7 +1725,8 @@ public class jTPCCTData {
             // ORDER_STATUS INPUT screen
             fmt[1].format("Warehouse: %6d   District: %2d", orderStatus.w_id, orderStatus.d_id);
             if (orderStatus.c_last == null)
-                fmt[2].format("Customer: %4d   Name:                     ________________", orderStatus.c_id);
+                fmt[2].format("Customer: %4d   Name:                     ________________",
+                        orderStatus.c_id);
             else
                 fmt[2].format("Customer: ____   Name:                     %-16.16s", orderStatus.c_last);
             fmt[3].format("Cust-Balance:");
@@ -1710,20 +1736,21 @@ public class jTPCCTData {
         } else {
             // ORDER_STATUS OUTPUT screen
             fmt[1].format("Warehouse: %6d   District: %2d", orderStatus.w_id, orderStatus.d_id);
-            fmt[2].format("Customer: %4d   Name: %-16.16s %2.2s %-16.16s", orderStatus.c_id, orderStatus.c_first,
-                    orderStatus.c_middle, orderStatus.c_last);
+            fmt[2].format("Customer: %4d   Name: %-16.16s %2.2s %-16.16s", orderStatus.c_id,
+                    orderStatus.c_first, orderStatus.c_middle, orderStatus.c_last);
             fmt[3].format("Cust-Balance: $%13.2f", orderStatus.c_balance);
 
             if (orderStatus.o_carrier_id >= 0)
-                fmt[5].format("Order-Number: %8d   Entry-Date: %-19.19s   Carrier-Number: %2d", orderStatus.o_id,
-                        orderStatus.o_entry_d, orderStatus.o_carrier_id);
+                fmt[5].format("Order-Number: %8d   Entry-Date: %-19.19s   Carrier-Number: %2d",
+                        orderStatus.o_id, orderStatus.o_entry_d, orderStatus.o_carrier_id);
             else
-                fmt[5].format("Order-Number: %8d   Entry-Date: %-19.19s   Carrier-Number:", orderStatus.o_id,
-                        orderStatus.o_entry_d);
+                fmt[5].format("Order-Number: %8d   Entry-Date: %-19.19s   Carrier-Number:",
+                        orderStatus.o_id, orderStatus.o_entry_d);
             fmt[6].format("Suppy-W      Item-Id     Qty    Amount        Delivery-Date");
             for (int i = 0; i < 15 && orderStatus.ol_i_id[i] > 0; i++) {
-                fmt[7 + i].format(" %6d      %6d     %3d     $%8.2f     %-10.10s", orderStatus.ol_supply_w_id[i],
-                        orderStatus.ol_i_id[i], orderStatus.ol_quantity[i], orderStatus.ol_amount[i],
+                fmt[7 + i].format(" %6d      %6d     %3d     $%8.2f     %-10.10s",
+                        orderStatus.ol_supply_w_id[i], orderStatus.ol_i_id[i],
+                        orderStatus.ol_quantity[i], orderStatus.ol_amount[i],
                         (orderStatus.ol_delivery_d[i] == null) ? "" : orderStatus.ol_delivery_d[i]);
             }
         }
@@ -1788,8 +1815,8 @@ public class jTPCCTData {
             stmt.setInt(4, stockLevel.d_id);
             rs = stmt.executeQuery();
             if (!rs.next()) {
-                throw new Exception(
-                        "Failed to get low-stock for" + " W_ID=" + stockLevel.w_id + " D_ID=" + stockLevel.d_id);
+                throw new Exception("Failed to get low-stock for" + " W_ID=" + stockLevel.w_id + " D_ID="
+                        + stockLevel.d_id);
             }
             stockLevel.low_stock = rs.getInt("low_stock");
             rs.close();
@@ -1962,7 +1989,8 @@ public class jTPCCTData {
          * part for the caller to pick up and queue/execute.
          */
         delivery.deliveryBG = new jTPCCTData();
-        delivery.deliveryBG.generateDeliveryBG(delivery.w_id, now, new java.sql.Timestamp(now).toString(), this);
+        delivery.deliveryBG.generateDeliveryBG(delivery.w_id, now,
+                new java.sql.Timestamp(now).toString(), this);
         delivery.deliveryBG.setDBType(dbType);
         delivery.deliveryBG.setUseStoredProcedures(useStoredProcedures);
         delivery.execution_status = new String("Delivery has been queued");
@@ -1983,7 +2011,8 @@ public class jTPCCTData {
         if (transType != TT_DELIVERY)
             throw new Exception("Not a DELIVERY");
         if (delivery.deliveryBG == null)
-            throw new Exception("DELIVERY foreground not executed yet " + "or background part already consumed");
+            throw new Exception(
+                    "DELIVERY foreground not executed yet " + "or background part already consumed");
 
         jTPCCTData result = delivery.deliveryBG;
         delivery.deliveryBG = null;
@@ -2124,8 +2153,8 @@ public class jTPCCTData {
                 rs = stmt1.executeQuery();
                 if (!rs.next()) {
                     rs.close();
-                    throw new Exception("ORDER in DELIVERY_BG for" + " O_W_ID=" + deliveryBG.w_id + " O_D_ID=" + d_id
-                            + " O_ID=" + o_id + " not found");
+                    throw new Exception("ORDER in DELIVERY_BG for" + " O_W_ID=" + deliveryBG.w_id
+                            + " O_D_ID=" + d_id + " O_ID=" + o_id + " not found");
                 }
                 c_id = rs.getInt("o_c_id");
                 rs.close();
@@ -2146,8 +2175,8 @@ public class jTPCCTData {
                 rs = stmt1.executeQuery();
                 if (!rs.next()) {
                     rs.close();
-                    throw new Exception("sum(OL_AMOUNT) for ORDER_LINEs with " + " OL_W_ID=" + deliveryBG.w_id
-                            + " OL_D_ID=" + d_id + " OL_O_ID=" + o_id + " not found");
+                    throw new Exception("sum(OL_AMOUNT) for ORDER_LINEs with " + " OL_W_ID="
+                            + deliveryBG.w_id + " OL_D_ID=" + d_id + " OL_O_ID=" + o_id + " not found");
                 }
                 sum_ol_amount = rs.getDouble("sum_ol_amount");
                 rs.close();
@@ -2286,7 +2315,8 @@ public class jTPCCTData {
 
         if (transEnd != 0) {
             for (int d_id = 1; d_id <= 10; d_id++) {
-                fmt[4 + d_id].format("District %02d: delivered O_ID: %8d", d_id, deliveryBG.delivered_o_id[d_id - 1]);
+                fmt[4 + d_id].format("District %02d: delivered O_ID: %8d", d_id,
+                        deliveryBG.delivered_o_id[d_id - 1]);
             }
         }
     }

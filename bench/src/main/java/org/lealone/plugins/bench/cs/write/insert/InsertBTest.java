@@ -12,11 +12,10 @@ import org.lealone.plugins.bench.cs.write.ClientServerWriteBTest;
 
 public abstract class InsertBTest extends ClientServerWriteBTest {
 
-    private int rowCount = loop * sqlCountPerLoop * threadCount;
-    private String[] sqls = new String[rowCount];
-
     @Override
     protected void init() throws Exception {
+        rowCount = innerLoop * sqlCountPerInnerLoop * threadCount;
+
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
         statement.executeUpdate("drop table if exists InsertBTest");
@@ -39,7 +38,7 @@ public abstract class InsertBTest extends ClientServerWriteBTest {
 
         UpdateThread(int id, Connection conn) {
             super(id, conn);
-            start = loop * sqlCountPerLoop * id;
+            start = innerLoop * sqlCountPerInnerLoop * id;
         }
 
         @Override

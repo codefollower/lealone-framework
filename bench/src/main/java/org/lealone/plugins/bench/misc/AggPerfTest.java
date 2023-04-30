@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh
  */
-package org.lealone.plugins.bench.cs.write;
+package org.lealone.plugins.bench.misc;
 
 import java.sql.Connection;
 import java.sql.Statement;

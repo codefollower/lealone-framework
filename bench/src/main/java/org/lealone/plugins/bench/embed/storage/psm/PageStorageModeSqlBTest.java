@@ -5,16 +5,15 @@
  */
 package org.lealone.plugins.bench.embed.storage.psm;
 
-import org.lealone.plugins.bench.embed.SqlTestBase;
 import org.lealone.storage.aose.AOStorageEngine;
 import org.lealone.storage.aose.btree.page.PageStorageMode;
+import org.lealone.test.sql.SqlTestBase;
 
 //把CACHE_SIZE加大后，RowStorage的方式有更多内存就不会重复从硬盘读取page，此时就跟ColumnStorage的性能差不多
 public class PageStorageModeSqlBTest extends SqlTestBase {
 
     public PageStorageModeSqlBTest() {
         super("PageStorageModeSqlPerfTest");
-        initTransactionEngine();
         setEmbedded(true);
         addConnectionParameter("PAGE_SIZE", (2 * 1024 * 1024) + "");
         // addConnectionParameter("COMPRESS", "true");
@@ -62,7 +61,8 @@ public class PageStorageModeSqlBTest extends SqlTestBase {
         if (count <= 0) {
             // Random random = new Random();
             for (int row = 1; row <= rowCount; row++) {
-                StringBuilder sql = new StringBuilder("insert into ").append(tableName).append(" values(").append(row);
+                StringBuilder sql = new StringBuilder("insert into ").append(tableName)
+                        .append(" values(").append(row);
                 for (int col = 1; col <= columnCount; col++) {
                     sql.append(", 'value-row" + row + "-col" + col + "'");
                     // columns[col] = ValueString.get("a string");
@@ -123,7 +123,8 @@ public class PageStorageModeSqlBTest extends SqlTestBase {
             e.printStackTrace();
         }
         t2 = System.currentTimeMillis();
-        System.out.println(pageStorageMode + " agg time: " + (t2 - t1) + " ms" + ", count: " + count + ", sum: " + sum);
+        System.out.println(pageStorageMode + " agg time: " + (t2 - t1) + " ms" + ", count: " + count
+                + ", sum: " + sum);
 
         System.out.println(pageStorageMode + " total time: " + (t2 - t0) + " ms");
     }

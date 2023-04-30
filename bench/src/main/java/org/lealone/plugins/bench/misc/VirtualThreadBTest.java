@@ -1,4 +1,4 @@
-package org.lealone.plugins.bench;
+package org.lealone.plugins.bench.misc;
 /// *
 // * Copyright Lealone Database Group.
 // * Licensed under the Server Side Public License, v 1.

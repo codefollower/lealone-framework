@@ -27,8 +27,8 @@ public abstract class ConnectionBTest extends ClientServerBTest {
         }
         long t2 = System.currentTimeMillis();
 
-        printResult(loop, ", create connection count: " + connectionCount + ", total time: " + (t2 - t1) + " ms"
-                + ", avg time: " + (t2 - t1) / (connectionCount * 1.0) + " ms");
+        printResult(loop, ", create connection count: " + connectionCount + ", total time: " + (t2 - t1)
+                + " ms" + ", avg time: " + (t2 - t1) / (connectionCount * 1.0) + " ms");
 
         for (int i = 0; i < connectionCount; i++) {
             connections[i].close();

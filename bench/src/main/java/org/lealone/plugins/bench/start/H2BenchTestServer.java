@@ -14,26 +14,17 @@ public class H2BenchTestServer {
 
     public static void main(String[] args) throws SQLException {
         setH2Properties();
-
         ArrayList<String> list = new ArrayList<String>();
-        // list.add("-tcp");
-        // //list.add("-tool");
-        // org.h2.tools.Server.main(list.toArray(new String[list.size()]));
-        //
+
         list.add("-tcp");
         list.add("-tcpPort");
         list.add("9092");
         list.add("-tcpAllowOthers");
 
-        list.add("-pg");
-        list.add("-pgPort");
-        list.add("9511");
-        list.add("-pgAllowOthers");
-
-        // 测试org.h2.server.TcpServer.checkKeyAndGetDatabaseName(String)
-        // list.add("-key");
-        // list.add("mydb");
-        // list.add("mydatabase");
+        // list.add("-pg");
+        // list.add("-pgPort");
+        // list.add("9511");
+        // list.add("-pgAllowOthers");
 
         // list.add("-pg");
         // list.add("-tcp");

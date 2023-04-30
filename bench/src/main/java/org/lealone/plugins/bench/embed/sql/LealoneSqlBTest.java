@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh
  */
-package org.lealone.plugins.bench.cs.sql;
+package org.lealone.plugins.bench.embed.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,9 +30,10 @@ public class LealoneSqlBTest extends SqlBenchTest {
             int f1 = i;
             if (isRandom())
                 f1 = randomKeys[i];
-            statement.executeUpdateAsync("update SqlPerfTest set f2 = 'value2' where f1 =" + f1).onComplete(ar -> {
-                notifyOperationComplete();
-            });
+            statement.executeUpdateAsync("update SqlPerfTest set f2 = 'value2' where f1 =" + f1)
+                    .onComplete(ar -> {
+                        notifyOperationComplete();
+                    });
         }
     }
 

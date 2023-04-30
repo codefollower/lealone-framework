@@ -11,14 +11,14 @@ import org.lealone.db.index.standard.VersionedValueType;
 import org.lealone.db.value.Value;
 import org.lealone.db.value.ValueLong;
 import org.lealone.db.value.ValueString;
-import org.lealone.plugins.bench.embed.AOStorageUtil;
-import org.lealone.plugins.bench.embed.TestBase;
 import org.lealone.storage.CursorParameters;
 import org.lealone.storage.StorageMap;
 import org.lealone.storage.StorageMapCursor;
 import org.lealone.storage.aose.AOStorage;
 import org.lealone.storage.aose.btree.BTreeMap;
 import org.lealone.storage.aose.btree.page.PageStorageMode;
+import org.lealone.test.TestBase;
+import org.lealone.test.aose.AOStorageTest;
 import org.lealone.transaction.aote.TransactionalValue;
 import org.lealone.transaction.aote.TransactionalValueType;
 
@@ -79,7 +79,7 @@ public class PageStorageModeBTest extends TestBase {
     void testRowStorage(ValueDataType keyType, TransactionalValueType tvType) {
         long t0 = System.currentTimeMillis();
         long t1 = System.currentTimeMillis();
-        AOStorage storage = AOStorageUtil.openStorage(pageSplitSize, cacheSize);
+        AOStorage storage = AOStorageTest.openStorage(pageSplitSize, cacheSize);
         BTreeMap<ValueLong, TransactionalValue> map = storage.openBTreeMap("testRowStorage", keyType,
                 tvType, null);
         map.setPageStorageMode(PageStorageMode.ROW_STORAGE);
@@ -119,7 +119,7 @@ public class PageStorageModeBTest extends TestBase {
     void testColumnStorage(ValueDataType keyType, TransactionalValueType tvType) {
         long t0 = System.currentTimeMillis();
         long t1 = System.currentTimeMillis();
-        AOStorage storage = AOStorageUtil.openStorage(pageSplitSize);
+        AOStorage storage = AOStorageTest.openStorage(pageSplitSize);
         BTreeMap<ValueLong, TransactionalValue> map = storage.openBTreeMap("testColumnStorage", keyType,
                 tvType, null);
         map.setPageStorageMode(PageStorageMode.COLUMN_STORAGE);
