@@ -1,10 +1,9 @@
-package org.lealone.plugins.bench.tpcc.LoadData;
+package org.lealone.plugins.bench.tpcc.benchmarksql.LoadData;
 
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-
 /*
  * LoadData - Load Sample Data directly into database tables or into
  * CSV files using multiple parallel workers.
@@ -18,7 +17,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.lealone.plugins.bench.tpcc.client.jTPCCRandom;
+import org.lealone.plugins.bench.tpcc.benchmarksql.client.jTPCCRandom;
 
 public class LoadData {
     private static Properties ini = new Properties();

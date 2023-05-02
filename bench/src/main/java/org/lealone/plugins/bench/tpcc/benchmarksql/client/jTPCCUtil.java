@@ -1,4 +1,4 @@
-package org.lealone.plugins.bench.tpcc.client;
+package org.lealone.plugins.bench.tpcc.benchmarksql.client;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -57,7 +57,8 @@ public class jTPCCUtil implements jTPCCConfig {
 
         if (dbConn == null) {
             dbConn = DriverManager.getConnection(db, dbProps);
-            stmtGetConfig = dbConn.prepareStatement("SELECT cfg_value FROM bmsql_config " + " WHERE cfg_name = ?");
+            stmtGetConfig = dbConn
+                    .prepareStatement("SELECT cfg_value FROM bmsql_config " + " WHERE cfg_name = ?");
         }
         stmtGetConfig.setString(1, option);
         rs = stmtGetConfig.executeQuery();

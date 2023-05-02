@@ -1,4 +1,4 @@
-package org.lealone.plugins.bench.tpcc.client;
+package org.lealone.plugins.bench.tpcc.benchmarksql.client;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -45,10 +45,11 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable {
     jTPCCConnection db = null;
     int dbType = 0;
 
-    public jTPCCTerminal(String terminalName, int terminalWarehouseID, int terminalDistrictID, Connection conn,
-            int dbType, int numTransactions, boolean terminalWarehouseFixed, boolean useStoredProcedures,
-            double paymentWeight, double orderStatusWeight, double deliveryWeight, double stockLevelWeight,
-            int numWarehouses, int limPerMin_Terminal, jTPCC parent) throws SQLException {
+    public jTPCCTerminal(String terminalName, int terminalWarehouseID, int terminalDistrictID,
+            Connection conn, int dbType, int numTransactions, boolean terminalWarehouseFixed,
+            boolean useStoredProcedures, double paymentWeight, double orderStatusWeight,
+            double deliveryWeight, double stockLevelWeight, int numWarehouses, int limPerMin_Terminal,
+            jTPCC parent) throws SQLException {
         this.terminalName = terminalName;
         this.conn = conn;
         this.dbType = dbType;
@@ -77,8 +78,8 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable {
         this.db = new jTPCCConnection(conn, dbType);
 
         terminalMessage("");
-        terminalMessage("Terminal \'" + terminalName + "\' has WarehouseID=" + terminalWarehouseID + " and DistrictID="
-                + terminalDistrictID + ".");
+        terminalMessage("Terminal \'" + terminalName + "\' has WarehouseID=" + terminalWarehouseID
+                + " and DistrictID=" + terminalDistrictID + ".");
         terminalStartTime = System.currentTimeMillis();
     }
 
@@ -98,7 +99,8 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable {
         }
 
         printMessage("");
-        printMessage("Terminal \'" + terminalName + "\' finished after " + (transactionCount - 1) + " transaction(s).");
+        printMessage("Terminal \'" + terminalName + "\' finished after " + (transactionCount - 1)
+                + " transaction(s).");
 
         parent.signalTerminalEnded(this, newOrderCounter);
     }
@@ -197,7 +199,8 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable {
                     System.exit(4);
                 }
                 transactionTypeName = "Order-Status";
-            } else if (transactionType <= paymentWeight + stockLevelWeight + orderStatusWeight + deliveryWeight) {
+            } else if (transactionType <= paymentWeight + stockLevelWeight + orderStatusWeight
+                    + deliveryWeight) {
                 jTPCCTData term = new jTPCCTData();
                 term.setNumWarehouses(numWarehouses);
                 term.setWarehouse(terminalWarehouseID);
@@ -259,8 +262,8 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable {
                         transactionEnd - transactionStart, null, newOrder);
             } else {
                 parent.signalTerminalEndedTransaction(this.terminalName, transactionTypeName,
-                        transactionEnd - transactionStart,
-                        (skippedDeliveries == 0 ? "None" : "" + skippedDeliveries + " delivery(ies) skipped."),
+                        transactionEnd - transactionStart, (skippedDeliveries == 0 ? "None"
+                                : "" + skippedDeliveries + " delivery(ies) skipped."),
                         newOrder);
             }
 
@@ -282,9 +285,10 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable {
     }
 
     private void error(String type) {
-        log.error(terminalName + ", TERMINAL=" + terminalName + "  TYPE=" + type + "  COUNT=" + transactionCount);
-        System.out.println(
-                terminalName + ", TERMINAL=" + terminalName + "  TYPE=" + type + "  COUNT=" + transactionCount);
+        log.error(terminalName + ", TERMINAL=" + terminalName + "  TYPE=" + type + "  COUNT="
+                + transactionCount);
+        System.out.println(terminalName + ", TERMINAL=" + terminalName + "  TYPE=" + type + "  COUNT="
+                + transactionCount);
     }
 
     private void logException(Exception e) {

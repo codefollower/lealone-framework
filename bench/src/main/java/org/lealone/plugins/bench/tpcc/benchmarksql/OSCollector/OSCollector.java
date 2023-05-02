@@ -1,4 +1,4 @@
-package org.lealone.plugins.bench.tpcc.OSCollector;
+package org.lealone.plugins.bench.tpcc.benchmarksql.OSCollector;
 
 /*
  * OSCollector.java
@@ -35,8 +35,8 @@ public class OSCollector {
 
     private BufferedWriter resultCSVs[];
 
-    public OSCollector(String script, int runID, int interval, String sshAddress, String devices, File outputDir,
-            Logger log) {
+    public OSCollector(String script, int runID, int interval, String sshAddress, String devices,
+            File outputDir, Logger log) {
         List<String> cmdLine = new ArrayList<String>();
         String deviceNames[];
 
@@ -66,7 +66,8 @@ public class OSCollector {
             resultCSVs[0] = new BufferedWriter(new FileWriter(new File(outputDir, "sys_info.csv")));
             for (int i = 0; i < deviceNames.length; i++) {
                 cmdLine.add(deviceNames[i]);
-                resultCSVs[i + 1] = new BufferedWriter(new FileWriter(new File(outputDir, deviceNames[i] + ".csv")));
+                resultCSVs[i + 1] = new BufferedWriter(
+                        new FileWriter(new File(outputDir, deviceNames[i] + ".csv")));
             }
         } catch (Exception e) {
             log.error("OSCollector, " + e.getMessage());
@@ -80,7 +81,8 @@ public class OSCollector {
             collProc = pb.start();
 
             BufferedReader scriptReader = new BufferedReader(new FileReader(script));
-            BufferedWriter scriptWriter = new BufferedWriter(new OutputStreamWriter(collProc.getOutputStream()));
+            BufferedWriter scriptWriter = new BufferedWriter(
+                    new OutputStreamWriter(collProc.getOutputStream()));
             String line;
             while ((line = scriptReader.readLine()) != null) {
                 scriptWriter.write(line);
@@ -128,7 +130,8 @@ public class OSCollector {
                 try {
                     line = osData.readLine();
                     if (line == null) {
-                        log.error("OSCollector, unexpected EOF " + "while reading from external " + "helper process");
+                        log.error("OSCollector, unexpected EOF " + "while reading from external "
+                                + "helper process");
                         break;
                     }
                     parent.resultCSVs[resultIdx].write(line);

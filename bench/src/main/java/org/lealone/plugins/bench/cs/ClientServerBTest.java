@@ -166,6 +166,7 @@ public abstract class ClientServerBTest extends BenchTest {
     public static Connection getLealoneConnection() throws Exception {
         String url = getLealoneUrl();
         url += "&" + ConnectionSetting.IS_SHARED + "=false";
+        // url += "&" + ConnectionSetting.NET_CLIENT_COUNT + "=3";
         return getConnection(url, "root", "");
     }
 

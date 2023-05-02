@@ -1,4 +1,4 @@
-package org.lealone.plugins.bench.tpcc.client;
+package org.lealone.plugins.bench.tpcc.benchmarksql.client;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
-import org.lealone.plugins.bench.tpcc.OSCollector.OSCollector;
+import org.lealone.plugins.bench.tpcc.benchmarksql.OSCollector.OSCollector;
 
 @SuppressWarnings({ "unused", "resource" })
 public class jTPCC implements jTPCCConfig {

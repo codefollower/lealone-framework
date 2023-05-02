@@ -1,4 +1,4 @@
-package org.lealone.plugins.bench.tpcc.client;
+package org.lealone.plugins.bench.tpcc.benchmarksql.client;
 
 import java.math.BigDecimal;
 import java.sql.Array;
@@ -644,10 +644,10 @@ public class jTPCCTData {
             }
             throw e;
         }
-        /*
-        log.info("Reached the point of creating one NEW_ORDER W_ID "+newOrder.w_id+" D_ID "+newOrder.d_id+" C_ID "+newOrder.c_id);
-        System.exit(0);
-        */
+
+        // log.info("Reached the point of creating one NEW_ORDER W_ID " + newOrder.w_id + " D_ID "
+        // + newOrder.d_id + " C_ID " + newOrder.c_id);
+        // System.exit(0);
     }
 
     private void executeNewOrderStoredProcPostgres(Logger log, jTPCCConnection db) throws Exception {
@@ -736,10 +736,10 @@ public class jTPCCTData {
             }
             throw e;
         }
-        /*
-        log.info("Reached the point of creating one NEW_ORDER W_ID "+newOrder.w_id+" D_ID "+newOrder.d_id+" C_ID "+newOrder.c_id);
-        System.exit(0);
-        */
+
+        // log.info("Reached the point of creating one NEW_ORDER W_ID " + newOrder.w_id + " D_ID "
+        // + newOrder.d_id + " C_ID " + newOrder.c_id);
+        // System.exit(0);
     }
 
     private void executeNewOrderStoredProcOracle(Logger log, jTPCCConnection db) throws Exception {

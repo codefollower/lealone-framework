@@ -1,4 +1,4 @@
-package org.lealone.plugins.bench.tpcc.jdbc;
+package org.lealone.plugins.bench.tpcc.benchmarksql.jdbc;
 
 /*
  * ExecJDBC - Command line program to process SQL DDL statements, from
@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-import org.lealone.plugins.bench.tpcc.client.jTPCCUtil;
+import org.lealone.plugins.bench.tpcc.benchmarksql.client.jTPCCUtil;
 
 public class ExecJDBC {
 
@@ -53,7 +53,8 @@ public class ExecJDBC {
             stmt = conn.createStatement();
 
             // Open inputFile
-            BufferedReader in = new BufferedReader(new FileReader(jTPCCUtil.getSysProp("commandFile", null)));
+            BufferedReader in = new BufferedReader(
+                    new FileReader(jTPCCUtil.getSysProp("commandFile", null)));
 
             // loop thru input file and concatenate SQL statement fragments
             while ((rLine = in.readLine()) != null) {
