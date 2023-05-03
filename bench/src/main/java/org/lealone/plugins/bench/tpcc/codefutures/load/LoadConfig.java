@@ -1,33 +1,29 @@
-package org.lealone.plugins.bench.tpcc.codefutures;
+/*
+ * Copyright Lealone Database Group. CodeFutures Corporation
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh, CodeFutures Corporation
+ */
+package org.lealone.plugins.bench.tpcc.codefutures.load;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 
-import org.lealone.plugins.bench.tpcc.codefutures.load.FileLoader;
-import org.lealone.plugins.bench.tpcc.codefutures.load.JdbcPreparedStatementLoader;
-import org.lealone.plugins.bench.tpcc.codefutures.load.JdbcStatementLoader;
-import org.lealone.plugins.bench.tpcc.codefutures.load.RecordLoader;
-
 /**
  * Copyright (C) 2011 CodeFutures Corporation. All rights reserved.
  */
-public class TpccLoadConfig {
+public class LoadConfig {
 
-    enum LoadType {
+    public enum LoadType {
         JDBC_STATEMENT,
         JDBC_PREPARED_STATEMENT,
         CSV
     }
 
     private LoadType loadType = LoadType.JDBC_PREPARED_STATEMENT;
-
     private Connection conn;
-
     private File outputDir;
-
     private boolean jdbcInsertIgnore = false;
-
     private int jdbcBatchSize = 100;
 
     public RecordLoader createLoader(String tableName, String columnName[]) throws IOException {
@@ -62,5 +58,9 @@ public class TpccLoadConfig {
 
     public LoadType getLoadType() {
         return loadType;
+    }
+
+    public void setJdbcInsertIgnore(boolean jdbcInsertIgnore) {
+        this.jdbcInsertIgnore = jdbcInsertIgnore;
     }
 }

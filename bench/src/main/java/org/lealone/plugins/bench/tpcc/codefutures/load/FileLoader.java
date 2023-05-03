@@ -1,3 +1,8 @@
+/*
+ * Copyright Lealone Database Group. CodeFutures Corporation
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh, CodeFutures Corporation
+ */
 package org.lealone.plugins.bench.tpcc.codefutures.load;
 
 import java.io.BufferedOutputStream;
@@ -25,6 +30,7 @@ public class FileLoader implements RecordLoader {
         this.os = new BufferedOutputStream(new FileOutputStream(file, true));
     }
 
+    @Override
     public void load(Record r) throws Exception {
         b.setLength(0);
         final Object[] field = r.getField();
@@ -44,10 +50,12 @@ public class FileLoader implements RecordLoader {
         os.write("\n".getBytes());
     }
 
+    @Override
     public void commit() throws Exception {
         // ignore
     }
 
+    @Override
     public void close() throws Exception {
         os.close();
     }

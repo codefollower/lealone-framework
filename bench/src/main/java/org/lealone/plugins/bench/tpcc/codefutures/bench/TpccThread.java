@@ -1,14 +1,14 @@
-package org.lealone.plugins.bench.tpcc.codefutures;
+/*
+ * Copyright Lealone Database Group. CodeFutures Corporation
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh, CodeFutures Corporation
+ */
+package org.lealone.plugins.bench.tpcc.codefutures.bench;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
@@ -100,37 +100,8 @@ public class TpccThread extends Thread {
 
     private Connection connectToDatabase() {
         logger.info("Connection to database: driver: " + driverClassName + " url: " + jdbcUrl);
-        // try {
-        // Class.forName(driverClassName);
-        // } catch (ClassNotFoundException e1) {
-        // throw new RuntimeException("Failed to load JDBC driver class: " + driverClassName, e1);
-        // }
-
         try {
             Properties prop = new Properties();
-            File connPropFile = new File("conf/jdbc-connection.properties");
-            if (connPropFile.exists()) {
-                logger.info("Loading JDBC connection properties from " + connPropFile.getAbsolutePath());
-                try {
-                    final FileInputStream is = new FileInputStream(connPropFile);
-                    prop.load(is);
-                    is.close();
-
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Connection properties: {");
-                        final Set<Map.Entry<Object, Object>> entries = prop.entrySet();
-                        for (Map.Entry<Object, Object> entry : entries) {
-                            logger.debug(entry.getKey() + " = " + entry.getValue());
-                        }
-                        logger.debug("}");
-                    }
-                } catch (IOException e) {
-                    logger.error("", e);
-                }
-            } else {
-                logger.warn(connPropFile.getAbsolutePath()
-                        + " does not exist! Using default connection properties");
-            }
             prop.put("user", db_user);
             prop.put("password", db_password);
 

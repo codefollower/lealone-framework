@@ -1,12 +1,18 @@
-package org.lealone.plugins.bench.tpcc.codefutures;
+/*
+ * Copyright Lealone Database Group. CodeFutures Corporation
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh, CodeFutures Corporation
+ */
+package org.lealone.plugins.bench.tpcc.codefutures.load;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import org.lealone.plugins.bench.tpcc.codefutures.load.Record;
-import org.lealone.plugins.bench.tpcc.codefutures.load.RecordLoader;
+import org.lealone.plugins.bench.tpcc.codefutures.bench.TpccConstants;
+import org.lealone.plugins.bench.tpcc.codefutures.bench.Util;
 
 public class Load implements TpccConstants {
+
     private static boolean optionDebug = false;
 
     /*
@@ -15,7 +21,7 @@ public class Load implements TpccConstants {
       * ARGUMENTS |      none
       * +==================================================================
       */
-    public static void loadItems(TpccLoadConfig loadConfig, boolean option_debug) throws Exception {
+    public static void loadItems(LoadConfig loadConfig, boolean option_debug) throws Exception {
         optionDebug = option_debug;
         int i_id = 0;
         int i_im_id = 0;
@@ -101,7 +107,7 @@ public class Load implements TpccConstants {
       * table |      Loads Stock, District as Warehouses are created | ARGUMENTS |
       * none +==================================================================
       */
-    public static void loadWare(TpccLoadConfig loadConfig, int shardCount, int min_ware, int max_ware,
+    public static void loadWare(LoadConfig loadConfig, int shardCount, int min_ware, int max_ware,
             boolean option_debug, int shardId) throws Exception {
 
         int w_id;
@@ -200,7 +206,7 @@ public class Load implements TpccConstants {
       * | ARGUMENTS |      none
       * +==================================================================
       */
-    public static void loadCust(TpccLoadConfig loadConfig, int shardCount, int min_ware, int max_ware,
+    public static void loadCust(LoadConfig loadConfig, int shardCount, int min_ware, int max_ware,
             int shardId) {
         /* EXEC SQL WHENEVER SQLERROR GOTO sqlerr; */
         try {
@@ -220,7 +226,7 @@ public class Load implements TpccConstants {
       * Order_Line Tables | ARGUMENTS |      none
       * +==================================================================
       */
-    public static void loadOrd(TpccLoadConfig loadConfig, int shardCount, int max_ware, int shardId) {
+    public static void loadOrd(LoadConfig loadConfig, int shardCount, int max_ware, int shardId) {
         try {
             // for each warehouse
             for (int w_id = 1; w_id <= max_ware; w_id++) {
@@ -241,7 +247,7 @@ public class Load implements TpccConstants {
       * ARGUMENTS |      w_id - warehouse id
       * +==================================================================
       */
-    public static boolean stock(TpccLoadConfig loadConfig, int w_id) throws Exception {
+    public static boolean stock(LoadConfig loadConfig, int w_id) throws Exception {
 
         int s_i_id = 0;
         int s_w_id = 0;
@@ -376,7 +382,7 @@ public class Load implements TpccConstants {
       * | ARGUMENTS |      w_id - warehouse id
       * +==================================================================
       */
-    public static boolean district(TpccLoadConfig loadConfig, int w_id) throws Exception {
+    public static boolean district(LoadConfig loadConfig, int w_id) throws Exception {
         int d_id;
         int d_w_id;
         String d_name;
@@ -464,7 +470,7 @@ public class Load implements TpccConstants {
       * customer id |      d_id - district id |      w_id - warehouse id
       * +==================================================================
       */
-    public static void loadCustomer(TpccLoadConfig loadConfig, int d_id, int w_id, int shardCount,
+    public static void loadCustomer(LoadConfig loadConfig, int d_id, int w_id, int shardCount,
             int shardId) throws Exception {
         int c_id = 0;
         int c_d_id = 0;
@@ -673,8 +679,8 @@ public class Load implements TpccConstants {
       * warehouse id
       * +==================================================================
       */
-    public static void loadOrders(TpccLoadConfig loadConfig, int d_id, int w_id, int shardCount,
-            int shardId) throws Exception {
+    public static void loadOrders(LoadConfig loadConfig, int d_id, int w_id, int shardCount, int shardId)
+            throws Exception {
         int o_id;
         int o_c_id;
         int o_d_id;
@@ -879,5 +885,4 @@ public class Load implements TpccConstants {
 
         System.out.printf("Orders Done.\n");
     }
-
 }

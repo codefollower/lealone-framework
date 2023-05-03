@@ -1,4 +1,9 @@
-package org.lealone.plugins.bench.tpcc.codefutures;
+/*
+ * Copyright Lealone Database Group. CodeFutures Corporation
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh, CodeFutures Corporation
+ */
+package org.lealone.plugins.bench.tpcc.codefutures.bench;
 
 public class RtHist implements TpccConstants {
 
@@ -26,7 +31,7 @@ public class RtHist implements TpccConstants {
     /* incliment matched one */
     public static void histInc(int transaction, double rtclk) {
         int i = 0;
-        i = (int) (rtclk * (double) REC_PER_SEC);
+        i = (int) (rtclk * REC_PER_SEC);
         if (i >= (MAXREC * REC_PER_SEC)) {
             i = (MAXREC * REC_PER_SEC) - 1;
         }

@@ -1,4 +1,9 @@
-package org.lealone.plugins.bench.tpcc.codefutures;
+/*
+ * Copyright Lealone Database Group. CodeFutures Corporation
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh, CodeFutures Corporation
+ */
+package org.lealone.plugins.bench.tpcc.codefutures.bench;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,6 +18,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
+import org.lealone.plugins.bench.tpcc.codefutures.TpccBench;
 
 public class Driver implements TpccConstants {
 
@@ -120,7 +126,7 @@ public class Driver implements TpccConstants {
         /* Actually, WaitTimes are needed... */
         // CHECK: Is activate_transaction handled correctly?
         int sequence = Util.seqGet();
-        while (Tpcc.activate_transaction == 1) {
+        while (TpccBench.activate_transaction == 1) {
 
             try {
                 if (DEBUG)
@@ -141,13 +147,13 @@ public class Driver implements TpccConstants {
                         t.get(15, TimeUnit.SECONDS);
                     } catch (InterruptedException e) {
                         logger.error("InterruptedException", e);
-                        Tpcc.activate_transaction = 0;
+                        TpccBench.activate_transaction = 0;
                     } catch (ExecutionException e) {
                         logger.error("Unhandled exception", e);
-                        Tpcc.activate_transaction = 0;
+                        TpccBench.activate_transaction = 0;
                     } catch (TimeoutException e) {
                         logger.error("Detected Lock Wait", e);
-                        Tpcc.activate_transaction = 0;
+                        TpccBench.activate_transaction = 0;
                     }
 
                 } else {
@@ -157,7 +163,7 @@ public class Driver implements TpccConstants {
                 count++;
             } catch (Throwable th) {
                 logger.error("FAILED", th);
-                Tpcc.activate_transaction = 0;
+                TpccBench.activate_transaction = 0;
                 try {
                     conn.rollback();
                 } catch (SQLException e) {
@@ -277,7 +283,7 @@ public class Driver implements TpccConstants {
 
                 RtHist.histInc(0, rt);
 
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     if (DEBUG)
                         logger.debug(" rt: " + rt + " RTIME_NEWORD " + RTIME_NEWORD);
                     if (rt < RTIME_NEWORD) {
@@ -296,7 +302,7 @@ public class Driver implements TpccConstants {
                 return (1); /* end */
             } else {
 
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
 
                     retry[0]++;
                     retry2[0][t_num]++;
@@ -305,7 +311,7 @@ public class Driver implements TpccConstants {
             }
         }
 
-        if (Tpcc.counting_on) {
+        if (TpccBench.counting_on) {
             retry[0]--;
             retry2[0][t_num]--;
             failure[0]++;
@@ -402,7 +408,7 @@ public class Driver implements TpccConstants {
                 if (rt > max_rt[1])
                     max_rt[1] = rt;
                 RtHist.histInc(1, rt);
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     if (rt < RTIME_PAYMENT) {
                         success[1]++;
                         success2[1][t_num]++;
@@ -415,7 +421,7 @@ public class Driver implements TpccConstants {
                 return (1); /* end */
             } else {
 
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     retry[1]++;
                     retry2[1][t_num]++;
                 }
@@ -423,7 +429,7 @@ public class Driver implements TpccConstants {
             }
         }
 
-        if (Tpcc.counting_on) {
+        if (TpccBench.counting_on) {
             retry[1]--;
             retry2[1][t_num]--;
             failure[1]++;
@@ -484,7 +490,7 @@ public class Driver implements TpccConstants {
                 if (rt > max_rt[2])
                     max_rt[2] = rt;
                 RtHist.histInc(2, rt);
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     if (rt < RTIME_ORDSTAT) {
                         success[2]++;
                         success2[2][t_num]++;
@@ -497,7 +503,7 @@ public class Driver implements TpccConstants {
                 return (1); /* end */
             } else {
 
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     retry[2]++;
                     retry2[2][t_num]++;
                 }
@@ -505,7 +511,7 @@ public class Driver implements TpccConstants {
             }
         }
 
-        if (Tpcc.counting_on) {
+        if (TpccBench.counting_on) {
             retry[2]--;
             retry2[2][t_num]--;
             failure[2]++;
@@ -547,7 +553,7 @@ public class Driver implements TpccConstants {
                 if (rt > max_rt[3])
                     max_rt[3] = rt;
                 RtHist.histInc(3, rt);
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     if (rt < RTIME_DELIVERY) {
                         success[3]++;
                         success2[3][t_num]++;
@@ -560,7 +566,7 @@ public class Driver implements TpccConstants {
                 return (1); /* end */
             } else {
 
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     retry[3]++;
                     retry2[3][t_num]++;
                 }
@@ -568,7 +574,7 @@ public class Driver implements TpccConstants {
             }
         }
 
-        if (Tpcc.counting_on) {
+        if (TpccBench.counting_on) {
             retry[3]--;
             retry2[3][t_num]--;
             failure[3]++;
@@ -615,7 +621,7 @@ public class Driver implements TpccConstants {
                 if (rt > max_rt[4])
                     max_rt[4] = rt;
                 RtHist.histInc(4, rt);
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     if (rt < RTIME_SLEV) {
                         success[4]++;
                         success2[4][t_num]++;
@@ -628,7 +634,7 @@ public class Driver implements TpccConstants {
                 return (1); /* end */
             } else {
 
-                if (Tpcc.counting_on) {
+                if (TpccBench.counting_on) {
                     retry[4]++;
                     retry2[4][t_num]++;
                 }
@@ -636,7 +642,7 @@ public class Driver implements TpccConstants {
             }
         }
 
-        if (Tpcc.counting_on) {
+        if (TpccBench.counting_on) {
             retry[4]--;
             retry2[4][t_num]--;
             failure[4]++;

@@ -5,12 +5,11 @@
  */
 package org.lealone.plugins.bench.tpcc;
 
-import org.lealone.plugins.bench.tpcc.codefutures.Tpcc;
+import org.lealone.plugins.bench.tpcc.codefutures.TpccBench;
 
-public class TpccMySQL {
+public class LealoneTpccBench {
     public static void main(String[] args) {
-        System.setProperty("tpcc.config", "mysql/tpcc.properties");
-        // TpccLoad.main(args);
-        Tpcc.main(args);
+        System.setProperty("tpcc.config", "lealone/tpcc.properties");
+        TpccBench.main(args);
     }
 }

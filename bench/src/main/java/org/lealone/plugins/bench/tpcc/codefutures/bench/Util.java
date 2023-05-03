@@ -1,4 +1,9 @@
-package org.lealone.plugins.bench.tpcc.codefutures;
+/*
+ * Copyright Lealone Database Group. CodeFutures Corporation
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh, CodeFutures Corporation
+ */
+package org.lealone.plugins.bench.tpcc.codefutures.bench;
 
 import java.util.Random;
 
@@ -68,7 +73,7 @@ public class Util implements TpccConstants {
         dl = d;
         sl = s;
         total = n + p + o + d + s;
-        System.out.printf("TOTAL:%d", total);
+        System.out.printf("TOTAL:%d\n", total);
         seq = new int[total];
         shuffle();
         nextNum = 0;
@@ -217,7 +222,7 @@ public class Util implements TpccConstants {
         return nums[permCount++];
     }
 
-    static String lastName(int num) {
+    public static String lastName(int num) {
         String name = null;
         String[] n = { "BAR", "OUGHT", "ABLE", "PRI", "PRES", "ESE", "ANTI", "CALLY", "ATION", "EING" };
 

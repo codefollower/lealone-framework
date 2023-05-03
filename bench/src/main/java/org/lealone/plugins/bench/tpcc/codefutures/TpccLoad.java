@@ -1,10 +1,12 @@
+/*
+ * Copyright Lealone Database Group. CodeFutures Corporation
+ * Licensed under the Server Side Public License, v 1.
+ * Initial Developer: zhh, CodeFutures Corporation
+ */
 package org.lealone.plugins.bench.tpcc.codefutures;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,123 +14,90 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.Properties;
 
-import org.lealone.common.logging.Logger;
-import org.lealone.common.logging.LoggerFactory;
 import org.lealone.plugins.bench.DbType;
+import org.lealone.plugins.bench.tpcc.codefutures.bench.Util;
+import org.lealone.plugins.bench.tpcc.codefutures.load.Load;
+import org.lealone.plugins.bench.tpcc.codefutures.load.LoadConfig;
 
-public class TpccLoad implements TpccConstants {
+public class TpccLoad extends Tpcc {
 
-    private String mode;
-    private String outputDir;
-    private String dbType = null;
-    private String dbUser = null;
-    private String dbPassword = null;
-    private int shardCount = 0;
-    private String jdbcUrl = null;
-    private String javaDriver = null;
-    private int shardId = -1;
+    public static void main(String[] args) {
+        dumpInformation(args);
+        TpccLoad tpccLoad = new TpccLoad();
+        tpccLoad.parseArgs(args);
+        tpccLoad.runLoad();
+    }
 
-    /* Global SQL Variables */
-    static int num_ware = 0;
-    static int fd = 0;
-    static int seed = 0;
-
-    int particle_flg = 0; /* "1" means particle mode */
-    int part_no = 0; /* 1:items 2:warehouse 3:customer 4:orders */
-    long min_ware = 1;
-    long max_ware;
-
-    /* Global Variables */
-    static int i = 0;
     // static int is_local = 1; /* "1" mean local */
     // static int DB_STRING_MAX = 51;
-    static boolean option_debug = false; /* 1 if generating debug output    */
-
-    private static final Logger logger = LoggerFactory.getLogger(Tpcc.class);
+    private static boolean option_debug = false; /* 1 if generating debug output    */
 
     private static final String MODE = "MODE";
     private static final String OUTPUTDIR = "OUTPUTDIR";
-    private static final String DRIVER = "DRIVER";
-    private static final String WAREHOUSECOUNT = "WAREHOUSECOUNT";
-    private static final String USER = "USER";
-    private static final String PASSWORD = "PASSWORD";
     private static final String SHARDCOUNT = "SHARDCOUNT";
-    private static final String JDBCURL = "JDBCURL";
     private static final String SHARDID = "SHARDID";
     private static final String DBTYPE = "DBTYPE";
 
-    private Properties properties;
-    private InputStream inputStream;
+    private String mode;
+    private String outputDir;
+    private String dbType;
+    private int shardCount = 0;
+    private int shardId = -1;
+
+    private int seed = 0;
+
+    private int particle_flg = 0; /* "1" means particle mode */
+    private int part_no = 0; /* 1:items 2:warehouse 3:customer 4:orders */
+    private long min_ware = 1;
+    private long max_ware;
 
     public TpccLoad() {
         // Empty.
     }
 
-    private void init() {
-        URL url = Tpcc.getConfigURL();
-        logger.info("Loading properties from: " + url);
-
-        properties = new Properties();
-        try {
-            inputStream = url.openStream();
-            properties.load(inputStream);
-        } catch (IOException e) {
-            throw new RuntimeException("Error loading properties file", e);
+    private void parseArgs(String[] args) {
+        if (args.length == 0) {
+            loadConfig();
+            mode = properties.getProperty(MODE);
+            outputDir = properties.getProperty(OUTPUTDIR);
+            shardCount = Integer.parseInt(properties.getProperty(SHARDCOUNT));
+            shardId = Integer.parseInt(properties.getProperty(SHARDID));
+            dbType = properties.getProperty(DBTYPE);
+        } else {
+            if ((args.length % 2) != 0) {
+                System.out.println("Invalid number of arguments: " + args.length);
+                showUsage();
+            }
+            System.out.println("Using the command line arguments for the load configuration.");
+            for (int i = 0; i < args.length; i = i + 2) {
+                if (args[i].equals("-m")) {
+                    mode = args[i + 1];
+                } else if (args[i].equals("-o")) {
+                    outputDir = args[i + 1];
+                } else if (args[i].equals("-u")) {
+                    dbUser = args[i + 1];
+                } else if (args[i].equals("-p")) {
+                    dbPassword = args[i + 1];
+                } else if (args[i].equals("-j")) {
+                    javaDriver = args[i + 1];
+                } else if (args[i].equals("-l")) {
+                    jdbcUrl = args[i + 1];
+                } else if (args[i].equals("-s")) {
+                    shardCount = Integer.parseInt(args[i + 1]);
+                } else if (args[i].equals("-i")) {
+                    shardId = Integer.parseInt(args[i + 1]);
+                } else {
+                    System.out.println("Incorrect Argument: " + args[i]);
+                    showUsage();
+                }
+            }
         }
     }
 
-    private int runLoad(boolean overridePropertiesFile, String[] argv) {
-
-        if (overridePropertiesFile) {
-            for (int i = 0; i < argv.length; i = i + 2) {
-                if (argv[i].equals("-m")) {
-                    mode = argv[i + 1];
-                } else if (argv[i].equals("-o")) {
-                    outputDir = argv[i + 1];
-                } else if (argv[i].equals("-u")) {
-                    dbUser = argv[i + 1];
-                } else if (argv[i].equals("-p")) {
-                    dbPassword = argv[i + 1];
-                } else if (argv[i].equals("-j")) {
-                    javaDriver = argv[i + 1];
-                } else if (argv[i].equals("-l")) {
-                    jdbcUrl = argv[i + 1];
-                } else if (argv[i].equals("-s")) {
-                    shardCount = Integer.parseInt(argv[i + 1]);
-                } else if (argv[i].equals("-i")) {
-                    shardId = Integer.parseInt(argv[i + 1]);
-                } else {
-                    System.out.println("Incorrect Argument: " + argv[i]);
-                    System.out.println("The possible arguments are as follows: ");
-                    System.out.println("-m [mode (FILE or JDBC)]");
-                    System.out.println("-o [file output dir]");
-                    System.out.println("-u [database username]");
-                    System.out.println("-p [database password]");
-                    System.out.println("-w [number of warehouses]");
-                    System.out.println("-j [java driver]");
-                    System.out.println("-l [jdbc url]");
-                    System.out.println("-s [shard count]");
-                    System.out.println("-i [shard id]");
-                    System.exit(-1);
-
-                }
-            }
-        } else {
-            mode = properties.getProperty(MODE);
-            outputDir = properties.getProperty(OUTPUTDIR);
-            dbUser = properties.getProperty(USER);
-            dbPassword = properties.getProperty(PASSWORD);
-            num_ware = Integer.parseInt(properties.getProperty(WAREHOUSECOUNT));
-            shardCount = Integer.parseInt(properties.getProperty(SHARDCOUNT));
-            javaDriver = properties.getProperty(DRIVER);
-            jdbcUrl = properties.getProperty(JDBCURL);
-            shardId = Integer.parseInt(properties.getProperty(SHARDID));
-            dbType = properties.getProperty(DBTYPE);
-        }
-
-        System.out.printf("*************************************\n");
-        System.out.printf("*** Java TPC-C Data Loader version " + Tpcc.VERSION + " ***\n");
-        System.out.printf("*************************************\n");
+    private void runLoad() {
+        System.out.printf("********************************************\n");
+        System.out.printf("*** Java TPC-C Data Loader version " + VERSION + " ***\n");
+        System.out.printf("********************************************\n");
 
         final long start = System.currentTimeMillis();
         System.out.println("Execution time start: " + start);
@@ -152,7 +121,7 @@ public class TpccLoad implements TpccConstants {
             throw new RuntimeException("Invalid mode '" + mode + "': must be CSV or JDBC");
         }
 
-        if (num_ware < 1) {
+        if (numWare < 1) {
             throw new RuntimeException("Warehouse count has to be greater than or equal to 1.");
         }
         if (javaDriver == null) {
@@ -176,7 +145,7 @@ public class TpccLoad implements TpccConstants {
             System.out.printf(" [Output Dir]: %s\n", outputDir);
         }
 
-        System.out.printf("  [warehouse]: %d\n", num_ware);
+        System.out.printf("  [warehouse]: %d\n", numWare);
         System.out.printf("    [shardId]: %d\n", shardId);
         if (particle_flg == 1) {
             System.out.printf("  [part(1-4)]: %d\n", part_no);
@@ -187,20 +156,12 @@ public class TpccLoad implements TpccConstants {
         // TODO: Pass the seed in as a variable.
         Util.setSeed(seed);
 
-        TpccLoadConfig loadConfig = new TpccLoadConfig();
+        LoadConfig loadConfig = new LoadConfig();
 
         /* EXEC SQL WHENEVER SQLERROR GOTO Error_SqlCall; */
         if (jdbcMode) {
-            try {
-                Class.forName(javaDriver);
-            } catch (ClassNotFoundException e1) {
-                throw new RuntimeException("Class for mysql error", e1);
-            }
-
             Connection conn;
-
             try {
-                // TODO: load from config
                 Properties jdbcConnectProp = new Properties();
                 jdbcConnectProp.setProperty("user", dbUser);
                 jdbcConnectProp.setProperty("password", dbPassword);
@@ -210,7 +171,6 @@ public class TpccLoad implements TpccConstants {
                 }
                 conn = DriverManager.getConnection(jdbcUrl, jdbcConnectProp);
                 conn.setAutoCommit(false);
-
             } catch (SQLException e) {
                 throw new RuntimeException("Connection error", e);
             }
@@ -232,9 +192,13 @@ public class TpccLoad implements TpccConstants {
                 } catch (SQLException e) {
                     throw new RuntimeException("Could not set foreign key checks error", e);
                 }
-            }
+                loadConfig.setJdbcInsertIgnore(true);
 
-            loadConfig.setLoadType(TpccLoadConfig.LoadType.JDBC_STATEMENT);
+                // mysql用JDBC_STATEMENT比JDBC_PREPARED_STATEMENT快
+                loadConfig.setLoadType(LoadConfig.LoadType.JDBC_STATEMENT);
+            } else {
+                loadConfig.setLoadType(LoadConfig.LoadType.JDBC_PREPARED_STATEMENT);
+            }
             loadConfig.setConn(conn);
         } else {
             File outputDir = new File(this.outputDir);
@@ -254,14 +218,14 @@ public class TpccLoad implements TpccConstants {
                     throw new RuntimeException("Could not create dir: " + outputDir.getAbsolutePath());
                 }
             }
-            loadConfig.setLoadType(TpccLoadConfig.LoadType.CSV);
+            loadConfig.setLoadType(LoadConfig.LoadType.CSV);
             loadConfig.setOutputDir(outputDir);
         }
 
         System.out.printf("TPCC Data Load Started...\n");
 
         try {
-            max_ware = num_ware;
+            max_ware = numWare;
             if (particle_flg == 0) {
                 System.out.printf("Particle flag: %d\n", particle_flg);
                 Load.loadItems(loadConfig, option_debug);
@@ -307,56 +271,19 @@ public class TpccLoad implements TpccConstants {
         System.out.println(
                 "Total execution time: " + df1.format(minutes) + " minute(s), " + df1.format(seconds)
                         + " second(s) (" + df2.format(durationSeconds / 60.0f) + " minutes)");
-
-        return 0;
     }
 
-    public static void main(String[] argv) {
-
-        // dump information about the environment we are running in
-        String sysProp[] = {
-                "os.name",
-                "os.arch",
-                "os.version",
-                "java.runtime.name",
-                "java.vm.version",
-                "java.library.path" };
-
-        for (String s : sysProp) {
-            logger.info("System Property: " + s + " = " + System.getProperty(s));
-        }
-
-        DecimalFormat df = new DecimalFormat("#,##0.0");
-        System.out.println("maxMemory = "
-                + df.format(Runtime.getRuntime().totalMemory() / (1024.0 * 1024.0)) + " MB");
-        TpccLoad tpccLoad = new TpccLoad();
-
-        int ret = 0;
-        if (argv.length == 0) {
-            System.out.println("Using the tpcc.properties file for the load configuration.");
-            tpccLoad.init();
-            ret = tpccLoad.runLoad(false, argv);
-        } else {
-            if ((argv.length % 2) == 0) {
-                System.out.println("Using the command line arguments for the load configuration.");
-                ret = tpccLoad.runLoad(true, argv);
-            } else {
-                System.out.println("Invalid number of arguments.");
-                System.out.println("Incorrect Argument: " + argv[i]);
-                System.out.println("The possible arguments are as follows: ");
-                System.out.println("-h [database host]");
-                System.out.println("-d [database name]");
-                System.out.println("-u [database username]");
-                System.out.println("-p [database password]");
-                System.out.println("-w [number of warehouses]");
-                System.out.println("-j [java driver]");
-                System.out.println("-l [jdbc url]");
-                System.out.println("-s [shard count]");
-                System.out.println("-i [shard id]");
-                System.exit(-1);
-
-            }
-        }
-        System.exit(ret);
+    private static void showUsage() {
+        System.out.println("The possible arguments are as follows: ");
+        System.out.println("-m [mode (FILE or JDBC)]");
+        System.out.println("-o [file output dir]");
+        System.out.println("-u [database username]");
+        System.out.println("-p [database password]");
+        System.out.println("-w [number of warehouses]");
+        System.out.println("-j [java driver]");
+        System.out.println("-l [jdbc url]");
+        System.out.println("-s [shard count]");
+        System.out.println("-i [shard id]");
+        System.exit(-1);
     }
 }
