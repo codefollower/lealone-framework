@@ -219,7 +219,7 @@ public class TpccBench extends Tpcc {
         // Start each server.
 
         for (int i = 0; i < numConn; i++) {
-            Runnable worker = new TpccThread(i, port, 1, dbUser, dbPassword, numWare, numConn,
+            Runnable worker = new TpccThread(dbType, i, port, 1, dbUser, dbPassword, numWare, numConn,
                     javaDriver, jdbcUrl, fetchSize, success, late, retry, failure, success2, late2,
                     retry2, failure2, joins);
             executor.execute(worker);

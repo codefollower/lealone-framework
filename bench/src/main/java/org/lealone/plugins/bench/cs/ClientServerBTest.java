@@ -32,19 +32,19 @@ public abstract class ClientServerBTest extends BenchTest {
         String name = getBTestName();
         DbType dbType;
         if (name.startsWith("AsyncLealone")) {
-            dbType = DbType.Lealone;
+            dbType = DbType.LEALONE;
             async = true;
         } else if (name.startsWith("Lealone")) {
-            dbType = DbType.Lealone;
+            dbType = DbType.LEALONE;
             async = false;
         } else if (name.startsWith("PgLealone")) {
-            dbType = DbType.Lealone;
+            dbType = DbType.LEALONE;
         } else if (name.startsWith("H2")) {
             dbType = DbType.H2;
         } else if (name.startsWith("MySQL")) {
-            dbType = DbType.MySQL;
+            dbType = DbType.MYSQL;
         } else if (name.startsWith("Pg")) {
-            dbType = DbType.PostgreSQL;
+            dbType = DbType.POSTGRESQL;
         } else {
             throw new RuntimeException("Unsupported BTestName: " + name);
         }
@@ -93,11 +93,11 @@ public abstract class ClientServerBTest extends BenchTest {
         switch (dbType) {
         case H2:
             return getH2Connection();
-        case MySQL:
+        case MYSQL:
             return getMySQLConnection();
-        case PostgreSQL:
+        case POSTGRESQL:
             return getPgConnection();
-        case Lealone: {
+        case LEALONE: {
             Connection conn = getLealoneConnection();
             if (disableLealoneQueryCache) {
                 disableLealoneQueryCache(conn);

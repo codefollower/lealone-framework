@@ -36,11 +36,9 @@ public class TpccLoad extends Tpcc {
     private static final String OUTPUTDIR = "OUTPUTDIR";
     private static final String SHARDCOUNT = "SHARDCOUNT";
     private static final String SHARDID = "SHARDID";
-    private static final String DBTYPE = "DBTYPE";
 
     private String mode;
     private String outputDir;
-    private String dbType;
     private int shardCount = 0;
     private int shardId = -1;
 
@@ -62,7 +60,6 @@ public class TpccLoad extends Tpcc {
             outputDir = properties.getProperty(OUTPUTDIR);
             shardCount = Integer.parseInt(properties.getProperty(SHARDCOUNT));
             shardId = Integer.parseInt(properties.getProperty(SHARDID));
-            dbType = properties.getProperty(DBTYPE);
         } else {
             if ((args.length % 2) != 0) {
                 System.out.println("Invalid number of arguments: " + args.length);
@@ -165,7 +162,7 @@ public class TpccLoad extends Tpcc {
                 Properties jdbcConnectProp = new Properties();
                 jdbcConnectProp.setProperty("user", dbUser);
                 jdbcConnectProp.setProperty("password", dbPassword);
-                if (dbType.equalsIgnoreCase(DbType.MySQL.name())) {
+                if (dbType == DbType.MYSQL) {
                     jdbcConnectProp.setProperty("useServerPrepStmts", "true");
                     jdbcConnectProp.setProperty("cachePrepStmts", "true");
                 }
@@ -174,7 +171,7 @@ public class TpccLoad extends Tpcc {
             } catch (SQLException e) {
                 throw new RuntimeException("Connection error", e);
             }
-            if (dbType.equalsIgnoreCase(DbType.MySQL.name())) {
+            if (dbType == DbType.MYSQL) {
                 Statement stmt;
                 try {
                     stmt = conn.createStatement();

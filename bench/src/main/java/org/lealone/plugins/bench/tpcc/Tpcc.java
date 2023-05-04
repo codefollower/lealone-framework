@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
+import org.lealone.plugins.bench.DbType;
 import org.lealone.plugins.bench.tpcc.bench.TpccConstants;
 
 public abstract class Tpcc implements TpccConstants {
@@ -27,6 +28,7 @@ public abstract class Tpcc implements TpccConstants {
     protected static final String USER = "USER";
     protected static final String PASSWORD = "PASSWORD";
     protected static final String JDBCURL = "JDBCURL";
+    protected static final String DBTYPE = "DBTYPE";
     protected static final String PROPERTIESFILE = "tpcc.properties";
 
     /* Global SQL Variables */
@@ -34,6 +36,7 @@ public abstract class Tpcc implements TpccConstants {
     protected String jdbcUrl;
     protected String dbUser;
     protected String dbPassword;
+    protected DbType dbType;
     protected int numWare;
 
     protected Properties properties;
@@ -55,6 +58,8 @@ public abstract class Tpcc implements TpccConstants {
         jdbcUrl = properties.getProperty(JDBCURL);
         dbUser = properties.getProperty(USER);
         dbPassword = properties.getProperty(PASSWORD);
+        String dbType = properties.getProperty(DBTYPE).toUpperCase();
+        this.dbType = DbType.valueOf(dbType);
         numWare = Integer.parseInt(properties.getProperty(WAREHOUSECOUNT));
     }
 

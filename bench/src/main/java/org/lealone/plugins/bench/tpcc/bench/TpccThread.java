@@ -8,10 +8,12 @@ package org.lealone.plugins.bench.tpcc.bench;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
+import org.lealone.plugins.bench.DbType;
 
 @SuppressWarnings("unused")
 public class TpccThread extends Thread {
@@ -51,10 +53,10 @@ public class TpccThread extends Thread {
 
     // TpccStatements pStmts;
 
-    public TpccThread(int number, int port, int is_local, String db_user, String db_password,
-            int num_ware, int num_conn, String driverClassName, String dURL, int fetchSize,
-            int[] success, int[] late, int[] retry, int[] failure, int[][] success2, int[][] late2,
-            int[][] retry2, int[][] failure2, boolean joins) {
+    public TpccThread(DbType dbType, int number, int port, int is_local, String db_user,
+            String db_password, int num_ware, int num_conn, String driverClassName, String dURL,
+            int fetchSize, int[] success, int[] late, int[] retry, int[] failure, int[][] success2,
+            int[][] late2, int[][] retry2, int[][] failure2, boolean joins) {
 
         this.number = number;
         this.port = port;
@@ -78,7 +80,7 @@ public class TpccThread extends Thread {
         this.failure2 = failure2;
         this.joins = joins;
 
-        connectToDatabase();
+        connectToDatabase(dbType);
 
         // Create a driver instance.
         driver = new Driver(conn, fetchSize, success, late, retry, failure, success2, late2, retry2,
@@ -98,7 +100,7 @@ public class TpccThread extends Thread {
         }
     }
 
-    private Connection connectToDatabase() {
+    private Connection connectToDatabase(DbType dbType) {
         logger.info("Connection to database: driver: " + driverClassName + " url: " + jdbcUrl);
         try {
             Properties prop = new Properties();
@@ -106,11 +108,14 @@ public class TpccThread extends Thread {
             prop.put("password", db_password);
 
             conn = DriverManager.getConnection(jdbcUrl, prop);
-
-            // Statement stmt = conn.createStatement();
-            // stmt.executeUpdate("set LOCK_TIMEOUT 1000000");
-            // stmt.close();
-            // conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+            if (dbType == DbType.LEALONE) {
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("set LOCK_TIMEOUT 1000000");
+                stmt.close();
+            }
+            if (dbType == DbType.MYSQL) {
+                conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+            }
             conn.setAutoCommit(false);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to connect to database", e);
