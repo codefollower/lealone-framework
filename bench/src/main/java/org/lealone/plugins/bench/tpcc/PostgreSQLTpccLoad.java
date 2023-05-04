@@ -5,8 +5,6 @@
  */
 package org.lealone.plugins.bench.tpcc;
 
-import org.lealone.plugins.bench.tpcc.codefutures.TpccLoad;
-
 public class PostgreSQLTpccLoad {
     public static void main(String[] args) {
         System.setProperty("tpcc.config", "postgresql/tpcc.properties");

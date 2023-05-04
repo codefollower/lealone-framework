@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh, CodeFutures Corporation
  */
-package org.lealone.plugins.bench.tpcc.codefutures.bench;
+package org.lealone.plugins.bench.tpcc.bench;
 
 public class AbortedTransactionException extends Exception {
     public AbortedTransactionException() {

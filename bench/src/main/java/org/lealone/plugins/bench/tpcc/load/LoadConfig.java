@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh, CodeFutures Corporation
  */
-package org.lealone.plugins.bench.tpcc.codefutures.load;
+package org.lealone.plugins.bench.tpcc.load;
 
 import java.io.File;
 import java.io.IOException;

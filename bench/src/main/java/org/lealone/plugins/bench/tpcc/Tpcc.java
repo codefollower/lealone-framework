@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh, CodeFutures Corporation
  */
-package org.lealone.plugins.bench.tpcc.codefutures;
+package org.lealone.plugins.bench.tpcc;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Properties;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
-import org.lealone.plugins.bench.tpcc.codefutures.bench.TpccConstants;
+import org.lealone.plugins.bench.tpcc.bench.TpccConstants;
 
 public abstract class Tpcc implements TpccConstants {
 

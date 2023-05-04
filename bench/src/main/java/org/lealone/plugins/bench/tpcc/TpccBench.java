@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh, CodeFutures Corporation
  */
-package org.lealone.plugins.bench.tpcc.codefutures;
+package org.lealone.plugins.bench.tpcc;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.ExecutorService;
@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
-import org.lealone.plugins.bench.tpcc.codefutures.bench.NamedThreadFactory;
-import org.lealone.plugins.bench.tpcc.codefutures.bench.RtHist;
-import org.lealone.plugins.bench.tpcc.codefutures.bench.TpccThread;
-import org.lealone.plugins.bench.tpcc.codefutures.bench.Util;
+import org.lealone.plugins.bench.tpcc.bench.NamedThreadFactory;
+import org.lealone.plugins.bench.tpcc.bench.RtHist;
+import org.lealone.plugins.bench.tpcc.bench.TpccThread;
+import org.lealone.plugins.bench.tpcc.bench.Util;
 
 @SuppressWarnings("unused")
 public class TpccBench extends Tpcc {

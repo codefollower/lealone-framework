@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh, CodeFutures Corporation
  */
-package org.lealone.plugins.bench.tpcc.codefutures.bench;
+package org.lealone.plugins.bench.tpcc.bench;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.lealone.common.logging.Logger;
 import org.lealone.common.logging.LoggerFactory;
-import org.lealone.plugins.bench.tpcc.codefutures.TpccBench;
+import org.lealone.plugins.bench.tpcc.TpccBench;
 
 public class Driver implements TpccConstants {
 

@@ -5,8 +5,6 @@
  */
 package org.lealone.plugins.bench.tpcc;
 
-import org.lealone.plugins.bench.tpcc.codefutures.TpccBench;
-
 public class H2TpccBench {
     public static void main(String[] args) {
         System.setProperty("tpcc.config", "h2/tpcc.properties");

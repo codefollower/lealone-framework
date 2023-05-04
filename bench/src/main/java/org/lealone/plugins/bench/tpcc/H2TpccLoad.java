@@ -5,8 +5,6 @@
  */
 package org.lealone.plugins.bench.tpcc;
 
-import org.lealone.plugins.bench.tpcc.codefutures.TpccLoad;
-
 public class H2TpccLoad {
     public static void main(String[] args) {
         System.setProperty("tpcc.config", "h2/tpcc.properties");

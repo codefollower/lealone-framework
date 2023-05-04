@@ -3,13 +3,13 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh, CodeFutures Corporation
  */
-package org.lealone.plugins.bench.tpcc.codefutures.load;
+package org.lealone.plugins.bench.tpcc.load;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import org.lealone.plugins.bench.tpcc.codefutures.bench.TpccConstants;
-import org.lealone.plugins.bench.tpcc.codefutures.bench.Util;
+import org.lealone.plugins.bench.tpcc.bench.TpccConstants;
+import org.lealone.plugins.bench.tpcc.bench.Util;
 
 public class Load implements TpccConstants {
 

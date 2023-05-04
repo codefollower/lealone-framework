@@ -3,7 +3,7 @@
  * Licensed under the Server Side Public License, v 1.
  * Initial Developer: zhh, CodeFutures Corporation
  */
-package org.lealone.plugins.bench.tpcc.codefutures;
+package org.lealone.plugins.bench.tpcc;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -15,9 +15,9 @@ import java.text.DecimalFormat;
 import java.util.Properties;
 
 import org.lealone.plugins.bench.DbType;
-import org.lealone.plugins.bench.tpcc.codefutures.bench.Util;
-import org.lealone.plugins.bench.tpcc.codefutures.load.Load;
-import org.lealone.plugins.bench.tpcc.codefutures.load.LoadConfig;
+import org.lealone.plugins.bench.tpcc.bench.Util;
+import org.lealone.plugins.bench.tpcc.load.Load;
+import org.lealone.plugins.bench.tpcc.load.LoadConfig;
 
 public class TpccLoad extends Tpcc {
 
