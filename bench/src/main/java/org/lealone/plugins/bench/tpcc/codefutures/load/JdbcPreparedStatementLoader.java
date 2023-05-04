@@ -42,7 +42,8 @@ public class JdbcPreparedStatementLoader implements RecordLoader {
         if (ignore) {
             b.append("IGNORE ");
         }
-        b.append("INTO `").append(tableName).append("` (");
+        // b.append("INTO `").append(tableName).append("` (");
+        b.append("INTO ").append(tableName).append(" (");
         for (int i = 0; i < columnName.length; i++) {
             if (i > 0) {
                 b.append(',');

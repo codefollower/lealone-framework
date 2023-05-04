@@ -388,7 +388,9 @@ public class Payment implements TpccConstants {
 
             }
 
-            h_data = h_data + '\0' + d_name + ' ' + ' ' + ' ' + ' ' + '\0';
+            // PostgreSQL不支持ERROR: invalid byte sequence for encoding "UTF8": 0x00
+            // h_data = h_data + '\0' + d_name + ' ' + ' ' + ' ' + ' ' + '\0';
+            h_data = h_data + '|' + d_name + ' ' + ' ' + ' ' + ' ' + '|';
 
             proceed = 10;
             // Get prepared statement
@@ -400,7 +402,8 @@ public class Payment implements TpccConstants {
                 pStmts.getStatement(19).setInt(3, c_id);
                 pStmts.getStatement(19).setInt(4, d_id);
                 pStmts.getStatement(19).setInt(5, w_id);
-                pStmts.getStatement(19).setString(6, currentTimeStamp.toString());
+                // pStmts.getStatement(19).setString(6, currentTimeStamp.toString());
+                pStmts.getStatement(19).setTimestamp(6, currentTimeStamp);
                 pStmts.getStatement(19).setFloat(7, h_amount);
                 pStmts.getStatement(19).setString(8, h_data);
                 if (TRACE)

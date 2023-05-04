@@ -268,7 +268,8 @@ public class NewOrder implements TpccConstants {
                 pstmt3.setInt(2, d_id);
                 pstmt3.setInt(3, w_id);
                 pstmt3.setInt(4, c_id);
-                pstmt3.setString(5, currentTimeStamp);
+                // pstmt3.setString(5, currentTimeStamp);
+                pstmt3.setTimestamp(5, time);
                 pstmt3.setInt(6, o_ol_cnt);
                 pstmt3.setInt(7, o_all_local);
                 if (TRACE)

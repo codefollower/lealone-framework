@@ -106,6 +106,10 @@ public class TpccThread extends Thread {
             prop.put("password", db_password);
 
             conn = DriverManager.getConnection(jdbcUrl, prop);
+
+            // Statement stmt = conn.createStatement();
+            // stmt.executeUpdate("set LOCK_TIMEOUT 1000000");
+            // stmt.close();
             // conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
             conn.setAutoCommit(false);
         } catch (SQLException e) {

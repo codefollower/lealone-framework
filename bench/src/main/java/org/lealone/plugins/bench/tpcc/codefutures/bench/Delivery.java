@@ -136,7 +136,8 @@ public class Delivery implements TpccConstants {
                             + " WHERE ol_o_id = " + no_o_id + " AND ol_d_id = " + d_id
                             + " AND ol_w_id = " + w_id);
                 try {
-                    pStmts.getStatement(29).setString(1, currentTimeStamp.toString());
+                    // pStmts.getStatement(29).setString(1, currentTimeStamp.toString());
+                    pStmts.getStatement(29).setTimestamp(1, currentTimeStamp);
                     pStmts.getStatement(29).setInt(2, no_o_id);
                     pStmts.getStatement(29).setInt(3, d_id);
                     pStmts.getStatement(29).setInt(4, w_id);
