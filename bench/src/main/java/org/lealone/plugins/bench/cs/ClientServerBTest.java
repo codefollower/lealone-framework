@@ -64,8 +64,11 @@ public abstract class ClientServerBTest extends BenchTest {
             Connection conn = getConnection();
             conns[i] = conn;
         }
-        for (int i = 0; i < 2; i++) {
-            run(threadCount, conns, true);
+
+        if (warmUpEnabled()) {
+            for (int i = 0; i < 2; i++) {
+                run(threadCount, conns, true);
+            }
         }
 
         for (int i = 0; i < outerLoop; i++) {
@@ -75,6 +78,10 @@ public abstract class ClientServerBTest extends BenchTest {
         for (int i = 0; i < threadCount; i++) {
             close(conns[i]);
         }
+    }
+
+    protected boolean warmUpEnabled() {
+        return true;
     }
 
     protected void run(int threadCount, Connection[] conns, boolean warmUp) throws Exception {

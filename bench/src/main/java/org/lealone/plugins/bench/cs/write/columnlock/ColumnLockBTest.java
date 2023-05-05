@@ -12,6 +12,11 @@ import org.lealone.plugins.bench.cs.write.ClientServerWriteBTest;
 
 public abstract class ColumnLockBTest extends ClientServerWriteBTest {
 
+    protected ColumnLockBTest() {
+        sqlCountPerInnerLoop = 50;
+        sqls = new String[threadCount];
+    }
+
     @Override
     protected void init() throws Exception {
         int columnCount = threadCount;
