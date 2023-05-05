@@ -22,10 +22,10 @@ public abstract class ColumnLockBTest extends ClientServerWriteBTest {
         int columnCount = threadCount;
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
-        statement.executeUpdate("drop table if exists ColumnLockPerfTest");
+        statement.executeUpdate("drop table if exists ColumnLockBTest");
 
         StringBuilder buff = new StringBuilder();
-        buff.append("create table if not exists ColumnLockPerfTest(pk int primary key");
+        buff.append("create table if not exists ColumnLockBTest(pk int primary key");
         for (int i = 1; i <= columnCount; i++) {
             buff.append(",f").append(i).append(" int");
         }
@@ -34,7 +34,7 @@ public abstract class ColumnLockBTest extends ClientServerWriteBTest {
 
         for (int row = 1; row <= 9; row++) {
             buff = new StringBuilder();
-            buff.append("insert into ColumnLockPerfTest values(").append(row);
+            buff.append("insert into ColumnLockBTest values(").append(row);
             for (int i = 1; i <= columnCount; i++) {
                 buff.append(",").append(i * 10);
             }
@@ -43,7 +43,7 @@ public abstract class ColumnLockBTest extends ClientServerWriteBTest {
         }
         for (int i = 1; i <= columnCount; i++) {
             buff = new StringBuilder();
-            buff.append("update ColumnLockPerfTest set f").append(i).append(" = ").append(i * 1000)
+            buff.append("update ColumnLockBTest set f").append(i).append(" = ").append(i * 1000)
                     .append(" where pk=5");
             sqls[i - 1] = buff.toString();
         }
