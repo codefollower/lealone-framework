@@ -18,8 +18,9 @@ public abstract class InsertBTest extends ClientServerWriteBTest {
     protected InsertBTest() {
         outerLoop = 30;
         threadCount = 32;
-        sqlCountPerInnerLoop = 250;
+        sqlCountPerInnerLoop = 50;
         innerLoop = 10;
+        // printInnerLoopResult = true;
     }
 
     @Override

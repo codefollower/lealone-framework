@@ -86,36 +86,34 @@ public abstract class ClientServerWriteBTest extends ClientServerBTest {
         }
 
         protected void executeUpdateAsync(Statement statement) throws Exception {
+            long t1 = System.nanoTime();
             JdbcStatement stmt = (JdbcStatement) statement;
             for (int j = 0; j < innerLoop; j++) {
                 CountDownLatch latch = new CountDownLatch(sqlCountPerInnerLoop);
-                long t1 = System.nanoTime();
-
                 for (int i = 0; i < sqlCountPerInnerLoop; i++) {
                     stmt.executeUpdateAsync(nextSql()).onComplete(ar -> {
                         latch.countDown();
                     });
                 }
-
                 latch.await();
-                long t2 = System.nanoTime();
-                if (printInnerLoopResult)
-                    System.out.println(getBTestName() + ": "
-                            + TimeUnit.NANOSECONDS.toMillis(t2 - t1) / sqlCountPerInnerLoop + " ms");
             }
+            printInnerLoopResult(t1);
         }
 
         protected void executeUpdate(Statement statement) throws Exception {
+            long t1 = System.nanoTime();
             for (int j = 0; j < innerLoop; j++) {
-                long t1 = System.nanoTime();
-
                 for (int i = 0; i < sqlCountPerInnerLoop; i++)
                     statement.executeUpdate(nextSql());
+            }
+            printInnerLoopResult(t1);
+        }
 
+        private void printInnerLoopResult(long t1) {
+            if (printInnerLoopResult) {
                 long t2 = System.nanoTime();
-                if (printInnerLoopResult)
-                    System.out.println(getBTestName() + ": "
-                            + TimeUnit.NANOSECONDS.toMillis(t2 - t1) / sqlCountPerInnerLoop + " ms");
+                System.out.println(getBTestName() + " sql count: " + (innerLoop * sqlCountPerInnerLoop) //
+                        + " total time: " + TimeUnit.NANOSECONDS.toMillis(t2 - t1) + " ms");
             }
         }
     }
