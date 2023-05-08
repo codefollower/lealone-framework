@@ -16,7 +16,9 @@ public abstract class InsertBTest extends ClientServerWriteBTest {
     AtomicInteger id = new AtomicInteger();
 
     protected InsertBTest() {
-        sqlCountPerInnerLoop = 500;
+        outerLoop = 30;
+        threadCount = 32;
+        sqlCountPerInnerLoop = 250;
         innerLoop = 10;
     }
 

@@ -101,7 +101,7 @@ public abstract class ClientServerWriteBTest extends ClientServerBTest {
                 long t2 = System.nanoTime();
                 if (printInnerLoopResult)
                     System.out.println(getBTestName() + ": "
-                            + TimeUnit.NANOSECONDS.toMicros(t2 - t1) / sqlCountPerInnerLoop + " ms");
+                            + TimeUnit.NANOSECONDS.toMillis(t2 - t1) / sqlCountPerInnerLoop + " ms");
             }
         }
 
@@ -115,7 +115,7 @@ public abstract class ClientServerWriteBTest extends ClientServerBTest {
                 long t2 = System.nanoTime();
                 if (printInnerLoopResult)
                     System.out.println(getBTestName() + ": "
-                            + TimeUnit.NANOSECONDS.toMicros(t2 - t1) / sqlCountPerInnerLoop + " ms");
+                            + TimeUnit.NANOSECONDS.toMillis(t2 - t1) / sqlCountPerInnerLoop + " ms");
             }
         }
     }
