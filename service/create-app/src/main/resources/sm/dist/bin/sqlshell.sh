@@ -17,4 +17,4 @@
 #  
 #  Initial Developer: zhh
 
-./lealone.sh -client $@
+lealone.sh -client $@
