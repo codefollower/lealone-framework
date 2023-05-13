@@ -35,7 +35,7 @@ public class SqlLine extends sqlline.SqlLine {
                 java.util.Properties info = new java.util.Properties();
                 ConnectionInfo ci = new ConnectionInfo(url, info);
                 if (ci.isEmbedded()) {
-                    Lealone.embed(args);
+                    Lealone.embed();
                 }
             }
         }

@@ -17,8 +17,8 @@ public abstract class InsertBTest extends ClientServerWriteBTest {
 
     protected InsertBTest() {
         outerLoop = 30;
-        threadCount = 32;
-        sqlCountPerInnerLoop = 50;
+        threadCount = 48;
+        sqlCountPerInnerLoop = 20;
         innerLoop = 10;
         // printInnerLoopResult = true;
     }
@@ -28,7 +28,9 @@ public abstract class InsertBTest extends ClientServerWriteBTest {
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
         statement.executeUpdate("drop table if exists InsertBTest");
-        String sql = "create table if not exists InsertBTest(pk int primary key, f1 int)";
+        String sql = "create table if not exists InsertBTest(pk int primary key, f1 int)"
+                + " parameters(page_split_size='8k')";
+        sql = "create table if not exists InsertBTest(pk int primary key, f1 int)";
         statement.executeUpdate(sql);
         close(statement, conn);
     }
