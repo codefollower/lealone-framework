@@ -6,7 +6,6 @@
 package org.lealone.plugins.bench.cs.async.vertx.lealone;
 
 import org.lealone.plugins.bench.cs.async.vertx.VertxBTest;
-import org.lealone.plugins.postgresql.server.PgServer;
 
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
@@ -17,7 +16,7 @@ public abstract class VertxLealoneBTest extends VertxBTest {
 
     public static void run(String name, String sql) throws Throwable {
         PgConnectOptions connectOptions = new PgConnectOptions();
-        connectOptions.setPort(PgServer.DEFAULT_PORT).setHost("localhost");
+        connectOptions.setPort(PG_PORT).setHost("localhost");
         connectOptions.setDatabase("test").setUser("test").setPassword("test");
 
         PoolOptions poolOptions = new PoolOptions().setMaxSize(5);

@@ -7,8 +7,6 @@ package org.lealone.plugins.bench.cs.write.columnlock;
 
 import java.sql.Connection;
 
-import org.lealone.plugins.postgresql.server.PgServer;
-
 public class PgLealoneColumnLockBTest extends ColumnLockBTest {
 
     public static void main(String[] args) {
@@ -17,6 +15,6 @@ public class PgLealoneColumnLockBTest extends ColumnLockBTest {
 
     @Override
     public Connection getConnection() throws Exception {
-        return getPgConnection(PgServer.DEFAULT_PORT);
+        return getPgConnection(PG_PORT);
     }
 }

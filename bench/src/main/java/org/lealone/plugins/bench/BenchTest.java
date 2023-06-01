@@ -30,6 +30,8 @@ import org.lealone.transaction.aote.log.LogSyncService;
 //-XX:+UnlockExperimentalVMOptions -XX:+UseZGC -Xmx800M
 public abstract class BenchTest {
 
+    public static final int PG_PORT = 9510;
+
     public static final String BENCH_TEST_BASE_DIR = "." + File.separatorChar + "target"
             + File.separatorChar + "bench-test-data";
 

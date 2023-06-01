@@ -14,7 +14,6 @@ import org.lealone.db.ConnectionSetting;
 import org.lealone.db.Constants;
 import org.lealone.plugins.bench.BenchTest;
 import org.lealone.plugins.bench.DbType;
-import org.lealone.plugins.postgresql.server.PgServer;
 
 public abstract class ClientServerBTest extends BenchTest {
 
@@ -185,7 +184,7 @@ public abstract class ClientServerBTest extends BenchTest {
     }
 
     public static Connection getLealonePgConnection() throws Exception {
-        return getPgConnection(PgServer.DEFAULT_PORT);
+        return getPgConnection(PG_PORT);
     }
 
     public static Connection getPgConnection(int port) throws Exception {
