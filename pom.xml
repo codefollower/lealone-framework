@@ -67,7 +67,6 @@
         <module>orm</module>
         <module>service</module>
         <module>storage</module>
-        <module>xsql</module>
         <module>test</module>
     </modules>
 

@@ -88,45 +88,7 @@
             </binaries>
         </moduleSet>
 
-        <!-- xsql -->
-        <moduleSet>
-            <includes>
-                <include>org.lealone.plugins:lealone-mysql</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-mysql</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                        <excludes>
-                            <exclude>org.lealone:lealone-main</exclude>
-                        </excludes>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-        <moduleSet>
-            <includes>
-                <include>org.lealone.plugins:lealone-postgresql</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-postgresql</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                        <excludes>
-                            <exclude>org.lealone:lealone-main</exclude>
-                        </excludes>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-
-        <!-- xsql -->
+        <!-- service -->
         <moduleSet>
             <includes>
                 <include>org.lealone.plugins:lealone-javascript</include>
