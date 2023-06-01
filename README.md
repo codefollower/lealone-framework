@@ -13,11 +13,6 @@
 Lealone 微服务框架，可以使用 Java、JavaScript 和 Python 语言在 Lealone 中开发微服务应用
 
 
-### [xsql](https://github.com/lealone/Lealone-Plugins/tree/master/xsql)
-
-使用 MySQL 或 PostgreSQL 的协议和 SQL 语法访问 Lealone 数据库
-
-
 ### [storage](https://github.com/lealone/Lealone-Plugins/tree/master/storage)
 
 使用 [H2](http://www.h2database.com/html/main.html) 数据库的 [MVStore](http://www.h2database.com/html/mvstore.html) 作为额外的 Lealone 存储引擎
