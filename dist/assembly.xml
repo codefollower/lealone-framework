@@ -50,44 +50,6 @@
             </binaries>
         </moduleSet>
 
-        <!-- storage -->
-        <moduleSet>
-            <includes>
-                <include>org.lealone.plugins:lealone-mvstore</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-mvstore</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                        <excludes>
-                            <exclude>org.lealone:lealone-common</exclude>
-                        </excludes>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-        <moduleSet>
-            <includes>
-                <include>org.lealone.plugins:lealone-memory</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-memory</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                        <excludes>
-                            <exclude>org.lealone:lealone-common</exclude>
-                        </excludes>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-
         <!-- service -->
         <moduleSet>
             <includes>

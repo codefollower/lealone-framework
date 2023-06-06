@@ -36,16 +36,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.lealone.plugins</groupId>
-            <artifactId>lealone-mvstore</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lealone.plugins</groupId>
-            <artifactId>lealone-memory</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.lealone</groupId>
             <artifactId>lealone-test</artifactId>
             <version>${project.version}</version>
