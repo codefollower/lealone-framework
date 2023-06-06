@@ -62,11 +62,9 @@
     </developers>
 
     <modules>
-        <module>bench</module>
         <module>client</module>
         <module>orm</module>
         <module>service</module>
-        <module>storage</module>
         <module>test</module>
     </modules>
 
