@@ -21,14 +21,14 @@
     <parent>
         <groupId>org.lealone.plugins</groupId>
         <artifactId>plugins-parent</artifactId>
-        <version>5.2.0-SNAPSHOT</version>
+        <version>5.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.lealone.plugins</groupId>
     <artifactId>service-parent</artifactId>
     <packaging>pom</packaging>
-    <version>5.2.0-SNAPSHOT</version>
+    <version>5.2.0</version>
 
     <modules>
         <module>create-app</module>
