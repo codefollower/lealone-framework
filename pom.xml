@@ -62,7 +62,6 @@
     </developers>
 
     <modules>
-        <module>client</module>
         <module>orm</module>
         <module>service</module>
         <module>test</module>
@@ -164,7 +163,7 @@
                     <configuration>
                         <finalName>lealone-plugins-${project.version}</finalName>
                         <descriptors>
-                            <descriptor>dist/assembly.xml</descriptor>
+                            <descriptor>assembly.xml</descriptor>
                         </descriptors>
                     </configuration>
                 </plugin>

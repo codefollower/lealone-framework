@@ -22,34 +22,8 @@
     </formats>
 
     <baseDirectory>/</baseDirectory>
-    <fileSets>
-        <fileSet>
-            <directory>dist/bin</directory>
-            <outputDirectory>bin</outputDirectory>
-        </fileSet>
-    </fileSets>
 
     <moduleSets>
-        <!-- client -->
-        <moduleSet>
-            <includes>
-                <include>org.lealone.plugins:lealone-sqlline</include>
-            </includes>
-            <binaries>
-                <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-sqlline</outputDirectory>
-                <dependencySets>
-                    <dependencySet>
-                        <useTransitiveFiltering>true</useTransitiveFiltering>
-                        <useTransitiveDependencies>true</useTransitiveDependencies>
-                        <excludes>
-                            <exclude>org.lealone:lealone-main</exclude>
-                        </excludes>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-
         <!-- service -->
         <moduleSet>
             <includes>
@@ -57,7 +31,7 @@
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-javascript</outputDirectory>
+                <outputDirectory>lealone-javascript</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
@@ -75,7 +49,7 @@
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-python</outputDirectory>
+                <outputDirectory>lealone-python</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
@@ -93,7 +67,7 @@
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-spring</outputDirectory>
+                <outputDirectory>lealone-spring</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
@@ -111,7 +85,7 @@
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-tomcat</outputDirectory>
+                <outputDirectory>lealone-tomcat</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
@@ -130,7 +104,7 @@
             </includes>
             <binaries>
                 <unpack>false</unpack>
-                <outputDirectory>plugins/lealone-vertx</outputDirectory>
+                <outputDirectory>lealone-vertx</outputDirectory>
                 <dependencySets>
                     <dependencySet>
                         <useTransitiveFiltering>true</useTransitiveFiltering>
