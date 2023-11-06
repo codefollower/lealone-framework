@@ -1,6 +1,6 @@
-# Lealone-Plugins
+# Lealone-Framework
 
-与 Lealone 集成的各类插件或框架
+与 Lealone 集成的各类框架
 
 
 ### [orm](https://github.com/lealone/Lealone-Plugins/tree/master/orm)
