@@ -74,6 +74,8 @@
                         <useTransitiveDependencies>true</useTransitiveDependencies>
                         <excludes>
                             <exclude>org.lealone:lealone-client</exclude>
+                            <exclude>org.lealone:lealone-main</exclude>
+                            <exclude>org.lealone.plugins:lealone-orm</exclude>
                         </excludes>
                     </dependencySet>
                 </dependencySets>
