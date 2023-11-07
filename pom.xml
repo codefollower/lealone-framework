@@ -19,12 +19,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>lealone plugins project</name>
+    <name>lealone framework project</name>
     <groupId>org.lealone.plugins</groupId>
-    <artifactId>plugins-parent</artifactId>
+    <artifactId>lealone-framework</artifactId>
     <packaging>pom</packaging>
-    <version>5.2.0</version>
-    <url>https://github.com/lealone/Lealone-Plugins</url>
+    <version>6.0.0-SNAPSHOT</version>
+    <url>https://github.com/lealone/Lealone-Framework</url>
     <description>lealone plugins project</description>
 
     <licenses>
@@ -47,9 +47,9 @@
 
     <scm>
         <tag>master</tag>
-        <url>https://github.com/lealone/Lealone-Plugins</url>
-        <connection>scm:git:https://github.com/lealone/Lealone-Plugins.git</connection>
-        <developerConnection>scm:git:https://github.com/lealone/Lealone-Plugins.git</developerConnection>
+        <url>https://github.com/lealone/Lealone-Framework</url>
+        <connection>scm:git:https://github.com/lealone/Lealone-Framework.git</connection>
+        <developerConnection>scm:git:https://github.com/lealone/Lealone-Framework.git</developerConnection>
     </scm>
 
     <developers>
@@ -161,7 +161,7 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.2-beta-5</version>
                     <configuration>
-                        <finalName>lealone-plugins-${project.version}</finalName>
+                        <finalName>lealone-framework-${project.version}</finalName>
                         <descriptors>
                             <descriptor>assembly.xml</descriptor>
                         </descriptors>
